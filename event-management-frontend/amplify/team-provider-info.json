@@ -1,0 +1,29 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-eventmanagementfront-dev-141604-authRole",
+            "UnauthRoleArn": "arn:aws:iam::026709880083:role/amplify-eventmanagementfront-dev-141604-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::026709880083:role/amplify-eventmanagementfront-dev-141604-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-eventmanagementfront-dev-141604-deployment",
+            "UnauthRoleName": "amplify-eventmanagementfront-dev-141604-unauthRole",
+            "StackName": "amplify-eventmanagementfront-dev-141604",
+            "StackId": "arn:aws:cloudformation:eu-west-1:026709880083:stack/amplify-eventmanagementfront-dev-141604/3e8ca7c0-d7d6-11ea-9ed4-0ae12681c23c",
+            "AmplifyAppId": "d295l1rn3k868u"
+        },
+        "categories": {
+            "auth": {
+                "eventmanagementfrontded31d3d": {}
+            },
+            "AuthRoleName": "amplify-eventmanagementfront-dev-134503-authRole",
+            "UnauthRoleArn": "arn:aws:iam::026709880083:role/amplify-eventmanagementfront-dev-134503-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::026709880083:role/amplify-eventmanagementfront-dev-134503-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-eventmanagementfront-dev-134503-deployment",
+            "UnauthRoleName": "amplify-eventmanagementfront-dev-134503-unauthRole",
+            "StackName": "amplify-eventmanagementfront-dev-134503",
+            "StackId": "arn:aws:cloudformation:eu-west-1:026709880083:stack/amplify-eventmanagementfront-dev-134503/e3d9f430-d7d1-11ea-b358-060f8efab01c",
+            "AmplifyAppId": "dck8iu73o2qhp"
+        }
+    }
+}

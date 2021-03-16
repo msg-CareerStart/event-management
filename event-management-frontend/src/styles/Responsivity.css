@@ -1,0 +1,87 @@
+@media (max-width: 550px) {
+  .authComponentsResponsive {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}
+
+@media (max-width: 750px) {
+  .forgotPasswordResponsive {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}
+
+@media (max-width: 900px) {
+  .categoryCardResponsive {
+    margin-left: 30%;
+    margin-right: 30%;
+  }
+}
+
+@media (max-width: 600px) {
+  .marginBasicResponsive {
+    width: '100%';
+    margin-left: '0';
+    margin-right: '0';
+  }
+}
+
+@media (max-width: 600px) {
+  .maxTicketsResponsive {
+    margin-right: 0;
+    width: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .headerResponsive {
+    width: 200px;
+  }
+}
+
+@media (min-width: 960px) {
+  .qrReaderResponsive {
+    margin-left: 30%;
+    width: 40%;
+  }
+}
+
+@media (max-width: 960px) {
+  .qrReaderResponsive {
+    margin-left: 7.5%;
+    width: 85%;
+  }
+}
+
+@media (min-width: 960px) {
+  .alertResponsive {
+    left: 25%;
+    width: 50%;
+  }
+}
+
+@media (max-width: 960px) {
+  .alertResponsive {
+    left: 10%;
+    width: 80%;
+  }
+}
+
+@media (min-width: 700px) {
+  .alertResponsive {
+    top: 30%;
+  }
+}
+
+@media (max-width: 700px) {
+  .alertResponsive {
+    top: 16.5%;
+  }
+}
+
+@media (max-width: 300px) {
+  .alertResponsive {
+    top: 0%;
+  }
+}

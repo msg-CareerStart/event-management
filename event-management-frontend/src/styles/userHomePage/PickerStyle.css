@@ -1,0 +1,29 @@
+.MuiPickersStaticWrapper-staticWrapperRoot {
+    width: 100%;
+    overflow: auto;
+    min-width: 1px !important;
+}
+
+.MuiPickersBasePicker-container {
+    width: 100%;
+    overflow: auto;
+}
+.MuiPickersBasePicker-pickerView {
+    min-height: 10px !important;
+    max-height: none !important;
+    min-width: 150px !important;
+    max-width: none !important;
+    width: 100% !important;
+    overflow: auto;
+}
+
+.MuiPickersCalendarHeader-daysHeader>span {
+    width: 14%;
+}
+
+.MuiPickersCalendar-week > div {
+    width: 14%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}

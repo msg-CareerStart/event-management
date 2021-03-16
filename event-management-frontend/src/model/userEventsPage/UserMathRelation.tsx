@@ -1,0 +1,7 @@
+export enum UserMathRelation {
+  GREATER = 'GREATER',
+  LOWER = 'LOWER',
+  EQUAL = 'EQUAL',
+  GREATEROREQUAL = 'GREATEROREQUAL',
+  LOWEROREQUAL = 'LOWEROREQUAL',
+}

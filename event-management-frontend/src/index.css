@@ -1,0 +1,106 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.events_admin_title {
+  background-color: #6BB7D0;
+  height: 1em;
+  padding: 20px;
+  color: #133655
+}
+
+.events-admin-title {
+  background-color: #6BB7D0;
+  height: 1em;
+  padding: 20px;
+  color: #133655;
+  width: 80%;
+  display: inline-block;
+}
+
+.button-style1 {
+  text-align: center;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #f9c929 20%, #f2ac0a 90%);
+  border-radius: 20px;
+  width: 85%;
+  box-shadow: 0 1px 7px 1px #133C55;
+}
+
+.button-style2 {
+  text-align: center;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #f9c929 20%, #f2ac0a 90%);
+  width: 85%;
+  cursor: pointer;
+  background-size: 200%;
+  border-collapse: separate;
+  border-radius: 100px;
+  overflow: hidden;
+  perspective: 1px;
+}
+
+.button-style2:hover {
+  background-position: right;
+  background-image: linear-gradient(45deg, #f9c929 10%, #f2ac0a 50%, #ed4d6e 90%);
+  transition: 0.3s;
+}
+
+.button-style3 {
+  float: right;
+  width: 16.7%;
+  height: 6.3em;
+  background-image: linear-gradient(45deg, #f9c929 10%, #f2ac0a 50%, #ed4d6e 90%);
+}
+
+@media only screen and (max-width: 1400px) {
+  .events-admin-title {
+    background-color: #6BB7D0;
+    height: 1em;
+    padding: 20px;
+    color: #133655;
+    width: 100%;
+  }
+
+  .button-style3 {
+    width: 100%;
+    height: 2em;
+    background-image: linear-gradient(45deg, #f9c929 10%, #f2ac0a 50%, #ed4d6e 90%);
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  .events-admin-title {
+    background-color: #6BB7D0;
+    height: 1em;
+    padding: 20px;
+    color: #133655;
+    width: 130%;
+  }
+
+  .button-style3 {
+    width: 138%;
+    height: 2em;
+    float: left;
+    background-image: linear-gradient(45deg, #f9c929 10%, #f2ac0a 50%, #ed4d6e 90%);
+  }
+}
+
+.typography {
+  font-size: 25px;
+  font-family: 'Monospace';
+  color: #133C55;
+  text-transform: uppercase;
+}

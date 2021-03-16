@@ -1,0 +1,10 @@
+{
+	"auth": {
+		"eventmanagementfrontded31d3d": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}
