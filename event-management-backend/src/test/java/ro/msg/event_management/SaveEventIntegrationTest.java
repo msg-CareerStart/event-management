@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -18,9 +19,12 @@ import ro.msg.event_management.controller.converter.EventReverseConverter;
 import ro.msg.event_management.controller.dto.EventDto;
 import ro.msg.event_management.controller.dto.TicketCategoryDto;
 import ro.msg.event_management.entity.Event;
+import ro.msg.event_management.entity.Location;
 import ro.msg.event_management.entity.Picture;
+import ro.msg.event_management.entity.Sublocation;
 import ro.msg.event_management.exception.ExceededCapacityException;
 import ro.msg.event_management.exception.OverlappingEventsException;
+import ro.msg.event_management.repository.*;
 import ro.msg.event_management.service.EventService;
 
 @SpringBootTest
@@ -34,11 +38,23 @@ public class SaveEventIntegrationTest {
     @Autowired
     private Converter<EventDto, Event> convertToEntity;
 
+    @Autowired
+    private SublocationRepository sublocationRepository;
+
+    @Autowired
+    private LocationRepository locationRepository;
 
 
     @Test
     void testSaveEvent() {
 
+        Location location1 = new Location("Campus", "Obs 23", (float) 34.55, (float) 55.76, null, null);
+        Sublocation sublocation1 = new Sublocation("same", 300, location1, null);
+        locationRepository.save(location1);
+        Sublocation s = sublocationRepository.save(sublocation1);
+        location1.setSublocation(new ArrayList<Sublocation>(Arrays.asList(s)));
+
+        Location l = locationRepository.save(location1);
 
         List<String> picturesUrlSave = new ArrayList<>();
         picturesUrlSave.add("url1");
@@ -76,16 +92,10 @@ public class SaveEventIntegrationTest {
                 .ticketInfo("ticket info")
                 .build();
 
-
-        long locationId = 1;
-
-
-
         Event event = ((EventReverseConverter) convertToEntity).convertForUpdate(eventDto, false);
 
-
         try {
-            Event testEvent = eventService.saveEvent(event,locationId);
+            Event testEvent = eventService.saveEvent(event,l.getId());
 
             assertEquals(event, testEvent);
 

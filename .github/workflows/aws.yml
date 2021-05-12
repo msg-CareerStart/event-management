@@ -1,0 +1,37 @@
+name: Java CI with Maven
+
+on:
+  [push]
+  # push:
+  #   branches: [master]
+  # pull_request:
+  #   branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Step 1. - Checkout
+        uses: actions/checkout@v2
+
+      - name: Step 2. - Setup Java JDK11 with Adopt OpenJDK Distribution
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+
+      - name: Step 3. - Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Step 4. - Run the Maven verify phase
+        working-directory: ./event-management-backend
+        run: mvn --batch-mode --update-snapshots verify
+
+      - name: Step 5. - Run the tests multiple times
+        working-directory: ./event-management-backend
+        run: for i in {1..10}; do mvn test; done

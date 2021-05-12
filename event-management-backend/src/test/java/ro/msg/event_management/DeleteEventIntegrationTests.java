@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import ro.msg.event_management.entity.Event;
 import ro.msg.event_management.repository.EventRepository;
 import ro.msg.event_management.service.EventService;
+import org.junit.jupiter.api.BeforeEach;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -25,6 +26,11 @@ class DeleteEventIntegrationTests {
         this.eventRepository = eventRepository;
     }
 
+    @BeforeEach
+    void setUp() {
+        this.eventRepository.deleteAll();
+    }
+
     @Test
     void deleteEvent_existingEvent_eventDeleted() {
         Event event1 = new Event();
@@ -32,12 +38,12 @@ class DeleteEventIntegrationTests {
         Event event2 = new Event();
         event2.setTitle("event2");
 
-        this.eventRepository.save(event1);
+        Event toDelete = this.eventRepository.save(event1);
         this.eventRepository.save(event2);
 
         long beforeCount = this.eventRepository.count();
 
-        this.eventService.deleteEvent(1);
+        this.eventService.deleteEvent(toDelete.getId());
 
         assertThat(this.eventRepository.count()).isEqualTo(beforeCount - 1);
     }
