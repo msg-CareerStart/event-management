@@ -4,7 +4,7 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 COPY src/ /build/src/
-RUN mvn clean package spring-boot:repackage
+RUN mvn clean package -DskipTests spring-boot:repackage
 
 FROM openjdk:11-jre
 COPY --from=build /build/target/*.jar /app/*.jar
