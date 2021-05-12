@@ -112,7 +112,7 @@ public class FilterEventsIntegrationTests {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        List<EventView> eventViews = eventService.filter(pageable, null, null, true, null, null, null, null, null, null, null, (float) 0, null, null, null, null, null).getContent();
+        List<EventView> eventViews = eventService.filter(pageable, null, null, null, null, null, null, null, null, null, ComparisonSign.GREATER, (float) 0, null, null, null, null, null).getContent();
         for (EventView eventView : eventViews) {
             if (eventView.getRate() == 0) {
                 assert (false);
