@@ -1,11 +1,10 @@
 name: Java CI with Maven
 
 on:
-  [push]
-  # push:
-  #   branches: [master]
-  # pull_request:
-  #   branches: [master]
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
 
 jobs:
   build:
@@ -31,7 +30,3 @@ jobs:
       - name: Step 4. - Run the Maven verify phase
         working-directory: ./event-management-backend
         run: mvn --batch-mode --update-snapshots verify
-
-      - name: Step 5. - Run the tests multiple times
-        working-directory: ./event-management-backend
-        run: for i in {1..10}; do mvn test; done
