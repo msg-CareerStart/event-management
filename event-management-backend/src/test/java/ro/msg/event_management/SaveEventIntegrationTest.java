@@ -81,14 +81,13 @@ public class SaveEventIntegrationTest {
                 .ticketsPerUser(10)
                 .highlighted(false)
                 .maxPeople(30)
-                .startDate(LocalDate.parse("2020-11-11"))
-                .endDate(LocalDate.parse("2020-11-15"))
-                .startHour(LocalTime.parse("18:00"))
-                .endHour(LocalTime.parse("20:00"))
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .startHour(LocalTime.now())
+                .endHour(LocalTime.now().plusHours(3))
                 .creator("")
                 .picturesUrlSave(picturesUrlSave)
                 .ticketCategoryDtoList(ticketCategoryDtoList)
-                .location(1)
                 .ticketInfo("ticket info")
                 .build();
 
