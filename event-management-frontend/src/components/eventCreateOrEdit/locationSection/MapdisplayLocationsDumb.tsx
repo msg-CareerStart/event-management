@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { Button } from '@material-ui/core';
 import { blackMarkerPoint } from './markerPointIcons';
@@ -17,6 +17,12 @@ const MapDisplayLocationsDumb = (props: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const [show, setShow] = useState(true);
+  const closePopup = () => {
+    setShow(false);
+  };
+  useEffect(() => setShow(true));
+
   return (
     <div>
       {props.locations.map((location) => (
@@ -25,21 +31,24 @@ const MapDisplayLocationsDumb = (props: Props) => {
           position={[parseFloat(location.latitude), parseFloat(location.longitude)]}
           icon={blackMarkerPoint}
         >
-          <Popup>
-            <div className={classesMap.wrapperPopup}>
-              <h1 className={classesMap.locationTitle}>{location.name} </h1>
-              <p className={classesMap.locationAddress}>{location.address}</p>
-              <Button
-                className={`${classes.mainButtonStyle} ${classes.pinkGradientButtonStyle} ${classesMap.buttonPopup}`}
-                onClick={(e) => {
-                  return props.submitLocation(location.id, location.latitude, location.longitude, location.name);
-                }}
-                disabled={false}
-              >
-                {t('location.selectButton')}
-              </Button>
-            </div>
-          </Popup>
+          {show && (
+            <Popup>
+              <div className={classesMap.wrapperPopup}>
+                <h1 className={classesMap.locationTitle}>{location.name} </h1>
+                <p className={classesMap.locationAddress}>{location.address}</p>
+                <Button
+                  className={`${classes.mainButtonStyle} ${classes.pinkGradientButtonStyle} ${classesMap.buttonPopup}`}
+                  onClick={(e) => {
+                    closePopup();
+                    return props.submitLocation(location.id, location.latitude, location.longitude, location.name);
+                  }}
+                  disabled={false}
+                >
+                  {t('location.selectButton')}
+                </Button>
+              </div>
+            </Popup>
+          )}
         </Marker>
       ))}
     </div>
