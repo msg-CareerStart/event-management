@@ -69,7 +69,7 @@ public class AdminHomepageIntegrationTests {
     }
 
     @Test
-    public void testEventInsertAndRetrieve() {
+    public void testFilterAndSorting() {
         Event event1 = new Event("Tile", "Subtitle", true, LocalDate.parse("2020-11-11"), LocalDate.parse("2020-11-15"), LocalTime.parse("18:00"), LocalTime.parse("20:00"), 10, "descr", true, "no obs", 3, "someUser", "ticket info", null, null, null, null);
         Event event2 = new Event("Tile2", "Subtitle2", true, LocalDate.parse("2020-11-14"), LocalDate.parse("2020-11-19"), LocalTime.parse("10:00"), LocalTime.parse("12:00"), 12, "descr2", true, "no obs", 3, "someUser", "ticket info", null, null, null, null);
         Event event3 = new Event("Tile3", "Subtitle3", true, LocalDate.parse("2021-11-14"), LocalDate.parse("2021-11-19"), LocalTime.parse("10:00"), LocalTime.parse("12:00"), 12, "descr2", true, "no obs", 3, "someUser", "ticket info", null, null, null, null);
@@ -115,12 +115,11 @@ public class AdminHomepageIntegrationTests {
         Pageable pageable = PageRequest.of(0, 4);
 
 
-        List<EventView> eventViewList = eventService.filter(pageable, null, null, null, null, null, LocalDate.now(), MAX_DATE, null, null, null, null, null, null, SortCriteria.DATE, true, null).getContent();
+        List<EventView> eventViewList = eventService.filter(pageable, null, null, null, null, null, LocalDate.parse("2017-11-14"), MAX_DATE, null, null, null, null, null, null, SortCriteria.DATE, true, null).getContent();
         EventView eventViewBefore = eventViewList.get(0);
         for (EventView eventView : eventViewList) {
-            if (eventView.getStartDate().isBefore(eventViewBefore.getStartDate()) && !(eventView.getStartDate().isEqual(eventViewBefore.getStartDate()))) {
-                assert (false);
-            }
+            assert(!(eventView.getStartDate().isBefore(eventViewBefore.getStartDate()) && !(eventView.getStartDate().isEqual(eventViewBefore.getStartDate()))));
+
             eventViewBefore.setStartDate(eventView.getStartDate());
         }
     }
