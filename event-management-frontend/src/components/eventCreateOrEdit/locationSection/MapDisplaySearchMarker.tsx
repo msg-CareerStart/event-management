@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { Button } from '@material-ui/core';
 import { redMarkerPoint } from './markerPointIcons';
@@ -19,32 +19,41 @@ const MapDisplaySearchMarker = (props: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const [show, setShow] = useState(true);
+  const closePopup = () => {
+    setShow(false);
+  };
+  useEffect(() => setShow(true));
+
   return (
     <div>
       {props.searchMarker.map((position: LatLngExpression, idx) => {
         return (
           <Marker key={idx} position={position} icon={redMarkerPoint}>
-            <Popup>
-              <div className={classesMap.wrapperPopup}>
-                <h1 className={classesMap.locationTitle}>{props.searchLocation.name} </h1>
-                {props.searchLocation.address}
-                <br />{' '}
-                <Button
-                  className={`${classes.mainButtonStyle} ${classes.pinkGradientButtonStyle} ${classesMap.buttonPopup}`}
-                  onClick={(e) => {
-                    return props.submitLocation(
-                      props.searchLocation.id,
-                      props.searchLocation.latitude,
-                      props.searchLocation.longitude,
-                      props.searchLocation.name
-                    );
-                  }}
-                  disabled={false}
-                >
-                  {t('location.selectButton')}
-                </Button>
-              </div>
-            </Popup>
+            {show && (
+              <Popup>
+                <div className={classesMap.wrapperPopup}>
+                  <h1 className={classesMap.locationTitle}>{props.searchLocation.name} </h1>
+                  {props.searchLocation.address}
+                  <br />{' '}
+                  <Button
+                    className={`${classes.mainButtonStyle} ${classes.pinkGradientButtonStyle} ${classesMap.buttonPopup}`}
+                    onClick={(e) => {
+                      closePopup();
+                      return props.submitLocation(
+                        props.searchLocation.id,
+                        props.searchLocation.latitude,
+                        props.searchLocation.longitude,
+                        props.searchLocation.name
+                      );
+                    }}
+                    disabled={false}
+                  >
+                    {t('location.selectButton')}
+                  </Button>
+                </div>
+              </Popup>
+            )}
           </Marker>
         );
       })}
