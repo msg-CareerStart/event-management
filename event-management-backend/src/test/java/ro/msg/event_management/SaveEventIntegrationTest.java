@@ -71,7 +71,6 @@ public class SaveEventIntegrationTest {
         List<TicketCategoryDto> ticketCategoryDtoList = new ArrayList<>();
         ticketCategoryDtoList.add(ticketCategoryDto);
 
-
         EventDto eventDto = EventDto.builder()
                 .title("title")
                 .subtitle("subtitle")
