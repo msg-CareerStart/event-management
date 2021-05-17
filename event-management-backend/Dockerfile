@@ -8,4 +8,4 @@ RUN mvn clean package -DskipTests spring-boot:repackage
 
 FROM openjdk:11-jre
 COPY --from=build /build/target/*.jar /app/*.jar
-CMD java -jar /app/*.jar
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/*.jar ${0} ${@}"]
