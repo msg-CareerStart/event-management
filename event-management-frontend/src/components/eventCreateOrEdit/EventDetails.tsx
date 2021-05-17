@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Container, Paper } from '@material-ui/core';
-import { loadEvent, deleteEvent, addEvent, editEvent, resetStore, resetErrors } from '../../actions/HeaderEventCrudActions';
+import {
+  loadEvent,
+  deleteEvent,
+  addEvent,
+  editEvent,
+  resetStore,
+  resetErrors,
+} from '../../actions/HeaderEventCrudActions';
 import { connect } from 'react-redux';
 import Header from './headerEditAndDelete/HeaderCrudSmart';
 import Stepper from './Stepper';
@@ -79,13 +86,12 @@ function EventDetails({
   const verifyDateAndTimePeriods = (event: EventCrud): boolean => {
     const startDate = new Date(event.startDate);
     const endDate = new Date(event.endDate);
-    if (event.startHour >= event.endHour) {
+    if (startDate === endDate && event.startHour >= event.endHour) {
       setMsgUndo(t('welcome.popupMsgTryAgain'));
       setDialogTitle(t('welcome.popupMsgErrTitle'));
       setDialogDescription(t('welcome.popupMsgTimeErrDescription'));
       setOpen(true);
       return false;
-
     } else if (startDate > endDate) {
       setMsgUndo(t('welcome.popupMsgTryAgain'));
       setDialogTitle(t('welcome.popupMsgErrTitle'));
@@ -206,7 +212,7 @@ function EventDetails({
     } else if (deleteRequest) {
       deleteEventAction(match.params.id);
     }
-  }, [addRequest, editRequest, deleteRequest])
+  }, [addRequest, editRequest, deleteRequest]);
 
   useEffect(() => {
     if (fetchedEvent.isDeleted) {
@@ -256,22 +262,18 @@ function EventDetails({
       />
       <AlertDialog
         isRequest={false}
-
         addRequest={addRequest}
         editRequest={editRequest}
         deleteRequest={deleteRequest}
         eventIsLoading={fetchedEvent.eventIsLoading}
         isError={fetchedEvent.modifyEventError}
         errorMsg={fetchedEvent.error}
-
         resetErrors={resetErrorsAction}
-
         open={open}
         setOpen={setOpen}
         msgUndo={msgUndo}
         dialogTitle={dialogTitle}
         dialogDescription={dialogDescription}
-
         setAddRequest={setAddRequest}
         setEditRequest={setEditRequest}
       />
