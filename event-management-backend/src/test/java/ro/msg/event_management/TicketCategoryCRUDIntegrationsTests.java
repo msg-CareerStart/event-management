@@ -36,7 +36,6 @@ class TicketCategoryCRUDIntegrationsTests {
     @BeforeEach
     void setUp() {
         this.eventRepository.deleteAll();
-        this.eventRepository.deleteAll();
     }
 
     @Test
