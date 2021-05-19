@@ -28,9 +28,9 @@ public class LocationController {
         return locationDtos;
     }
 
-    @PostMapping(value="/insert")
-    public Location addLocation(@RequestBody LocationDto locationDto){
-        Location newLocation = locationService.addLocation(locationDto, 100);
+    @PostMapping(value="/insert/{maxCapacity}")
+    public Location addLocation(@RequestBody LocationDto locationDto, @PathVariable int maxCapacity) {
+        Location newLocation = locationService.addLocation(locationDto, maxCapacity);
         return newLocation;
     }
 }

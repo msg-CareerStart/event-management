@@ -46,7 +46,7 @@
     "react-geocode": "^0.2.3",
     "react-google-autocomplete": "^2.1.2",
     "react-google-maps": "^9.4.5",
-    "react-i18next": "^11.7.0",
+    "react-i18next": "^11.8.15",
     "react-leaflet": "^2.7.0",
     "react-material-ui-carousel": "^1.8.2",
     "react-material-ui-form-validator": "^2.1.1",

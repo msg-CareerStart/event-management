@@ -15,7 +15,7 @@ public class LocationConverter implements  Converter<LocationDto, Location> {
                 .name(obj.getName())
                 .address(obj.getAddress())
                 .latitude(Float.parseFloat(obj.getLatitude()))
-                .longitude(Float.parseFloat(obj.getLatitude()))
+                .longitude(Float.parseFloat(obj.getLongitude()))
                 .programs(null)
                 .build();
     }

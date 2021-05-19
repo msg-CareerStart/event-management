@@ -57,9 +57,9 @@ const SearchBar = (props: Props) => {
 
     const results = getUserDataWithPromise(props.searchValue).then((result: any) => {
       result.features.map((element: any) => {
-        const id = element.properties.id.split('/');
+        const uniqueId = element.properties.id;
         const location: LocationType = {
-          id: id[1],
+          id: uniqueId,
           name: element.properties.name,
           address: element.properties.label,
           latitude: element.geometry.coordinates[1],
