@@ -24,6 +24,27 @@ interface Props {
   searchMarker: LatLngExpression[];
   setsearchMarker: (searchMarker: LatLngExpression[]) => void;
 }
+
+function getUserDataWithPromise(props: string) {
+  const searchString =
+    'https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf62487d25cd8ddc034cb2a0dc14a4ec737419&text=';
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'json';
+  return new Promise(function (resolve, reject) {
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status >= 300) {
+          reject('Error, status code = ' + xhr.status);
+        } else {
+          resolve(xhr.response);
+        }
+      }
+    };
+    xhr.open('GET', searchString.concat(props), true);
+    xhr.send();
+  });
+}
+
 const SearchBar = (props: Props) => {
   const classesSearch = useStylesSearchBar();
   const [flag, setFlag] = useState(true);
