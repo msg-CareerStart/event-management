@@ -83,18 +83,16 @@ const SearchBar = (props: Props) => {
     }
   }, [props.searchValue]);
 
-  const searchLocationCoord = (value: string) => {
-    props.myLocations.forEach((location) => {
-      if (location.name === value) {
-        props.setLocation(location);
-        props.setPosition([location.latitude, location.longitude]);
-        props.setsearchMarker([[parseFloat(location.latitude), parseFloat(location.longitude)]]);
-      }
-    });
+  const searchLocationCoord = (value: LocationType) => {
+    props.setLocation(value);
+    props.setPosition([value.latitude, value.longitude]);
+    props.setsearchMarker([[parseFloat(value.latitude), parseFloat(value.longitude)]]);
   };
-  const suggestionSelected = (value: string) => {
+  const suggestionSelected = (value: LocationType) => {
+    console.log(value);
+
     setSuggestions([]);
-    props.updateSearchValue(value);
+    props.updateSearchValue(value.address);
     setFlag(false);
     searchLocationCoord(value);
   };
