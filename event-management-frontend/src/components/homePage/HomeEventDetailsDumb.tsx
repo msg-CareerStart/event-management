@@ -16,7 +16,6 @@ interface Props {
 const HomeEventDetailsDumb = ({ events }: Props) => {
   const classes = useStylesEventsHome();
   const occupancyClasses = useStylesCards();
-
   return (
     <Link to={`/admin/events/${events.id}`} style={{ textDecoration: 'none' }}>
       <Card className={classes.root} variant="outlined">

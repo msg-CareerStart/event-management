@@ -1,3 +1,4 @@
+import { convertCompilerOptionsFromJson } from 'typescript';
 import { serverURL } from './Api';
 import { fetchWrapper } from './FetchWrapper';
 

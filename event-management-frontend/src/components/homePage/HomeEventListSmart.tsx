@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import { fetchAllEventsHome } from '../../actions/EventsPageActions';
 import { AppState } from '../../store/store';
 import HomeEventListDumb from './HomeEventListDumb';
-import { incrementPageHome, decrementPageHome, fetchCustomEventsHome, setLastPageHome } from '../../actions/EventsPageActions';
+import {
+  incrementPageHome,
+  decrementPageHome,
+  fetchCustomEventsHome,
+  setLastPageHome,
+} from '../../actions/EventsPageActions';
 import { getLastNumberHome } from '../../api/EventsServiceAPI';
 import { Event } from '../../model/Event';
 
@@ -21,8 +26,7 @@ interface Props {
   setLastPageHome: (page: number) => void;
 }
 
-interface State {
-}
+interface State {}
 
 class HomeEventListSmart extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -31,14 +35,14 @@ class HomeEventListSmart extends React.Component<Props, State> {
 
   componentWillMount() {
     this.props.fetchAllEventsHome();
-    getLastNumberHome().then(result => {
-      this.props.setLastPageHome(result)
+    getLastNumberHome().then((result) => {
+      this.props.setLastPageHome(result);
     });
   }
 
   componentDidUpdate(prevProps: any, prevState: any) {
     if (prevProps.page !== this.props.page) {
-      this.props.fetchCustomEventsHome(this.props.page)
+      this.props.fetchCustomEventsHome(this.props.page);
     }
   }
 
@@ -85,7 +89,7 @@ const mapStateToProps = (state: AppState) => ({
   page: state.events.homePage,
   isLoading: state.events.isLoadingHome,
   isError: state.events.isErrorHome,
-  lastPage: state.events.lastPageHome
+  lastPage: state.events.lastPageHome,
 });
 
 export default connect(mapStateToProps, {
@@ -93,5 +97,5 @@ export default connect(mapStateToProps, {
   fetchCustomEventsHome,
   incrementPageHome,
   decrementPageHome,
-  setLastPageHome
+  setLastPageHome,
 })(HomeEventListSmart);
