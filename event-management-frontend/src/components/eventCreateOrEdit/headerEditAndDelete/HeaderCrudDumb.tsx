@@ -7,21 +7,29 @@ import SaveIcon from '@material-ui/icons/Save';
 import { headerCrudDumbStyles } from '../../../styles/HeaderCrudStyles';
 
 interface Props {
+  step: number;
+  loadStep: () => void;
+  setStep: (value: number) => void;
   isAdmin: boolean;
   title: string;
   handleEventDelete: () => void;
   handleEventSave: () => void;
 }
 
-function HeaderDumb({ isAdmin, title, handleEventDelete, handleEventSave }: Props) {
+function HeaderDumb({ step, loadStep, setStep, isAdmin, title, handleEventDelete, handleEventSave }: Props) {
   const buttonStyle = useStyles();
   const gridStyle = headerCrudDumbStyles();
   const { t } = useTranslation();
 
-  const cancelButton =
-    <Button variant="contained" className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle}`} onClick={handleEventDelete}>
-      { isAdmin && t("welcome.newEventTitle") === title  ?  t("welcome.headerCRUDCancel") :  t("welcome.headerCRUDDelete") }
+  const cancelButton = (
+    <Button
+      variant="contained"
+      className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle}`}
+      onClick={handleEventDelete}
+    >
+      {isAdmin && t('welcome.newEventTitle') === title ? t('welcome.headerCRUDCancel') : t('welcome.headerCRUDDelete')}
     </Button>
+  );
 
   const cancelIcon = (
     <IconButton onClick={handleEventDelete}>
@@ -43,9 +51,9 @@ function HeaderDumb({ isAdmin, title, handleEventDelete, handleEventSave }: Prop
       <Button
         variant="contained"
         className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle}`}
-        onClick={handleEventSave}
+        onClick={step != 3 ? loadStep : handleEventSave}
       >
-        {t('welcome.headerCRUDSave')}
+        {isAdmin && step != 3 ? 'NEXT' : t('welcome.headerCRUDSave')}
       </Button>
     ) : null;
 
@@ -95,7 +103,16 @@ function HeaderDumb({ isAdmin, title, handleEventDelete, handleEventSave }: Prop
         </Typography>
       </Grid>
 
-      <Grid item container sm={5} xs={4} className={gridStyle.secondGrid} direction="row" justify="flex-end" alignItems="center">
+      <Grid
+        item
+        container
+        sm={5}
+        xs={4}
+        className={gridStyle.secondGrid}
+        direction="row"
+        justify="flex-end"
+        alignItems="center"
+      >
         {cancelIconButton}
         {saveIconButton}
       </Grid>

@@ -149,7 +149,7 @@ const HeaderReducer = (
       return {
         ...initialState,
       };
-    
+
     case UPDATE_LOCATION:
       const newEvent = JSON.parse(JSON.stringify(state.event));
       newEvent.location = action.payload;
