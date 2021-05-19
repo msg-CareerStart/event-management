@@ -49,14 +49,34 @@ const SearchBar = (props: Props) => {
   const classesSearch = useStylesSearchBar();
   const [flag, setFlag] = useState(true);
   const [suggestions, setSuggestions] = useState<LocationType[]>([]);
+  const [locations, setLocations] = useState<LocationType[]>([]);
   const { t } = useTranslation();
 
   useEffect(() => {
+    const l: LocationType[] = [];
+
+    const results = getUserDataWithPromise(props.searchValue).then((result: any) => {
+      result.features.map((element: any) => {
+        const id = element.properties.id.split('/');
+        const location: LocationType = {
+          id: id[1],
+          name: element.properties.name,
+          address: element.properties.label,
+          latitude: element.geometry.coordinates[1],
+          longitude: element.geometry.coordinates[0],
+        };
+        l.push(location);
+      });
+      return result;
+    });
+
+    setLocations(l);
+
     if (props.searchValue.length > 0 && flag) {
       const results = props.myLocations.filter((item) =>
         item.name.toLowerCase().includes(props.searchValue.toLowerCase())
       );
-      setSuggestions(results);
+      setSuggestions(results.concat(locations));
     } else {
       setSuggestions([]);
       setFlag(true);
