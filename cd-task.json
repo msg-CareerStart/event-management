@@ -30,7 +30,7 @@
         "workingDirectory": null,
         "secrets": null,
         "dockerSecurityOptions": null,
-        "memory": 595,
+        "memory": 700,
         "memoryReservation": null,
         "volumesFrom": [],
         "stopTimeout": null,
@@ -87,4 +87,5 @@
     "inferenceAccelerators": null,
     "proxyConfiguration": null,
     "volumes": []
+
   }
