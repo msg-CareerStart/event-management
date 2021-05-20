@@ -22,7 +22,7 @@ const RenderSuggestions = (props: Props) => {
       <ul className={classesSearch.suggestionsText}>
         {props.suggestions.map((location: LocationType) => (
           <li
-            key={location.id}
+            key={location.address}
             className={classesSearch.suggestedItem}
             onClick={() => props.suggestionSelected(location)}
           >
