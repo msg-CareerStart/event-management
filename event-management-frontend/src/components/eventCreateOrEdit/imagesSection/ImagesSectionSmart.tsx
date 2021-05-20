@@ -7,6 +7,7 @@ import { AppState } from '../../../store/store';
 import { useTranslation } from 'react-i18next';
 import { useDropzone } from 'react-dropzone';
 import ImagesDialog from './ImagesDialog';
+import Header from '../../header/Header';
 
 interface ImagesSectionProps {
   isError: boolean;

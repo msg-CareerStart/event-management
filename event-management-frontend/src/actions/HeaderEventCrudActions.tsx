@@ -180,8 +180,8 @@ export const resetStore = () => {
 export const resetErrors = () => {
   return {
     type: RESET_ERRORS,
-  }
-}
+  };
+};
 
 //--------------- Category Card----------------------
 

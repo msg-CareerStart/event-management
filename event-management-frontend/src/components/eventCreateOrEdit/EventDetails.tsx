@@ -24,6 +24,7 @@ import CategoryPageSmart from './ticketsSection/CategoryPage/CategoryPageSmart';
 import { eventDetailsStyles } from '../../styles/EventDetailsStyle';
 import { AppState } from '../../store/store';
 import { Dispatch } from 'redux';
+import { nextStepForm, setStepForm } from '../../actions/FormAction';
 
 interface Props {
   match: any;
@@ -44,6 +45,9 @@ interface Props {
     isSaved: boolean;
     modifyEventError: boolean;
   };
+  loadStep: () => void;
+  step: number;
+  setStep: (value: number) => void;
 }
 
 function EventDetails({
@@ -56,6 +60,9 @@ function EventDetails({
   resetStoreAction,
   resetErrorsAction,
   fetchedEvent,
+  loadStep,
+  step,
+  setStep,
 }: Props) {
   const history = useHistory();
   const backgroundStyle = eventDetailsStyles();
@@ -80,6 +87,7 @@ function EventDetails({
     }
     return () => {
       resetStoreAction();
+      setStep(0);
     };
   }, [fetchEventAction, resetStoreAction, match.params.id, newEvent]);
 
@@ -176,6 +184,7 @@ function EventDetails({
 
   const isFormValid = (event: EventCrud, errors: EventFormErrors): boolean => {
     if (verifyDateAndTimePeriods(event) && verifyErrorMessages(errors) && verifyNullFields(event)) return true;
+    setStep(0);
     return false;
   };
 
@@ -253,7 +262,15 @@ function EventDetails({
   let title = !newEvent ? fetchedEvent.event.title : t('welcome.newEventTitle');
   return (
     <Paper className={backgroundStyle.paper}>
-      <Header saveEvent={saveEvent} deleteEvent={deleteEvent} isAdmin={isAdmin} title={title} />
+      <Header
+        step={step}
+        loadStep={loadStep}
+        setStep={setStep}
+        saveEvent={saveEvent}
+        deleteEvent={deleteEvent}
+        isAdmin={isAdmin}
+        title={title}
+      />
       <Stepper
         overviewComponent={overviewComponent}
         locationComponent={locationComponent}
@@ -284,6 +301,7 @@ function EventDetails({
 const mapStateToProps = (state: AppState) => {
   return {
     fetchedEvent: state.eventCrud,
+    step: state.step.stepNumber,
   };
 };
 
@@ -295,6 +313,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     editEventAction: (event: EventCrud, images: EventImage[]) => dispatch(editEvent(event, images)),
     resetStoreAction: () => dispatch(resetStore()),
     resetErrorsAction: () => dispatch(resetErrors()),
+    loadStep: () => dispatch(nextStepForm()),
+    setStep: (value: number) => dispatch(setStepForm(value)),
   };
 };
 

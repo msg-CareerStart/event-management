@@ -15,6 +15,7 @@ import { ReserveFirstPageState } from '../reducers/ReservePageReducer';
 import { ReserveSecondPageState } from '../reducers/TicketReservationReducer';
 import { RegistrationPageState } from '../reducers/RegistrationPageReducer';
 import { UserEventDetailsState } from '../reducers/UserEventDetailsReducer';
+import { FormState } from '../reducers/FormReducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -35,4 +36,5 @@ export interface AppState {
   reserveTicket: ReserveFirstPageState;
   ticketCategories: ReserveSecondPageState;
   eventWithLocation: UserEventDetailsState;
+  step: FormState;
 }
