@@ -1,3 +1,5 @@
+[![Deploy to Amazon ECS](https://github.com/msg-CareerStart/event-management/actions/workflows/awsCD.yml/badge.svg?branch=develop)](https://github.com/msg-CareerStart/event-management/actions/workflows/awsCD.yml)
+
 # docker
 
 The docker repo for the project is: [Dockerhub](https://hub.docker.com/repository/docker/erwinhilbert/event-management)

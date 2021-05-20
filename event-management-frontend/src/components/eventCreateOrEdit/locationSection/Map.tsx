@@ -19,6 +19,8 @@ import MapDisplayLocationsDumb from './MapdisplayLocationsDumb';
 import MapDisplaySelectedLocationDumb from './MapDisplaySelectedLocation';
 import MapDisplaySearchMarker from './MapDisplaySearchMarker';
 import { LocationType } from '../../../model/LocationType';
+import MapDisplayClickLocationDumb from './MapDisplayClickLocationDumb';
+var geocoding = require('esri-leaflet-geocoder');
 
 interface Props {
   isLoading: boolean;
@@ -41,6 +43,7 @@ interface OwnProps {
 const MapWrapper: React.FC<Props> = (props: Props) => {
   const classesMap = useStylesMapWrapper();
   const [position, setPosition]: any = useState([46.77121, 23.623634]);
+
   const [currentLocation, setcurrentLocation] = useState('');
   const [searchLocation, setsearchLocation] = useState({
     id: 0,
@@ -49,6 +52,7 @@ const MapWrapper: React.FC<Props> = (props: Props) => {
     latitude: '',
     longitude: '',
   });
+
   const [selectedMarker, setSelectedMarker] = useState<LatLngExpression[]>([]);
   const [searchMarker, setSearchMarker] = useState<LatLngExpression[]>([]);
 
@@ -80,6 +84,34 @@ const MapWrapper: React.FC<Props> = (props: Props) => {
     setcurrentLocation(name);
   };
 
+  const setNewPinReverseGeocoding = (e: { latlng: { lat: number; lng: number } }) => {
+    var lat = e.latlng.lat.toFixed(5);
+    var lon = e.latlng.lng.toFixed(5);
+    const markers: LatLngExpression[] = [];
+    markers.push([parseFloat(lat.toString()), parseFloat(lon.toString())]);
+    setSearchMarker(markers);
+
+    var geocodeService = geocoding.geocodeService({
+      apikey: process.env.REACT_APP_ARCGIS_KEY,
+    });
+
+    geocodeService
+      .reverse()
+      .latlng(e.latlng)
+      .run(function (error: Error, result: any) {
+        if (error) {
+          return;
+        }
+        setsearchLocation({
+          id: 0,
+          name: result.address.ShortLabel,
+          address: result.address.LongLabel.split(/, (.+)/)[1],
+          latitude: lat.toString(),
+          longitude: lon.toString(),
+        });
+      });
+  };
+
   return (
     <div className={`${classesMap.mapWrapper} mapResponsive`}>
       <div className={classesMap.searchBar}>
@@ -96,7 +128,7 @@ const MapWrapper: React.FC<Props> = (props: Props) => {
         ></SearchBar>
       </div>
 
-      <Map center={position} zoom={13}>
+      <Map center={position} zoom={13} ondblclick={setNewPinReverseGeocoding} doubleClickZoom={false}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -109,6 +141,11 @@ const MapWrapper: React.FC<Props> = (props: Props) => {
           searchLocation={searchLocation}
           submitLocation={submitLocation}
         ></MapDisplaySearchMarker>
+        <MapDisplayClickLocationDumb
+          searchMarker={searchMarker}
+          searchLocation={searchLocation}
+          submitLocation={submitLocation}
+        ></MapDisplayClickLocationDumb>
       </Map>
     </div>
   );
