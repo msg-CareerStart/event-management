@@ -30,7 +30,7 @@
         "workingDirectory": null,
         "secrets": null,
         "dockerSecurityOptions": null,
-        "memory": 1024,
+        "memory": 515,
         "memoryReservation": null,
         "volumesFrom": [],
         "stopTimeout": null,
@@ -55,7 +55,7 @@
       }
     ],
     "placementConstraints": [],
-    "memory": "1024",
+    "memory": "520",
     "taskRoleArn": null,
     "compatibilities": [
       "EC2"
