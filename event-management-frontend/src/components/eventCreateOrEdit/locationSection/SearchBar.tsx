@@ -57,9 +57,8 @@ const SearchBar = (props: Props) => {
     const l: LocationType[] = [];
     const results = getUserDataWithPromise(props.searchValue).then((result: any) => {
       result.features.map((element: any) => {
-        const id = element.properties.id.split('/');
         const location: LocationType = {
-          id: id[1],
+          id: 0,
           name: element.properties.name,
           address: element.properties.label,
           latitude: element.geometry.coordinates[1],
