@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core';
 
-export const userEventDetailsStyles = makeStyles(theme => ({
+export const userEventDetailsStyles = makeStyles((theme) => ({
   grid: {
     background: 'linear-gradient(45deg, #21C6F3 10%, #1E5FA4 90%)',
     width: '100%',
@@ -9,17 +9,17 @@ export const userEventDetailsStyles = makeStyles(theme => ({
   },
   typographyTitle: {
     fontSize: 22,
-    textTransform: "uppercase",
-    textAlign: "center"
+    textTransform: 'uppercase',
+    textAlign: 'center',
   },
   typographySubtitle: {
     fontSize: 16,
-    textTransform: "uppercase",
-    textAlign: "center"
+    textTransform: 'uppercase',
+    textAlign: 'center',
   },
   position: {
-    marginTop: "2vh",
-    marginBottom: "2vh",
+    marginTop: '2vh',
+    marginBottom: '2vh',
   },
   disabled: {
     '&:disabled': {

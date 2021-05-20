@@ -1,4 +1,4 @@
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles, Theme } from '@material-ui/core';
 
 export const stepperStyles = makeStyles((theme: Theme) => ({
   rootResponsive: {
@@ -24,6 +24,6 @@ export const stepperStyles = makeStyles((theme: Theme) => ({
   },
   iconTabs: {
     borderRight: `1px solid ${theme.palette.primary.dark}`,
-    marginTop: "60px",
+    marginTop: '60px',
   },
 }));

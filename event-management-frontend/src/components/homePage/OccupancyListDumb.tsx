@@ -65,7 +65,7 @@ const OccupancyListDumb = (props: Props) => {
 
                 <div className={classCardStyle.imageCover}>
                   <div>
-                    <img className={classCardStyle.imageContent} src="/iuliusM.jpg" alt="logo" />
+                    <img className={classCardStyle.imageContent} src={event.pictureUrl} alt="logo" />
                   </div>
                 </div>
               </div>
