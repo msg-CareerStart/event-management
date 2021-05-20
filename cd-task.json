@@ -34,7 +34,7 @@
         "memoryReservation": null,
         "volumesFrom": [],
         "stopTimeout": null,
-        "image": "026709880083.dkr.ecr.eu-west-1.amazonaws.com/event-managment:48f0b8aba9b258d7e6a4e677950c7b8f4bd57a67",
+        "image": "026709880083.dkr.ecr.eu-west-1.amazonaws.com/event-managment:e41fb6109000e18c16d58f28593e3652bbaa3129",
         "startTimeout": null,
         "firelensConfiguration": null,
         "dependsOn": null,
@@ -60,7 +60,7 @@
     "compatibilities": [
       "EC2"
     ],
-    "taskDefinitionArn": "arn:aws:ecs:eu-west-1:026709880083:task-definition/event-management-task-2:1",
+    "taskDefinitionArn": "arn:aws:ecs:eu-west-1:026709880083:task-definition/event-management-task-2:6",
     "family": "event-management-task-2",
     "requiresAttributes": [
       {
@@ -82,10 +82,9 @@
     ],
     "networkMode": null,
     "cpu": "1024",
-    "revision": 1,
+    "revision": 6,
     "status": "ACTIVE",
     "inferenceAccelerators": null,
     "proxyConfiguration": null,
     "volumes": []
-
   }
