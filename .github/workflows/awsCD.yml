@@ -26,7 +26,7 @@
 on:
   push:
     branches: 
-      - CD/4.1
+      - develop
 
 name: Deploy to Amazon ECS
 
