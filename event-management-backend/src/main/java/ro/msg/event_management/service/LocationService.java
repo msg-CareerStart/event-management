@@ -17,7 +17,6 @@ import ro.msg.event_management.repository.SublocationRepository;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class LocationService {
 
     private final LocationRepository locationRepository;
@@ -41,25 +40,20 @@ public class LocationService {
 
         Location findLocationInDB = locationRepository.findByNameAndAddress(locationDto.getName(), locationDto.getAddress());
         if(findLocationInDB == null) {
-            log.info("We don't have this location in our database...");
             Location location = locationConverter.convert(locationDto);
-            List<Sublocation> sublocationList = new ArrayList<Sublocation>();
-
+            List<Sublocation> sublocationList = new ArrayList<>();
+            location = locationRepository.save(location);
             Sublocation searchedSublocation = sublocationRepository.findByName(locationDto.getName());
             if (searchedSublocation != null) {
-                log.info("We have this sublocation in our database, so we don't add another one...");
                 sublocationList.add(searchedSublocation);
             } else {
-                log.info("We don't have this sublocation in our database...");
-                Sublocation sublocation = new Sublocation(locationDto.getName(), capacity, null, null);
-                sublocationRepository.save(sublocation);
+                Sublocation sublocation = new Sublocation(locationDto.getAddress(), capacity, location, null);
+                sublocation = sublocationRepository.save(sublocation);
                 sublocationList.add(sublocation);
             }
             location.setSublocation(sublocationList);
-            locationRepository.save(location);
+            location = locationRepository.save(location);
             return location;
-        }else {
-            log.info("We have this location in our database, so we don't add another one...");
         }
         return null;
     }
