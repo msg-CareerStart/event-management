@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { LatLngExpression } from 'leaflet';
 import RenderSuggestions from './SearchBarSuggestions';
 import { LocationType } from '../../../model/LocationType';
+import { ORS_URL } from './MapUtils';
 
 interface Props {
   myLocations: LocationType[];
@@ -26,10 +27,7 @@ interface Props {
 }
 
 function getUserDataWithPromise(props: string) {
-  const searchString =
-    'https://api.openrouteservice.org/geocode/autocomplete?api_key=' +
-    process.env.REACT_APP_OPENROUTESERVICE_KEY +
-    '&text=';
+  const searchString = ORS_URL + process.env.REACT_APP_OPENROUTESERVICE_KEY + '&text=';
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'json';
   return new Promise(function (resolve, reject) {
@@ -54,8 +52,11 @@ const SearchBar = (props: Props) => {
   const [locations, setLocations] = useState<LocationType[]>([]);
   const { t } = useTranslation();
 
+  const [showSuggestions, setShowSuggestions] = useState(true);
+
   useEffect(() => {
-    const l: LocationType[] = [];
+    setShowSuggestions(true);
+    const foundLocations: LocationType[] = [];
     const results = getUserDataWithPromise(props.searchValue).then((result: any) => {
       result.features.map((element: any) => {
         const location: LocationType = {
@@ -65,12 +66,12 @@ const SearchBar = (props: Props) => {
           latitude: element.geometry.coordinates[1],
           longitude: element.geometry.coordinates[0],
         };
-        l.push(location);
+        foundLocations.push(location);
       });
       return result;
     });
 
-    setLocations(l);
+    setLocations(foundLocations);
 
     if (props.searchValue.length > 0 && flag) {
       const results = props.myLocations.filter((item) =>
@@ -89,12 +90,11 @@ const SearchBar = (props: Props) => {
     props.setsearchMarker([[parseFloat(value.latitude), parseFloat(value.longitude)]]);
   };
   const suggestionSelected = (value: LocationType) => {
-    console.log(value);
-
     setSuggestions([]);
     props.updateSearchValue(value.address);
     setFlag(false);
     searchLocationCoord(value);
+    setShowSuggestions(false);
   };
   return (
     <div className={classesSearch.searchBar}>
@@ -110,11 +110,13 @@ const SearchBar = (props: Props) => {
           </InputAdornment>
         }
       />
-      <RenderSuggestions
-        suggestions={suggestions}
-        suggestionSelected={suggestionSelected}
-        setSuggestions={setSuggestions}
-      ></RenderSuggestions>
+      {showSuggestions && (
+        <RenderSuggestions
+          suggestions={suggestions}
+          suggestionSelected={suggestionSelected}
+          setSuggestions={setSuggestions}
+        ></RenderSuggestions>
+      )}
     </div>
   );
 };
