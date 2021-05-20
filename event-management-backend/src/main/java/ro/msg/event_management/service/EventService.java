@@ -72,9 +72,7 @@ public class EventService {
         List<Long> sublocationIDs = location.getSublocation().stream()
                 .map(BaseEntity::getId)
                 .collect(Collectors.toList());
-        System.out.println("1 " + startDate + " = " + endDate + " = " + startHour + " = " + endHour);
         TimeValidation.validateTime(startDate, endDate, startHour, endHour);
-        System.out.println("2 " + startDate + " = " + endDate + " = " + startHour + " = " + endHour);
 
         boolean validSublocations = true;
         int sumCapacity = 0;
