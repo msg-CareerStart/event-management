@@ -5,4 +5,5 @@ import ro.msg.event_management.entity.Sublocation;
 
 public interface SublocationRepository extends JpaRepository<Sublocation,Long> {
 
+    Sublocation findByName(String name);
 }
