@@ -1,140 +1,140 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    position: "absolute",
+    position: 'absolute',
     right: 0,
   },
   linkDecoration: {
-    textDecoration: "none",
+    textDecoration: 'none',
   },
   title: {
     flexGrow: 1,
   },
   shadow: {
-    boxShadow: "0px 7px 8px -4px rgba(0,0,0,0.2),0px 13px 19px 2px rgba(0,0,0,0.14),0px 5px 24px 4px rgba(0,0,0,0.12)",
+    boxShadow: '0px 7px 8px -4px rgba(0,0,0,0.2),0px 13px 19px 2px rgba(0,0,0,0.14),0px 5px 24px 4px rgba(0,0,0,0.12)',
   },
   eventTitle: {
     height: 50,
     padding: 20,
-    color: "#133655",
+    color: '#133655',
     width: 100,
   },
   buttonSize: {
-    maxWidth: "120px"
+    maxWidth: '120px',
   },
   mainButtonStyle: {
     color: theme.palette.secondary.main,
-    textTransform: "uppercase",
-    borderRadius: "20px",
-    width: "85%",
-    cursor: "pointer",
-    backgroundSize: "200%",
-    transition: "0.3s",
-    "&:hover": {
-      backgroundPosition: "right",
+    textTransform: 'uppercase',
+    borderRadius: '20px',
+    width: '85%',
+    cursor: 'pointer',
+    backgroundSize: '200%',
+    transition: '0.3s',
+    '&:hover': {
+      backgroundPosition: 'right',
     },
   },
   pinkGradientButtonStyle: {
-    backgroundImage: "linear-gradient(45deg, #f9c929 10%, #f2ac0a 50%, #ed4d6e 90%)",
+    backgroundImage: 'linear-gradient(45deg, #f9c929 10%, #f2ac0a 50%, #ed4d6e 90%)',
   },
   buttonStyle4: {
-    width: "100%",
-    borderRadius: "0px",
+    width: '100%',
+    borderRadius: '0px',
   },
   typography: {
     fontSize: 25,
-    fontFamily: "LATO",
+    fontFamily: 'LATO',
     color: theme.palette.text.primary,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   visuallyHidden: {
     border: 0,
-    clip: "rect(0 0 0 0)",
+    clip: 'rect(0 0 0 0)',
     height: 1,
     margin: -1,
-    overflow: "hidden",
+    overflow: 'hidden',
     padding: 0,
-    position: "absolute",
+    position: 'absolute',
     top: 20,
     width: 1,
   },
   //Colors
   dark: {
-    color: "#133655",
+    color: '#133655',
   },
   light: {
-    color: "#6BB7D0",
+    color: '#6BB7D0',
   },
   ghost: {
-    color: "#F4F5F9",
+    color: '#F4F5F9',
   },
   white: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
   },
   yellow: {
-    color: "#F2AE30",
+    color: '#F2AE30',
   },
   active: {
-    color: "#F2AE30",
-    textDecoration: "none",
+    color: '#F2AE30',
+    textDecoration: 'none',
   },
   inactive: {
-    color: "#6BB7D0",
-    textDecoration: "none",
+    color: '#6BB7D0',
+    textDecoration: 'none',
   },
   buttonBar: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
     },
-    margin: "10px",
-    paddingLeft: "16px",
+    margin: '10px',
+    paddingLeft: '16px',
     right: 0,
-    position: "relative",
-    background: "transparent",
+    position: 'relative',
+    background: 'transparent',
   },
   mobileButton: {
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 10
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 10,
     },
   },
   buttonCollapse: {
-    [theme.breakpoints.up("md")]: {
-      display: "none",
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
     },
-    margin: "10px",
-    boxShadow: "none",
+    margin: '10px',
+    boxShadow: 'none',
   },
   left: {
-    left: "100px",
+    left: '100px',
   },
   floatRight: {
-    float: "right",
-    position: "relative",
+    float: 'right',
+    position: 'relative',
   },
   cardRoot: {
-    backgroundColor: "#6BB7D0",
-    color: "#FFFFFF",
+    backgroundColor: '#6BB7D0',
+    color: '#FFFFFF',
   },
   blueButton: {
-    backgroundColor: "#6BB7D0",
-    color: "#FFFFFF",
-    "&:hover": {
-      backgroundColor: "#6BB7D0",
-      color: "#FFFFFF",
+    backgroundColor: '#6BB7D0',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: '#6BB7D0',
+      color: '#FFFFFF',
     },
   },
   mainCardRoot: {
-    width: "25%",
-    float: "right",
+    width: '25%',
+    float: 'right',
   },
   addEventIconButton: {
-    float: "right",
+    float: 'right',
     marginTop: 5,
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 50,
-    "&:hover": {
-      color: "#F4F5F9",
+    '&:hover': {
+      color: '#F4F5F9',
     },
   },
   marginTop: {

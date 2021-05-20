@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core';
 
 export const headerCrudDumbStyles = makeStyles({
   grid: {
@@ -15,11 +15,11 @@ export const headerCrudDumbStyles = makeStyles({
     flexGrow: 1,
   },
   position: {
-    marginLeft: "5%"
+    marginLeft: '5%',
   },
   typography: {
     fontSize: 22,
     fontFamily: 'Monospace',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
 });

@@ -22,64 +22,49 @@ const CardsOccupancyDumb = (props: Props) => {
   const { t } = useTranslation();
   return (
     <Grid container spacing={3} direction="row">
-      <Grid item xs={12} sm={3} xl={4} md={3}>
-        <Card
-          className={`${commonClasses.cardRoot} ${occupancyClasses.occupancyCard} cardsResponsive`}
-          variant="outlined"
-        >
-          <CardContent>
-            <Typography className={occupancyClasses.cardTitle}>{t('occupancyCards.upcomingEvents')}</Typography>
-            {props.isLoading ? (
-              <Grid container alignItems={'center'} justify={'center'}>
-                <CircularProgress />
-              </Grid>
-            ) : props.isError ? (
-              <Grid container alignItems={'center'} justify={'center'}>
-                <ErrorIcon color={'primary'} fontSize={'large'} />
-                Oops, there was an error
-              </Grid>
-            ) : (
-              <OccupancyListDumb eventsList={props.upcomingEvents} />
-            )}
-          </CardContent>
-        </Card>
+      <Grid item container sm={12} xl={9} md={8} direction="column">
+        <Grid>
+          <Card className={`${commonClasses.cardRoot} ${occupancyClasses.occupancyCard}`} variant="outlined">
+            <CardContent>
+              <Typography className={occupancyClasses.cardTitle}>{t('occupancyCards.upcomingEvents')}</Typography>
+              {props.isLoading ? (
+                <Grid container alignItems={'center'} justify={'center'}>
+                  <CircularProgress />
+                </Grid>
+              ) : props.isError ? (
+                <Grid container alignItems={'center'} justify={'center'}>
+                  <ErrorIcon color={'primary'} fontSize={'large'} />
+                  Oops, there was an error
+                </Grid>
+              ) : (
+                <OccupancyListDumb eventsList={props.upcomingEvents} />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item>
+          <Card className={`${commonClasses.cardRoot} ${occupancyClasses.occupancyCard} `} variant="outlined">
+            <CardContent>
+              <Typography className={occupancyClasses.cardTitle}>{t('occupancyCards.historyEvents')}</Typography>
+              {props.isLoading ? (
+                <Grid container alignItems={'center'} justify={'center'}>
+                  <CircularProgress />
+                </Grid>
+              ) : props.isError ? (
+                <Grid container alignItems={'center'} justify={'center'}>
+                  <ErrorIcon color={'primary'} fontSize={'large'} />
+                  Oops, there was an error
+                </Grid>
+              ) : (
+                <OccupancyListDumb eventsList={props.historyEvents} />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
 
-      <Grid item xs={12} sm={3} xl={4} md={3}>
-        <Card
-          className={`${commonClasses.cardRoot} ${occupancyClasses.occupancyCard} cardsResponsive`}
-          variant="outlined"
-        >
-          <CardContent>
-            <Typography className={occupancyClasses.cardTitle}>{t('occupancyCards.historyEvents')}</Typography>
-            {props.isLoading ? (
-              <Grid container alignItems={'center'} justify={'center'}>
-                <CircularProgress />
-              </Grid>
-            ) : props.isError ? (
-              <Grid container alignItems={'center'} justify={'center'}>
-                <ErrorIcon color={'primary'} fontSize={'large'} />
-                Oops, there was an error
-              </Grid>
-            ) : (
-              <OccupancyListDumb eventsList={props.historyEvents} />
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} sm={3} xl={4} md={3}>
-        <Card
-          className={`${commonClasses.cardRoot} ${occupancyClasses.occupancyCard} cardsResponsive`}
-          variant="outlined"
-        >
-          <CardContent>
-            <Typography className={occupancyClasses.cardTitle}>Test Card</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} sm={3} xl={4} md={3}>
+      <Grid item sm={12} xl={3} md={4}>
         <HomeEventListSmart />
       </Grid>
     </Grid>

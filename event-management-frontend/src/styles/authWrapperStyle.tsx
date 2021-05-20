@@ -1,11 +1,11 @@
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles, Theme } from '@material-ui/core';
 
 export const useStylesAuth = makeStyles((theme: Theme) => ({
   languageButton: {
-    float: "right",
+    float: 'right',
   },
 
   authHeader: {
-    height: "2em",
+    height: '2em',
   },
 }));

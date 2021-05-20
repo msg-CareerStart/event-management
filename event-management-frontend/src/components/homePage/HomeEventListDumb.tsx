@@ -45,7 +45,7 @@ const HomeEventListDumb = ({
       >
         <CardContent>
           <Typography variant="h4" component="h4" className={occupancyClasses.text}>
-            {t('eventList.events')}
+            {t('eventList.addevents')}
 
             <Link to={`/admin/newEvent`} style={{ textDecoration: 'none' }}>
               <AddCircleIcon className={commonClasses.addEventIconButton} />

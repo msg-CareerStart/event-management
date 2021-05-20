@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { AppState } from '../../store/store';
 import { Dispatch } from 'redux';
+
 import {
   upcomingEventsFetch,
   historyEventsFetch,

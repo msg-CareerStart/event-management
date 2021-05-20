@@ -14,6 +14,8 @@ public class CardsEventConverter implements Converter<EventView, CardsEventDto> 
                 .occupancyRate(eventView.getRate())
                 .startDate(eventView.getStartDate())
                 .endDate(eventView.getEndDate())
+                .location(eventView.getLocation())
+                .pictureUrl(eventView.getPictureUrl())
                 .build();
     }
 }

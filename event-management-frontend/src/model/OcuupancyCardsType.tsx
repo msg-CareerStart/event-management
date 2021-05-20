@@ -4,4 +4,6 @@ export interface OccupancyCardType {
   occupancyRate: number;
   startDate: string;
   endDate: string;
+  location: string;
+  pictureUrl: string;
 }
