@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Container, Paper } from '@material-ui/core';
-import { loadEvent, deleteEvent, addEvent, editEvent, resetStore, resetErrors } from '../../actions/HeaderEventCrudActions';
+import {
+  loadEvent,
+  deleteEvent,
+  addEvent,
+  editEvent,
+  resetStore,
+  resetErrors,
+} from '../../actions/HeaderEventCrudActions';
 import { connect } from 'react-redux';
 import Header from './headerEditAndDelete/HeaderCrudSmart';
 import Stepper from './Stepper';
@@ -17,6 +24,7 @@ import CategoryPageSmart from './ticketsSection/CategoryPage/CategoryPageSmart';
 import { eventDetailsStyles } from '../../styles/EventDetailsStyle';
 import { AppState } from '../../store/store';
 import { Dispatch } from 'redux';
+import { nextStepForm, setStepForm } from '../../actions/FormAction';
 
 interface Props {
   match: any;
@@ -37,6 +45,9 @@ interface Props {
     isSaved: boolean;
     modifyEventError: boolean;
   };
+  loadStep: () => void;
+  step: number;
+  setStep: (value: number) => void;
 }
 
 function EventDetails({
@@ -49,6 +60,9 @@ function EventDetails({
   resetStoreAction,
   resetErrorsAction,
   fetchedEvent,
+  loadStep,
+  step,
+  setStep,
 }: Props) {
   const history = useHistory();
   const backgroundStyle = eventDetailsStyles();
@@ -73,19 +87,19 @@ function EventDetails({
     }
     return () => {
       resetStoreAction();
+      setStep(0);
     };
   }, [fetchEventAction, resetStoreAction, match.params.id, newEvent]);
 
   const verifyDateAndTimePeriods = (event: EventCrud): boolean => {
     const startDate = new Date(event.startDate);
     const endDate = new Date(event.endDate);
-    if (event.startHour >= event.endHour) {
+    if (startDate === endDate && event.startHour >= event.endHour) {
       setMsgUndo(t('welcome.popupMsgTryAgain'));
       setDialogTitle(t('welcome.popupMsgErrTitle'));
       setDialogDescription(t('welcome.popupMsgTimeErrDescription'));
       setOpen(true);
       return false;
-
     } else if (startDate > endDate) {
       setMsgUndo(t('welcome.popupMsgTryAgain'));
       setDialogTitle(t('welcome.popupMsgErrTitle'));
@@ -170,6 +184,7 @@ function EventDetails({
 
   const isFormValid = (event: EventCrud, errors: EventFormErrors): boolean => {
     if (verifyDateAndTimePeriods(event) && verifyErrorMessages(errors) && verifyNullFields(event)) return true;
+    setStep(0);
     return false;
   };
 
@@ -206,7 +221,7 @@ function EventDetails({
     } else if (deleteRequest) {
       deleteEventAction(match.params.id);
     }
-  }, [addRequest, editRequest, deleteRequest])
+  }, [addRequest, editRequest, deleteRequest]);
 
   useEffect(() => {
     if (fetchedEvent.isDeleted) {
@@ -247,7 +262,15 @@ function EventDetails({
   let title = !newEvent ? fetchedEvent.event.title : t('welcome.newEventTitle');
   return (
     <Paper className={backgroundStyle.paper}>
-      <Header saveEvent={saveEvent} deleteEvent={deleteEvent} isAdmin={isAdmin} title={title} />
+      <Header
+        step={step}
+        loadStep={loadStep}
+        setStep={setStep}
+        saveEvent={saveEvent}
+        deleteEvent={deleteEvent}
+        isAdmin={isAdmin}
+        title={title}
+      />
       <Stepper
         overviewComponent={overviewComponent}
         locationComponent={locationComponent}
@@ -256,22 +279,18 @@ function EventDetails({
       />
       <AlertDialog
         isRequest={false}
-
         addRequest={addRequest}
         editRequest={editRequest}
         deleteRequest={deleteRequest}
         eventIsLoading={fetchedEvent.eventIsLoading}
         isError={fetchedEvent.modifyEventError}
         errorMsg={fetchedEvent.error}
-
         resetErrors={resetErrorsAction}
-
         open={open}
         setOpen={setOpen}
         msgUndo={msgUndo}
         dialogTitle={dialogTitle}
         dialogDescription={dialogDescription}
-
         setAddRequest={setAddRequest}
         setEditRequest={setEditRequest}
       />
@@ -282,6 +301,7 @@ function EventDetails({
 const mapStateToProps = (state: AppState) => {
   return {
     fetchedEvent: state.eventCrud,
+    step: state.step.stepNumber,
   };
 };
 
@@ -293,6 +313,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     editEventAction: (event: EventCrud, images: EventImage[]) => dispatch(editEvent(event, images)),
     resetStoreAction: () => dispatch(resetStore()),
     resetErrorsAction: () => dispatch(resetErrors()),
+    loadStep: () => dispatch(nextStepForm()),
+    setStep: (value: number) => dispatch(setStepForm(value)),
   };
 };
 

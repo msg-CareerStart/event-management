@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Grid, useMediaQuery } from '@material-ui/core';
+import { Grid, Typography, useMediaQuery } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import Overview from '@material-ui/icons/Assignment';
 import Location from '@material-ui/icons/Room';
@@ -10,6 +10,10 @@ import Images from '@material-ui/icons/Image';
 import { stepperStyles } from '../../styles/StepperStyle';
 import TabPanel from './TabPanel';
 import { a11yProps } from '../../utils/CrudStepperUtils';
+import { Dispatch } from 'redux';
+import { nextStepForm } from '../../actions/FormAction';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { AppState } from '../../store/store';
 
 interface EventProps {
   overviewComponent: React.ReactNode;
@@ -21,15 +25,18 @@ interface EventProps {
 function Stepper(props: EventProps) {
   const stepperClasses = stepperStyles();
 
+  const counter = useSelector<AppState, number>((state) => state.step.stepNumber);
+
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
 
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-  };
+  useEffect(() => {
+    console.log(counter);
+    setValue(counter);
+  }, [counter]);
 
   const iconTab = (
-    <Tabs orientation='vertical' value={value} onChange={handleTabChange} className={stepperClasses.iconTabs} centered>
+    <Tabs orientation="vertical" value={value} className={stepperClasses.iconTabs} centered>
       <Tab icon={<Overview />} {...a11yProps(0)} />
       <Tab icon={<Location />} {...a11yProps(1)} />
       <Tab icon={<Tickets />} {...a11yProps(2)} />
@@ -38,7 +45,7 @@ function Stepper(props: EventProps) {
   );
 
   const textTab = (
-    <Tabs orientation='vertical' value={value} onChange={handleTabChange} className={stepperClasses.tabs} centered>
+    <Tabs orientation="vertical" value={value} className={stepperClasses.tabs} centered>
       <Tab label={t('welcome.overviewTab')} {...a11yProps(0)} />
       <Tab label={t('welcome.locationTab')} {...a11yProps(1)} />
       <Tab label={t('welcome.ticketsTab')} {...a11yProps(2)} />
@@ -65,7 +72,7 @@ function Stepper(props: EventProps) {
 
   const bigWindow = (
     <div className={stepperClasses.root}>
-      <Grid container direction='row' justify='flex-start' alignItems='center'>
+      <Grid container direction="row" justify="flex-start" alignItems="center">
         <Grid item xl={1} lg={2} md={2} sm={3} xs={3}>
           {textTab}
         </Grid>
@@ -79,12 +86,20 @@ function Stepper(props: EventProps) {
 
   const smallWindow = (
     <div className={`${stepperClasses.root} ${stepperClasses.rootResponsive}`}>
-      <Grid container direction='row' justify='flex-start'>
+      <Grid container direction="row" justify="flex-start">
         <Grid item xl={1} lg={2} md={2} sm={2} xs={1}>
           {iconTab}
         </Grid>
 
-        <Grid item xl={11} lg={10} md={10} sm={9} xs={8} style={{ minHeight: '93vh', backgroundColor: 'white', minWidth: '91.6vw' }}>
+        <Grid
+          item
+          xl={11}
+          lg={10}
+          md={10}
+          sm={9}
+          xs={8}
+          style={{ minHeight: '93vh', backgroundColor: 'white', minWidth: '91.6vw' }}
+        >
           {tabPanel}
         </Grid>
       </Grid>

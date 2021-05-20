@@ -39,6 +39,7 @@ class SaveBookingIntegrationTests {
 
     @Test
     void saveBooking_validNumberOfTickets_bookingAndTicketsSaved() {
+        
         TicketCategory testCategory = new TicketCategory();
         testCategory.setTicketsPerCategory(10);
         testCategory.setTitle("test1");
