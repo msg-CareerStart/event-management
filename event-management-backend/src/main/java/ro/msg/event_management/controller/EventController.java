@@ -213,6 +213,7 @@ public class EventController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<CardsEventDto>> upcomingEvents(@PageableDefault(size = 4) Pageable pageable) {
         try {
+
             Page<EventView> page = eventService.filter(pageable, null, null, null, null, null, LocalDate.now(), MAX_DATE, null, null, null, null, null, null, SortCriteria.DATE, true, null);
             return new ResponseEntity<>(converterToCardsEventDto.convertAll(page.getContent()), HttpStatus.OK);
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {

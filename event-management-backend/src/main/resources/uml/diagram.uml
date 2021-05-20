@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="177.74151651651675" y="890.0">ro.msg.event_management.entity.Event</node>
+    <node x="80.74151651651664" y="519.0">ro.msg.event_management.entity.Sublocation</node>
+    <node x="671.0" y="327.0">ro.msg.event_management.entity.TicketDocument</node>
+    <node x="524.0247372372373" y="0.0">ro.msg.event_management.entity.BaseEntity</node>
+    <node x="599.7415165165166" y="700.0">ro.msg.event_management.entity.Booking</node>
+    <node x="147.04065315315324" y="711.0">ro.msg.event_management.entity.EventSublocation</node>
+    <node x="0.0" y="722.0">ro.msg.event_management.entity.Picture</node>
+    <node x="79.66666666666669" y="124.0">ro.msg.event_management.entity.Program</node>
+    <node x="79.66666666666669" y="294.0">ro.msg.event_management.entity.Location</node>
+    <node x="668.25" y="508.0">ro.msg.event_management.entity.Ticket</node>
+    <node x="951.75" y="0.0">uml</node>
+    <node x="386.74151651651664" y="541.0">ro.msg.event_management.entity.EventSublocationID</node>
+    <node x="719.3006006006008" y="1368.0">ro.msg.event_management.entity.TicketCategory</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="ro.msg.event_management.entity.Sublocation" target="ro.msg.event_management.entity.Location">
+      <point x="-95.33333333333337" y="-60.0" />
+      <point x="128.40818318318327" y="483.0" />
+      <point x="132.16666666666669" y="483.0" />
+      <point x="-52.5" y="82.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Ticket" target="ro.msg.event_management.entity.Booking">
+      <point x="-27.75" y="71.0" />
+      <point x="751.5" y="675.0" />
+      <point x="765.57484984985" y="675.0" />
+      <point x="66.33333333333331" y="-60.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.TicketCategory" target="ro.msg.event_management.entity.Event">
+      <point x="-65.60000000000002" y="-104.0" />
+      <point x="735.7006006006008" y="1348.0" />
+      <point x="246.24151651651675" y="1348.0" />
+      <point x="-68.5" y="214.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Location" target="ro.msg.event_management.entity.Program">
+      <point x="-70.0" y="-82.0" />
+      <point x="114.66666666666669" y="269.0" />
+      <point x="118.16666666666669" y="269.0" />
+      <point x="-38.5" y="60.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Sublocation" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="95.33333333333337" y="-60.0" />
+      <point x="319.07484984985" y="483.0" />
+      <point x="312.3739864864866" y="483.0" />
+      <point x="312.3739864864866" y="104.0" />
+      <point x="573.8025150150152" y="104.0" />
+      <point x="-14.222222222222229" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Event" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="51.375" y="-214.0" />
+      <point x="366.11651651651675" y="850.0" />
+      <point x="589.2415165165166" y="850.0" />
+      <point x="589.2415165165166" y="104.0" />
+      <point x="588.0247372372373" y="104.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.EventSublocation" target="ro.msg.event_management.entity.Event">
+      <point x="86.66666666666674" y="49.0" />
+      <point x="363.70731981982" y="840.0" />
+      <point x="331.86651651651675" y="840.0" />
+      <point x="17.125" y="-214.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.TicketCategory" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="65.60000000000002" y="-104.0" />
+      <point x="866.9006006006008" y="1348.0" />
+      <point x="900.75" y="1348.0" />
+      <point x="900.75" y="74.0" />
+      <point x="644.9136261261262" y="74.0" />
+      <point x="56.888888888888914" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Booking" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="-66.33333333333331" y="-60.0" />
+      <point x="632.9081831831834" y="675.0" />
+      <point x="613.8333333333334" y="675.0" />
+      <point x="613.8333333333334" y="104.0" />
+      <point x="602.2469594594596" y="104.0" />
+      <point x="14.222222222222229" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.TicketCategory" target="ro.msg.event_management.entity.Ticket">
+      <point x="0.0" y="-104.0" />
+      <point x="801.3006006006008" y="1348.0" />
+      <point x="809.2415165165166" y="1348.0" />
+      <point x="809.2415165165166" y="675.0" />
+      <point x="807.0" y="675.0" />
+      <point x="27.75" y="71.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Booking" target="ro.msg.event_management.entity.Event">
+      <point x="49.75" y="60.0" />
+      <point x="748.9915165165166" y="870.0" />
+      <point x="434.61651651651675" y="870.0" />
+      <point x="119.875" y="-214.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Program" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="0.0" y="-60.0" />
+      <point x="156.66666666666669" y="84.0" />
+      <point x="545.3580705705707" y="84.0" />
+      <point x="-42.666666666666686" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Location" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="70.0" y="-82.0" />
+      <point x="254.02473723723733" y="94.0" />
+      <point x="559.5802927927929" y="94.0" />
+      <point x="-28.444444444444457" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Event" target="ro.msg.event_management.entity.TicketCategory">
+      <point x="68.5" y="214.0" />
+      <point x="383.24151651651675" y="1338.0" />
+      <point x="768.5006006006008" y="1338.0" />
+      <point x="-32.80000000000001" y="-104.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.EventSublocation" target="ro.msg.event_management.entity.Sublocation">
+      <point x="-32.5" y="-49.0" />
+      <point x="244.54065315315324" y="675.0" />
+      <point x="223.74151651651664" y="675.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Location" target="ro.msg.event_management.entity.Sublocation">
+      <point x="52.5" y="82.0" />
+      <point x="237.16666666666669" y="483.0" />
+      <point x="223.74151651651664" y="483.0" />
+      <point x="0.0" y="-60.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Sublocation" target="ro.msg.event_management.entity.EventSublocation">
+      <point x="95.33333333333337" y="60.0" />
+      <point x="319.07484984985" y="675.0" />
+      <point x="309.54065315315324" y="675.0" />
+      <point x="32.5" y="-49.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.TicketDocument" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="0.0" y="-49.0" />
+      <point x="751.0" y="94.0" />
+      <point x="616.4691816816818" y="94.0" />
+      <point x="28.444444444444457" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Ticket" target="ro.msg.event_management.entity.TicketCategory">
+      <point x="83.25" y="71.0" />
+      <point x="862.5" y="675.0" />
+      <point x="841.0406531531532" y="675.0" />
+      <point x="841.0406531531532" y="1348.0" />
+      <point x="834.1006006006007" y="1348.0" />
+      <point x="32.80000000000001" y="-104.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Booking" target="ro.msg.event_management.entity.Ticket">
+      <point x="0.0" y="-60.0" />
+      <point x="699.2415165165166" y="675.0" />
+      <point x="696.0" y="675.0" />
+      <point x="-83.25" y="71.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Event" target="ro.msg.event_management.entity.Booking">
+      <point x="85.625" y="-214.0" />
+      <point x="400.36651651651675" y="860.0" />
+      <point x="649.4915165165166" y="860.0" />
+      <point x="-49.75" y="60.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Event" target="ro.msg.event_management.entity.Picture">
+      <point x="-119.875" y="-214.0" />
+      <point x="194.86651651651675" y="870.0" />
+      <point x="27.5" y="870.0" />
+      <point x="-27.5" y="38.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Program" target="ro.msg.event_management.entity.Location">
+      <point x="38.5" y="60.0" />
+      <point x="195.16666666666669" y="269.0" />
+      <point x="184.66666666666669" y="269.0" />
+      <point x="0.0" y="-82.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Event" target="ro.msg.event_management.entity.EventSublocation">
+      <point x="-51.375" y="-214.0" />
+      <point x="263.36651651651675" y="850.0" />
+      <point x="190.37398648648656" y="850.0" />
+      <point x="-86.66666666666669" y="49.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Ticket" target="ro.msg.event_management.entity.TicketDocument">
+      <point x="-74.0" y="-71.0" />
+      <point x="705.25" y="483.0" />
+      <point x="711.0" y="483.0" />
+      <point x="-40.0" y="49.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Picture" target="ro.msg.event_management.entity.Event">
+      <point x="27.5" y="38.0" />
+      <point x="82.5" y="860.0" />
+      <point x="229.11651651651675" y="860.0" />
+      <point x="-85.625" y="-214.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Ticket" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="74.0" y="-71.0" />
+      <point x="853.25" y="483.0" />
+      <point x="841.5" y="483.0" />
+      <point x="841.5" y="84.0" />
+      <point x="630.6914039039041" y="84.0" />
+      <point x="42.66666666666674" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.EventSublocation" target="ro.msg.event_management.entity.EventSublocationID">
+      <point x="97.5" y="-49.0" />
+      <point x="374.54065315315324" y="675.0" />
+      <point x="482.74151651651664" y="675.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.Picture" target="ro.msg.event_management.entity.BaseEntity">
+      <point x="0.0" y="-38.0" />
+      <point x="55.0" y="74.0" />
+      <point x="531.1358483483484" y="74.0" />
+      <point x="-56.888888888888914" y="27.0" />
+    </edge>
+    <edge source="ro.msg.event_management.entity.TicketDocument" target="ro.msg.event_management.entity.Ticket">
+      <point x="40.0" y="49.0" />
+      <point x="791.0" y="483.0" />
+      <point x="779.25" y="483.0" />
+      <point x="0.0" y="-71.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="218.0" y="244.5" />
+  <SelectedNodes>
+    <node>ro.msg.event_management.entity.BaseEntity</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

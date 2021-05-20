@@ -3,8 +3,6 @@ package ro.msg.event_management;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -30,10 +28,7 @@ import ro.msg.event_management.repository.TicketRepository;
 import ro.msg.event_management.service.EventService;
 import ro.msg.event_management.utils.ComparisonSign;
 
-import javax.transaction.Transactional;
-
 @SpringBootTest
-@Transactional
 @ActiveProfiles("test")
 public class FilterEventsIntegrationTests {
 
@@ -73,12 +68,6 @@ public class FilterEventsIntegrationTests {
         sublocationRepository.save(sublocation1);
         sublocationRepository.save(sublocation2);
 
-        location1.setSublocation(new ArrayList<Sublocation>(Arrays.asList(sublocation1)));
-        location1 = locationRepository.save(location1);
-
-        location2.setSublocation(new ArrayList<Sublocation>(Arrays.asList(sublocation2)));
-        location2 = locationRepository.save(location2);
-
         EventSublocation eventSublocation1 = new EventSublocation(event1, sublocation1);
         EventSublocationID eventSublocationID1 = new EventSublocationID(event1.getId(), sublocation1.getId());
         eventSublocation1.setEventSublocationID(eventSublocationID1);
@@ -103,12 +92,6 @@ public class FilterEventsIntegrationTests {
         ticketRepository.save(ticket111);
         ticketRepository.save(ticket112);
         ticketRepository.save(ticket121);
-
-        booking11.setTickets(new ArrayList<>(Arrays.asList(ticket111, ticket112)));
-        bookingRepository.save(booking11);
-
-        booking12.setTickets(new ArrayList<>(Arrays.asList(ticket121)));
-        bookingRepository.save(booking12);
 
         Pageable pageable = PageRequest.of(0, 10);
 

@@ -17,6 +17,4 @@ public class CardsEventDto {
     private Float occupancyRate;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String location;
-    private String pictureUrl;
 }
