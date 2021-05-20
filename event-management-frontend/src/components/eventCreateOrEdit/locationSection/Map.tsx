@@ -92,7 +92,7 @@ const MapWrapper: React.FC<Props> = (props: Props) => {
     setSearchMarker(markers);
 
     var geocodeService = geocoding.geocodeService({
-      apikey: 'AAPK2ce35ddd928d4c3b866528f5d496ba29Zdtl_7J9kcoZz6vVGxxzP6wxNv-vIttLUM4UW1qjzyVm_T2NE2Xo71AapXeWa8xm',
+      apikey: process.env.REACT_APP_ARCGIS_KEY,
     });
 
     geocodeService
