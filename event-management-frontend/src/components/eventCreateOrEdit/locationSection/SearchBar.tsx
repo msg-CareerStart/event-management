@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { LatLngExpression } from 'leaflet';
 import RenderSuggestions from './SearchBarSuggestions';
 import { LocationType } from '../../../model/LocationType';
+import { openRouteServiceApiKey } from '../../../api/Api';
 
 interface Props {
   myLocations: LocationType[];
@@ -27,7 +28,7 @@ interface Props {
 
 function getUserDataWithPromise(props: string) {
   const searchString =
-    'https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf62487d25cd8ddc034cb2a0dc14a4ec737419&text=';
+    'https://api.openrouteservice.org/geocode/autocomplete?api_key=' + openRouteServiceApiKey + '&text=';
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'json';
   return new Promise(function (resolve, reject) {
@@ -54,7 +55,6 @@ const SearchBar = (props: Props) => {
 
   useEffect(() => {
     const l: LocationType[] = [];
-
     const results = getUserDataWithPromise(props.searchValue).then((result: any) => {
       result.features.map((element: any) => {
         const id = element.properties.id.split('/');
