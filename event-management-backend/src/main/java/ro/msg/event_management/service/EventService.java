@@ -72,7 +72,6 @@ public class EventService {
         List<Long> sublocationIDs = location.getSublocation().stream()
                 .map(BaseEntity::getId)
                 .collect(Collectors.toList());
-
         TimeValidation.validateTime(startDate, endDate, startHour, endHour);
 
         boolean validSublocations = true;
