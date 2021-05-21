@@ -2,6 +2,7 @@ import { EventCrud } from '../model/EventCrud';
 import { EventImage } from '../model/EventImage';
 import { EventFormErrors } from '../model/EventFormErrors';
 import { TicketAvailabilityData } from '../model/TicketAvailabilityData';
+import { LocationType } from '../model/LocationType';
 
 export const LOAD_EVENT = 'LOAD_EVENT';
 export const DELETE_EVENT = 'DELETE_EVENT';
@@ -34,6 +35,32 @@ export const RESET_ERRORS = 'RESET_ERRORS';
 
 export const ADD_EMPTY_CATEGORY_CARD = 'ADD_EMPTY_CATEGORY_CARD';
 export const REMOVE_CATEGORY_CARD = 'REMOVE_CATEGORY_CARD';
+
+export const ADD_LOCATION_SUCCESS = 'ADD_LOCATION_SUCCESS';
+export const ADD_LOCATION_FAILURE = 'ADD_LOCATION_FAILURE';
+
+export const ADD_LOCATION_TO_EVENT = 'ADD_LOCATION_TO_EVENT';
+
+export const addLocationToEvent = (location: LocationType) => {
+  return {
+    type: ADD_LOCATION_TO_EVENT,
+    payload: location,
+  };
+};
+
+export const addLocationSuccess = (location: LocationType) => {
+  return {
+    type: ADD_LOCATION_SUCCESS,
+    payload: location,
+  };
+};
+
+export const addLOcationFailure = (error: string) => {
+  return {
+    type: ADD_LOCATION_FAILURE,
+    payload: error,
+  };
+};
 
 //---------------------------------------------------for SAGA
 export const loadEvent = (id: string) => {

@@ -19,12 +19,16 @@ import {
   ADD_EMPTY_CATEGORY_CARD,
   REMOVE_CATEGORY_CARD,
   RESET_ERRORS,
+  ADD_LOCATION_FAILURE,
+  ADD_LOCATION_SUCCESS,
+  ADD_LOCATION_TO_EVENT,
 } from '../actions/HeaderEventCrudActions';
 import { EventCrud } from '../model/EventCrud';
 import { EventImage } from '../model/EventImage';
 import { EventFormErrors, CategoryCardErrors } from '../model/EventFormErrors';
 import { TicketAvailabilityData } from '../model/TicketAvailabilityData';
 import { CategoryCardItem } from '../model/TicketType';
+import { LocationType } from '../model/LocationType';
 
 export interface EventState {
   eventIsLoading: boolean;
@@ -39,6 +43,7 @@ export interface EventState {
   locationName: string;
   isDeleted: boolean;
   isSaved: boolean;
+  location: LocationType;
 
   modifyEventError: boolean;
 }
@@ -121,6 +126,14 @@ export const initialState: EventState = {
   isDeleted: false,
   isSaved: false,
 
+  location: {
+    id: 0,
+    name: '',
+    address: '',
+    latitude: '',
+    longitude: '',
+  },
+
   modifyEventError: false,
 };
 
@@ -137,6 +150,24 @@ const HeaderReducer = (
   action: { type: string; payload: EventCrud; id: number; ticketCategoryData: TicketAvailabilityData[] }
 ) => {
   switch (action.type) {
+    case ADD_LOCATION_TO_EVENT:
+      return {
+        ...state,
+        location: action.payload,
+      };
+    case ADD_LOCATION_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case ADD_LOCATION_SUCCESS:
+      var loc = state.location;
+      loc.id = action.payload.id;
+      return {
+        ...state,
+        location: loc,
+      };
     case RESET_ERRORS:
       return {
         ...state,

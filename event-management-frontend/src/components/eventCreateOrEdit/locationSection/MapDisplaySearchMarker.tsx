@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useStyles } from '../../../styles/CommonStyles';
 import { LatLngExpression } from 'leaflet';
 import { LocationType } from '../../../model/LocationType';
+import { useDispatch } from 'react-redux';
+import { addLocationToEvent } from '../../../actions/HeaderEventCrudActions';
 
 interface Props {
   searchMarker: LatLngExpression[];
@@ -18,6 +20,8 @@ const MapDisplaySearchMarker = (props: Props) => {
   const classesMap = useStylesMapWrapper();
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const dispatch = useDispatch();
 
   const [show, setShow] = useState(true);
   const closePopup = () => {
@@ -40,6 +44,7 @@ const MapDisplaySearchMarker = (props: Props) => {
                     className={`${classes.mainButtonStyle} ${classes.pinkGradientButtonStyle} ${classesMap.buttonPopup}`}
                     onClick={(e) => {
                       closePopup();
+                      dispatch(addLocationToEvent(props.searchLocation));
                       return props.submitLocation(
                         props.searchLocation.id,
                         props.searchLocation.latitude,
