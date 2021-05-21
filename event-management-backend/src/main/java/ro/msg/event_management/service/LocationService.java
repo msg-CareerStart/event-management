@@ -52,6 +52,8 @@ public class LocationService {
             }
             location.setSublocation(sublocationList);
             location = locationRepository.save(location);
+            sublocationList.get(0).setLocation(null);
+            location.setSublocation(sublocationList);
             return location;
         }
         return null;
