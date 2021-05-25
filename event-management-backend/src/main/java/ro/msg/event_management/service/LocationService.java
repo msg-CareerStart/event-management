@@ -8,7 +8,10 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ro.msg.event_management.controller.converter.LocationConverter;
+import ro.msg.event_management.controller.converter.LocationReverseConverter;
 import ro.msg.event_management.controller.dto.LocationDto;
+import ro.msg.event_management.entity.Event;
+import ro.msg.event_management.entity.EventSublocation;
 import ro.msg.event_management.entity.Location;
 import ro.msg.event_management.entity.Sublocation;
 import ro.msg.event_management.repository.LocationRepository;
@@ -21,6 +24,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final SublocationRepository sublocationRepository;
     private final LocationConverter locationConverter;
+    private final LocationReverseConverter locationReverseConverter;
 
     public Location findByID(long id) {
         Optional<Location> locationOptional = this.locationRepository.findById(id);
@@ -57,5 +61,20 @@ public class LocationService {
             return location;
         }
         return null;
+    }
+
+    public List<LocationDto> getLocationsByEvent(Event event) {
+
+        List<LocationDto> searchedLocations = new ArrayList<>();
+        List<EventSublocation> eventSublocation = event.getEventSublocations();
+
+        for(EventSublocation e: eventSublocation){
+            Sublocation sublocation = e.getSublocation();
+            Location location = sublocation.getLocation();
+            LocationDto foundLocation = locationReverseConverter.convert(location);
+            searchedLocations.add(foundLocation);
+        }
+
+        return searchedLocations;
     }
 }
