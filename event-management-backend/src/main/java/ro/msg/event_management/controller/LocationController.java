@@ -28,6 +28,7 @@ public class LocationController {
     }
 
     @PostMapping(value="/insert/{maxCapacity}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Location addLocation(@RequestBody LocationDto locationDto, @PathVariable int maxCapacity) {
         Location newLocation = locationService.addLocation(locationDto, maxCapacity);
         return newLocation;
