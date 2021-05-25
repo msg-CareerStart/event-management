@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-interface EventStatisticsPropd {
+interface EventStatisticsProps {
   events: [];
 }
 
-function EventStatisticsOverview(props: EventStatisticsPropd) {
+function EventStatisticsOverview(props: EventStatisticsProps) {
   const { t } = useTranslation();
 }
