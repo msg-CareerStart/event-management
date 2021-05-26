@@ -3,8 +3,13 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as rds from '@aws-cdk/aws-rds';
 import { AutoScalingGroup } from '@aws-cdk/aws-autoscaling';
-import { ApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
+import {
+  ApplicationLoadBalancer,
+  ApplicationProtocol,
+} from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as acm from '@aws-cdk/aws-certificatemanager';
+import { Repository } from '@aws-cdk/aws-ecr';
+import { Duration } from '@aws-cdk/core';
 
 export class CloudEventManagementStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -64,7 +69,7 @@ export class CloudEventManagementStack extends cdk.Stack {
 
     //dbSecret.grantRead(asg.role);
 
-    const db = rds.DatabaseInstance.fromDatabaseInstanceAttributes(this, 'db', {
+    rds.DatabaseInstance.fromDatabaseInstanceAttributes(this, 'db', {
       securityGroups: [dbSG],
       port: 3306,
       instanceEndpointAddress:
@@ -73,21 +78,31 @@ export class CloudEventManagementStack extends cdk.Stack {
     });
 
     const cluster = new ecs.Cluster(this, 'EcsCluster', { vpc });
-    cluster.addAutoScalingGroup(asg);
+    const capacityProvider = new ecs.AsgCapacityProvider(
+      this,
+      'AsgCapacityProvider',
+      {
+        autoScalingGroup: asg,
+      }
+    );
+    cluster.addAsgCapacityProvider(capacityProvider);
 
     // Create Task Definition
+    const image = ecs.ContainerImage.fromEcrRepository(
+      Repository.fromRepositoryName(this, 'ECR-Repo', 'event-managment'),
+      'a5cbdf63a8b3b4d7cdcc33b7eca3864f6ee71014'
+    );
+
     const taskDefinition = new ecs.Ec2TaskDefinition(this, 'TaskDef');
     taskDefinition.addContainer('web', {
-      image: ecs.ContainerImage.fromRegistry(
-        'erwinhilbert/event-management:https'
-      ),
+      image,
       memoryLimitMiB: 512,
       environment: {
         //https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/java-rds.html#java-rds-javase
         SPRING_PROFILES_ACTIVE: 'test',
         //rds to do
       },
-      portMappings: [{ containerPort: 8080 }],
+      portMappings: [{ containerPort: 8080, hostPort: 8080 }],
     });
 
     const service = new ecs.Ec2Service(this, 'Service', {
@@ -116,12 +131,14 @@ export class CloudEventManagementStack extends cdk.Stack {
 
     // Attach ALB to ECS Service
     listener.addTargets('ECS', {
-      port: 80,
+      port: 8080,
+      protocol: ApplicationProtocol.HTTP,
       targets: [service],
       healthCheck: {
         enabled: true,
         healthyHttpCodes: '403',
         path: '/',
+        interval: Duration.seconds(300),
       },
     });
 
