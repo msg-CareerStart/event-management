@@ -11,14 +11,14 @@ import java.util.List;
 
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
 
-    List<Discount> findByTicketCategory(TicketCategory ticketCategory);
+    List<Discount> deleteByTicketCategoryId(long id);
 
-    @Query("select * from Discount d join TicketCategory tc on d.id = tc.discount.id " +
+    /*@Query("select * from Discount d join TicketCategory tc on d.id = tc.discount.id " +
             "where ((d.startDate>= :startDate and d.startDate<= :endDate) " +
             "or (e.endDate <= :endDate and e.endDate >= :startDate))  " +
             "and d.ticketCategory = :ticketCategory")
     List<Discount> findOverlappingDiscounts(@Param("startDate") LocalDate startDate,
                                             @Param("endDate") LocalDate endDate,
-                                            @Param("ticketCategory") long ticketCategory);
+                                            @Param("ticketCategory") long ticketCategory);*/
 
 }

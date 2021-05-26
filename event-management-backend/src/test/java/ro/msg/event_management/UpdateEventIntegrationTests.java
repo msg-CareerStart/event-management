@@ -116,7 +116,7 @@ class UpdateEventIntegrationTests {
 
         List<String> picturesToDelete = new ArrayList<>();
         try {
-            eventService.updateEvent(eventToUpdate, new ArrayList<>(),
+            eventService.updateEvent(eventToUpdate, new ArrayList<>(), new ArrayList<>(),
                                      this.locationRepository.findById(this.locationRepository.findAll().get(0).getId())
                                                             .get().getId());
             Optional<Event> eventOptional = eventRepository.findById(event.getId());

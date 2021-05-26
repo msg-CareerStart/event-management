@@ -3,6 +3,7 @@ package ro.msg.event_management.controller;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletResponse;
@@ -107,7 +108,7 @@ public class EventController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventDto> saveEvent(@RequestBody EventDto eventDTO) {
         try {
 
@@ -116,10 +117,10 @@ public class EventController {
             Event event = ((EventReverseConverter) convertToEntity).convertForUpdate(eventDTO, false);
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
-            String creator = user.getIdentificationString();
+            //User user = (User) auth.getPrincipal();
+            //String creator = user.getIdentificationString();
 
-            event.setCreator(creator);
+            //event.setCreator(creator);
 
             Event savedEvent = eventService.saveEvent(event, locationId);
 
@@ -135,7 +136,7 @@ public class EventController {
 
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<JSONObject> getPaginatedFilteredAndSortedEvents(Pageable pageable, @RequestParam(required = false) String title, @RequestParam(required = false) String subtitle, @RequestParam(required = false) Boolean status, @RequestParam(required = false) Boolean highlighted, @RequestParam(required = false) String location,
                                                                           @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false) String startHour, @RequestParam(required = false) String endHour, @RequestParam(required = false) ComparisonSign rateSign,
                                                                           @RequestParam(required = false) Float rate, @RequestParam(required = false) ComparisonSign maxPeopleSign, @RequestParam(required = false) Integer maxPeople, @RequestParam(required = false) SortCriteria sortCriteria, @RequestParam(required = false) Boolean sortType) {
@@ -158,7 +159,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventDto> updateEvent(@PathVariable Long id, @RequestBody EventDto eventUpdateDto) {
         EventDto eventDto;
         Event eventUpdated;
@@ -168,7 +169,8 @@ public class EventController {
 
         try {
             List<Long> ticketCategoryToDelete = eventUpdateDto.getTicketCategoryToDelete();
-            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, eventUpdateDto.getLocation());
+            List<Long> discountsToDelete = eventUpdateDto.getDiscountsToDelete();
+            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, discountsToDelete, eventUpdateDto.getLocation());
             eventDto = convertToDto.convert(eventUpdated);
         } catch (NoSuchElementException noSuchElementException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, noSuchElementException.getMessage(), noSuchElementException);
