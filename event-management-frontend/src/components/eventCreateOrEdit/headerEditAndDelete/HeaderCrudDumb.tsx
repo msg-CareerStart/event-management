@@ -53,7 +53,7 @@ function HeaderDumb({ step, loadStep, setStep, isAdmin, title, handleEventDelete
         className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle}`}
         onClick={step != 3 ? loadStep : handleEventSave}
       >
-        {isAdmin && step != 3 ? 'NEXT' : t('welcome.headerCRUDSave')}
+        {isAdmin && step != 3 ? t('welcome.headerCRUDNext') : t('welcome.headerCRUDSave')}
       </Button>
     ) : null;
 

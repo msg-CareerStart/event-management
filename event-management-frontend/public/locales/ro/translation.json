@@ -13,6 +13,7 @@
         "more": "Vezi mai mult"
     },
     "eventList": {
+        
         "account": "Contul meu",
         "logout": "Deconectare",
         "home": "Acasă",
@@ -110,6 +111,14 @@
         "button": "Confirmă",
         "errorMessage": "Cod de verificare sau adresă de email invalid!"
     },
+
+    "accountDetails":{
+        "firstName":"Nume",
+        "lastName":"Prenume",
+        "email":"Email"
+    }
+    ,
+
     "welcome": {
         "title": "Bine ai venit!",
 
@@ -134,6 +143,8 @@
         "locationAddress": "Adresa Locației",
         "ticketsTab": "Bilete",
         "imagesTab": "Imagini",
+        "appSettingsTab": "Setari App",
+        "userDetails": "Detalii User",
 
         "errMsgOverviewMinCharacters": "minim 3 charactere necesare",
         "errMsgOverviewFirstDayInPast": "prima zi a evenimentului nu poate fi în trecut",
@@ -161,6 +172,8 @@
         "headerCRUDDelete": "Șterge",
         "headerCRUDCancel": "Renunță",
         "headerCRUDSave": "Salvează",
+        "headerCRUDClear":"Sterge",
+        "headerCRUDNext":"Urmatorul",
 
         "backButton": "Înapoi",
         "joinButton": "Participă",
