@@ -2,10 +2,7 @@ package ro.msg.event_management.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -374,7 +371,6 @@ public class EventService {
         return new PageImpl<>(result, pageable, count);
     }
 
-
     public Predicate getPredicate(ComparisonSign comparisonSign, String criteria, Float value, CriteriaBuilder criteriaBuilder, Root<EventView> c) {
         switch (comparisonSign) {
             case GREATER:
@@ -391,7 +387,6 @@ public class EventService {
                 return null;
         }
     }
-
 
     public Event getEvent(long id) {
         Optional<Event> eventOptional = this.eventRepository.findById(id);
@@ -410,4 +405,13 @@ public class EventService {
         return eventRepository.findByUserInFuture(user.getIdentificationString(), pageable);
     }
 
+    public Map<Long, Integer> getAvailableTicketsForEvents(){
+        List<Integer> eventIds = eventRepository.getIdsOfEventsWithTicketsOnSale();
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(int eId: eventIds){
+            int nrOfTickets = eventRepository.retrieveAvailableTicketsForEvent(eId);
+            mapNrTicketsToEvent.put((long) eId, nrOfTickets);
+        }
+        return mapNrTicketsToEvent;
+    }
 }

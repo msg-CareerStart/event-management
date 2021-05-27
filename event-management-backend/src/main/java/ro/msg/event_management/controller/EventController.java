@@ -3,8 +3,7 @@ package ro.msg.event_management.controller;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,6 @@ import ro.msg.event_management.controller.converter.Converter;
 import ro.msg.event_management.controller.converter.EventReverseConverter;
 import ro.msg.event_management.controller.dto.*;
 import ro.msg.event_management.entity.Event;
-import ro.msg.event_management.entity.Location;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
 import ro.msg.event_management.exception.OverlappingEventsException;
@@ -321,5 +319,14 @@ public class EventController {
 
         return new ResponseEntity<>(returnList, HttpStatus.OK);
     }
+
+    @GetMapping("/ticketsinfo")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<Map<Long, Integer>> getAvailableTicketsForEvents(){
+        Map<Long, Integer> dbResponse = eventService.getAvailableTicketsForEvents();
+
+        return new ResponseEntity<>(dbResponse, HttpStatus.OK);
+    }
+
 }
 

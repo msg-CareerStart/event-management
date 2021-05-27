@@ -2,6 +2,7 @@ package ro.msg.event_management.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.AbstractMap;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -46,5 +47,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " INNER JOIN Ticket t on b.id = t.booking.id" +
             " WHERE t.id= :id")
     Event findEventByTicket(@Param("id") long idTicket);
+
+    @Query("SELECT SUM(TC.ticketsPerCategory) FROM TicketCategory TC" +
+            " WHERE TC.event.id = :id")
+    Integer retrieveAvailableTicketsForEvent(@Param("id") long id);
+
+    @Query("SELECT TC.event.id" +
+            " FROM TicketCategory TC" +
+            " GROUP BY TC.event.id")
+    List<Integer> getIdsOfEventsWithTicketsOnSale();
 
 }
