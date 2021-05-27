@@ -12,6 +12,7 @@ import MapWrapper from '../eventCreateOrEdit/locationSection/Map';
 import LocationStatisticsOverview from './LocationStatisticsOverview';
 import { LocationType } from '../../model/LocationType';
 import { locationFetch } from '../../actions/LocationActions';
+import EventStatisticsOverview from './EventStatisticsOverview';
 
 interface Props {
   match: any;
@@ -29,16 +30,8 @@ function StatisticsPage({ match, isAdmin, events, locations, fetchAllEvents, loc
   const [msgUndo, setMsgUndo] = useState('');
   const [dialogTitle, setDialogTitle] = useState('');
   const [dialogDescription, setDialogDescription] = useState('');
-  const overviewComponent = (
-    <OverviewSmart
-      newEvent={newEvent}
-      isAdmin={isAdmin}
-      setOpen={setOpen}
-      setMsgUndo={setMsgUndo}
-      setDialogTitle={setDialogTitle}
-      setDialogDescription={setDialogDescription}
-    />
-  );
+
+  const eventsOverviewStatistics = <EventStatisticsOverview events={events} />;
 
   const [idLocation, setidLocation] = useState('');
   const locationComponent = <MapWrapper locationStatus={idLocation} setlocationStatus={setidLocation} />;
@@ -51,7 +44,7 @@ function StatisticsPage({ match, isAdmin, events, locations, fetchAllEvents, loc
 
   return (
     <Paper className={backgroundStyle.paper}>
-      <StepperStatistics eventsComponent={overviewComponent} locationComponent={locComponent} />
+      <StepperStatistics eventsComponent={eventsOverviewStatistics} locationComponent={locationComponent} />
     </Paper>
   );
 }
