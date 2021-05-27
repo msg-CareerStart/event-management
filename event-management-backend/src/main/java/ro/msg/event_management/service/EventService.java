@@ -405,13 +405,69 @@ public class EventService {
         return eventRepository.findByUserInFuture(user.getIdentificationString(), pageable);
     }
 
+    /**
+     * Gets the total number of available tickets tickets for all the events.
+     * @return a HashMap where each entry has the eventId as key,
+     * and the number of available tickets as value.
+     */
     public Map<Long, Integer> getAvailableTicketsForEvents(){
-        List<Integer> eventIds = eventRepository.getIdsOfEventsWithTicketsOnSale();
+        // Get the ids of all the events
+        List<Long> allEventIds = new ArrayList<Long>();
+        for(Event e: eventRepository.findAll()){
+            allEventIds.add(e.getId());
+        }
+
+        // Get the ids of all events with tickets on sale
+        List<Integer> saleEventIds = eventRepository.getIdsOfEventsWithTicketsOnSale();
+
         Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
-        for(int eId: eventIds){
-            int nrOfTickets = eventRepository.retrieveAvailableTicketsForEvent(eId);
+        for(Long eId: allEventIds){
+            int nrOfTickets;
+            // If the event has tickets on sale, query the number of tickets
+            if(saleEventIds.contains(Math.toIntExact(eId))) {
+                nrOfTickets = eventRepository.getAvailableTicketsForEvent(eId);
+            }
+            // If the event has no tickets on sale, set the number of tickets to 0
+            else
+                nrOfTickets = 0;
             mapNrTicketsToEvent.put((long) eId, nrOfTickets);
         }
+        return mapNrTicketsToEvent;
+    }
+
+    /**
+     * Gets the total number sold tickets tickets for all the events.
+     * This method will return the total number of tickets on sale.
+     * @return a HashMap where each entry has the eventId as key,
+     * and the number of validated tickets (for that event) as value.
+     */
+    public Map<Long, Integer> getValidatedTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = new ArrayList<Long>();
+        for(Event e: eventRepository.findAll()){
+            allEventIds.add(e.getId());
+        }
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(long eId: allEventIds){
+            mapNrTicketsToEvent.put(eId, eventRepository.getNrOfValidatedTicketsForEvent(eId));
+        }
+
+        return mapNrTicketsToEvent;
+    }
+
+    public Map<Long, Integer> getSoldTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = new ArrayList<Long>();
+        for(Event e: eventRepository.findAll()){
+            allEventIds.add(e.getId());
+        }
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(long eId: allEventIds){
+            mapNrTicketsToEvent.put(eId, eventRepository.getSoldTicketsForEvent(eId));
+        }
+
         return mapNrTicketsToEvent;
     }
 }

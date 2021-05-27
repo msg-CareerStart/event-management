@@ -32,6 +32,7 @@ import ro.msg.event_management.controller.converter.Converter;
 import ro.msg.event_management.controller.converter.EventReverseConverter;
 import ro.msg.event_management.controller.dto.*;
 import ro.msg.event_management.entity.Event;
+import ro.msg.event_management.entity.EventStatistics;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
 import ro.msg.event_management.exception.OverlappingEventsException;
@@ -322,10 +323,26 @@ public class EventController {
 
     @GetMapping("/ticketsinfo")
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<Map<Long, Integer>> getAvailableTicketsForEvents(){
-        Map<Long, Integer> dbResponse = eventService.getAvailableTicketsForEvents();
+    public ResponseEntity<List<EventStatistics>> getAvailableTicketsForEvents(){
+        Map<Long, Integer> availableTickets = eventService.getAvailableTicketsForEvents();
+        Map<Long, Integer> validatedTickets = eventService.getValidatedTicketsForEvents();
+        Map<Long, Integer> soldTickets = eventService.getSoldTicketsForEvents();
+        List<EventStatistics> finalResponse = new ArrayList<>();
 
-        return new ResponseEntity<>(dbResponse, HttpStatus.OK);
+        for(Long id: availableTickets.keySet()){
+            EventStatistics eventStatistics = EventStatistics.builder()
+                    .id(id)
+                    .availableTickets(availableTickets.get(id))
+                    .validatedTickets(validatedTickets.get(id))
+                    .totalTickets(soldTickets.get(id) + availableTickets.get(id))
+                    .unvalidatedTickets(soldTickets.get(id) - validatedTickets.get(id))
+                    .build();
+
+            finalResponse.add(eventStatistics);
+
+        }
+
+        return new ResponseEntity<>(finalResponse, HttpStatus.OK);
     }
 
 }
