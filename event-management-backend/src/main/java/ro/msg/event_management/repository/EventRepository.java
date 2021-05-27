@@ -58,7 +58,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " INNER JOIN TicketDocument td ON t.id = td.id  and td.validate = TRUE")
     Integer getNrOfValidatedTicketsForEvent(long id);
 
-    @Query("SELECT COUNT(tc.id) FROM TicketCategory tc "+
+    @Query("SELECT COUNT(t.id) FROM TicketCategory tc "+
             "INNER JOIN Ticket t ON t.ticketCategory.id = tc.id "+
             "WHERE tc.event.id= :id" )
     Integer getSoldTicketsForEvent(@Param("id")long eventId);
@@ -67,4 +67,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " FROM TicketCategory TC" +
             " GROUP BY TC.event.id")
     List<Integer> getIdsOfEventsWithTicketsOnSale();
+
+    @Query("SELECT e.id FROM Event e")
+    List<Long> getAllEventIds();
 }

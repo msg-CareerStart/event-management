@@ -406,16 +406,13 @@ public class EventService {
     }
 
     /**
-     * Gets the total number of available tickets tickets for all the events.
-     * @return a HashMap where each entry has the eventId as key,
+     * Gets the total number of available tickets for all the events.
+     * @return a Map where each entry has the eventId as key,
      * and the number of available tickets as value.
      */
     public Map<Long, Integer> getAvailableTicketsForEvents(){
         // Get the ids of all the events
-        List<Long> allEventIds = new ArrayList<Long>();
-        for(Event e: eventRepository.findAll()){
-            allEventIds.add(e.getId());
-        }
+        List<Long> allEventIds = eventRepository.getAllEventIds();
 
         // Get the ids of all events with tickets on sale
         List<Integer> saleEventIds = eventRepository.getIdsOfEventsWithTicketsOnSale();
@@ -436,17 +433,14 @@ public class EventService {
     }
 
     /**
-     * Gets the total number sold tickets tickets for all the events.
-     * This method will return the total number of tickets on sale.
-     * @return a HashMap where each entry has the eventId as key,
+     * Gets the total number of validated tickets for all the events.
+     * This method will return the total number of validated tickets.
+     * @return a Map where each entry has the eventId as key,
      * and the number of validated tickets (for that event) as value.
      */
     public Map<Long, Integer> getValidatedTicketsForEvents(){
         // Get the ids of all the events
-        List<Long> allEventIds = new ArrayList<Long>();
-        for(Event e: eventRepository.findAll()){
-            allEventIds.add(e.getId());
-        }
+        List<Long> allEventIds = eventRepository.getAllEventIds();
 
         Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
         for(long eId: allEventIds){
@@ -456,12 +450,15 @@ public class EventService {
         return mapNrTicketsToEvent;
     }
 
+    /**
+     * Gets the total number of sold tickets for all the events.
+     * This method will return the total number of sold tickets.
+     * @return a Map where each entry has the eventId as key,
+     * and the number of sold tickets (for that event) as value.
+     */
     public Map<Long, Integer> getSoldTicketsForEvents(){
         // Get the ids of all the events
-        List<Long> allEventIds = new ArrayList<Long>();
-        for(Event e: eventRepository.findAll()){
-            allEventIds.add(e.getId());
-        }
+        List<Long> allEventIds = eventRepository.getAllEventIds();
 
         Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
         for(long eId: allEventIds){

@@ -321,7 +321,7 @@ public class EventController {
         return new ResponseEntity<>(returnList, HttpStatus.OK);
     }
 
-    @GetMapping("/ticketsinfo")
+    @GetMapping("/ticketsStatistics")
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<EventStatistics>> getAvailableTicketsForEvents(){
         Map<Long, Integer> availableTickets = eventService.getAvailableTicketsForEvents();
