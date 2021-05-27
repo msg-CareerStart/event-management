@@ -46,5 +46,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " INNER JOIN Ticket t on b.id = t.booking.id" +
             " WHERE t.id= :id")
     Event findEventByTicket(@Param("id") long idTicket);
-    
+
 }

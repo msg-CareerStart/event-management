@@ -34,8 +34,7 @@ function StatisticsPage({ match, isAdmin, events, locations, fetchAllEvents, loc
   const eventsOverviewStatistics = <EventStatisticsOverview events={events} />;
 
   const [idLocation, setidLocation] = useState('');
-  const locationComponent = <MapWrapper locationStatus={idLocation} setlocationStatus={setidLocation} />;
-  const locComponent = <LocationStatisticsOverview locations={locations} />;
+  const locationComponent = <LocationStatisticsOverview locations={locations} />;
 
   useEffect(() => {
     fetchAllEvents();
