@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.msg.event_management.entity.*;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.repository.*;
 import ro.msg.event_management.security.User;

@@ -23,6 +23,7 @@ import ro.msg.event_management.entity.Sublocation;
 import ro.msg.event_management.entity.Ticket;
 import ro.msg.event_management.entity.TicketCategory;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.repository.BookingRepository;
 import ro.msg.event_management.repository.EventRepository;
@@ -123,7 +124,7 @@ class UpdateEventIntegrationTests {
             eventOptional.ifPresent(value -> assertThat(value.getTitle()).isEqualTo(eventToUpdate.getTitle()));
             eventOptional.ifPresent(value -> assertThat(value.getSubtitle()).isEqualTo(eventToUpdate.getSubtitle()));
             eventOptional.ifPresent(value -> assertThat(value.getMaxPeople()).isEqualTo(eventToUpdate.getMaxPeople()));
-        } catch (ExceededCapacityException | OverlappingEventsException exception) {
+        } catch (ExceededCapacityException | OverlappingEventsException | OverlappingDiscountsException exception) {
             assert false;
         }
     }

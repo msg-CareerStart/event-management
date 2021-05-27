@@ -39,11 +39,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //public resources that do not require authentication
                 .antMatchers("**/public/**").permitAll()
                 //h2-console
-                .antMatchers("/h2-console/**").permitAll();
+                .antMatchers("/h2-console/**").permitAll()
                 //resources that require authentication
-                //.antMatchers(HttpMethod.OPTIONS,"/**/{[path:[^\\.]*}").permitAll()
-                //.antMatchers("/").authenticated()
-                //.and()
-                //.addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .antMatchers(HttpMethod.OPTIONS,"/**/{[path:[^\\.]*}").permitAll()
+                .antMatchers("/").authenticated()
+                .and()
+                .addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

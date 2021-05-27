@@ -43,6 +43,7 @@ import ro.msg.event_management.controller.dto.EventWithRemainingTicketsDto;
 import ro.msg.event_management.entity.Event;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.exception.TicketCategoryException;
 import ro.msg.event_management.security.User;
@@ -108,7 +109,7 @@ public class EventController {
     }
 
     @PostMapping
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventDto> saveEvent(@RequestBody EventDto eventDTO) {
         try {
 
@@ -131,12 +132,14 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
+        } catch (OverlappingDiscountsException overlappingDiscountsException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
     }
 
 
     @GetMapping
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<JSONObject> getPaginatedFilteredAndSortedEvents(Pageable pageable, @RequestParam(required = false) String title, @RequestParam(required = false) String subtitle, @RequestParam(required = false) Boolean status, @RequestParam(required = false) Boolean highlighted, @RequestParam(required = false) String location,
                                                                           @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false) String startHour, @RequestParam(required = false) String endHour, @RequestParam(required = false) ComparisonSign rateSign,
                                                                           @RequestParam(required = false) Float rate, @RequestParam(required = false) ComparisonSign maxPeopleSign, @RequestParam(required = false) Integer maxPeople, @RequestParam(required = false) SortCriteria sortCriteria, @RequestParam(required = false) Boolean sortType) {
@@ -159,7 +162,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventDto> updateEvent(@PathVariable Long id, @RequestBody EventDto eventUpdateDto) {
         EventDto eventDto;
         Event eventUpdated;
@@ -180,6 +183,8 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
+        } catch (OverlappingDiscountsException overlappingDiscountsException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
         return new ResponseEntity<>(eventDto, HttpStatus.OK);
     }
@@ -187,7 +192,6 @@ public class EventController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteEvent(@PathVariable long id) {
-
         try {
             this.eventService.deleteEvent(id);
             return new ResponseEntity<>("Event deleted", HttpStatus.OK);
