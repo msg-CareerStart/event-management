@@ -209,7 +209,7 @@ public class EventService {
                             eventFromDB.getTicketCategories().forEach(ticketCategoryFromDB -> {
                                 if (ticketCategoryFromDB.getId().equals(ticketCategory.getId())) {
                                     this.ticketCategoryService.updateTicketCategory(ticketCategory);
-                                    if(ticketCategory.getDiscounts() != null || !ticketCategory.getDiscounts().isEmpty()) {
+                                    if(ticketCategory.getDiscounts() != null && !ticketCategory.getDiscounts().isEmpty()) {
                                         for(Discount discount: ticketCategory.getDiscounts()) {
                                             if(discount.getId() < 0) {
                                                 List<Discount> discountToAdd = new ArrayList<>();
