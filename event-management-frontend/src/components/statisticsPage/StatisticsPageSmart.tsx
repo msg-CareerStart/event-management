@@ -11,6 +11,7 @@ import StepperStatistics from './StepperStatistics';
 import ImagesSectionSmart from '../eventCreateOrEdit/imagesSection/ImagesSectionSmart';
 import CategoryPageSmart from '../eventCreateOrEdit/ticketsSection/CategoryPage/CategoryPageSmart';
 import MapWrapper from '../eventCreateOrEdit/locationSection/Map';
+import EventStatisticsOverview from './EventStatisticsOverview';
 
 interface Props {
   match: any;
@@ -26,16 +27,8 @@ function StatisticsPage({ match, isAdmin, events, fetchAllEvents }: Props) {
   const [msgUndo, setMsgUndo] = useState('');
   const [dialogTitle, setDialogTitle] = useState('');
   const [dialogDescription, setDialogDescription] = useState('');
-  const overviewComponent = (
-    <OverviewSmart
-      newEvent={newEvent}
-      isAdmin={isAdmin}
-      setOpen={setOpen}
-      setMsgUndo={setMsgUndo}
-      setDialogTitle={setDialogTitle}
-      setDialogDescription={setDialogDescription}
-    />
-  );
+
+  const eventsOverviewStatistics = <EventStatisticsOverview events={events} />;
 
   const [idLocation, setidLocation] = useState('');
   const locationComponent = <MapWrapper locationStatus={idLocation} setlocationStatus={setidLocation} />;
@@ -46,7 +39,7 @@ function StatisticsPage({ match, isAdmin, events, fetchAllEvents }: Props) {
 
   return (
     <Paper className={backgroundStyle.paper}>
-      <StepperStatistics eventsComponent={overviewComponent} locationComponent={locationComponent} />
+      <StepperStatistics eventsComponent={eventsOverviewStatistics} locationComponent={locationComponent} />
     </Paper>
   );
 }
