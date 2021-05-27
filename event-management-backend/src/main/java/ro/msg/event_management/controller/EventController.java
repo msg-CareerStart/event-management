@@ -118,10 +118,10 @@ public class EventController {
             Event event = ((EventReverseConverter) convertToEntity).convertForUpdate(eventDTO, false);
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            //User user = (User) auth.getPrincipal();
-            //String creator = user.getIdentificationString();
+            User user = (User) auth.getPrincipal();
+            String creator = user.getIdentificationString();
 
-            //event.setCreator(creator);
+            event.setCreator(creator);
 
             Event savedEvent = eventService.saveEvent(event, locationId);
 
