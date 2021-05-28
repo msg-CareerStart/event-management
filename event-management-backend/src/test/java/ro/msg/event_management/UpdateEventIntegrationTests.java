@@ -23,6 +23,7 @@ import ro.msg.event_management.entity.Sublocation;
 import ro.msg.event_management.entity.Ticket;
 import ro.msg.event_management.entity.TicketCategory;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.repository.BookingRepository;
 import ro.msg.event_management.repository.EventRepository;
@@ -91,14 +92,14 @@ class UpdateEventIntegrationTests {
         bookingRepository.save(booking);
 
         TicketCategory ticketCategory = new TicketCategory("title", "subtitle", (float) 40, "desc", 3, true, event,
-                                                           null);
+                                                           null,null);
         ticketCategoryRepository.save(ticketCategory);
 
         Ticket ticket = new Ticket("name", "address@yahoo.com", booking, ticketCategory, null);
         ticketRepository.save(ticket);
 
         TicketCategory ticketCategoryToUpdate = new TicketCategory("NewTitleCategory", "subtitle", (float) 40, "desc",
-                                                                   3, true, event, null);
+                                                                   3, true, event, null,null);
         ticketCategoryToUpdate.setId(ticketCategory.getId());
         List<TicketCategory> ticketCategoryList = new ArrayList<>();
         ticketCategoryList.add(ticketCategoryToUpdate);
@@ -116,14 +117,14 @@ class UpdateEventIntegrationTests {
 
         List<String> picturesToDelete = new ArrayList<>();
         try {
-            eventService.updateEvent(eventToUpdate, new ArrayList<>(),
+            eventService.updateEvent(eventToUpdate, new ArrayList<>(), new ArrayList<>(),
                                      this.locationRepository.findById(this.locationRepository.findAll().get(0).getId())
                                                             .get().getId());
             Optional<Event> eventOptional = eventRepository.findById(event.getId());
             eventOptional.ifPresent(value -> assertThat(value.getTitle()).isEqualTo(eventToUpdate.getTitle()));
             eventOptional.ifPresent(value -> assertThat(value.getSubtitle()).isEqualTo(eventToUpdate.getSubtitle()));
             eventOptional.ifPresent(value -> assertThat(value.getMaxPeople()).isEqualTo(eventToUpdate.getMaxPeople()));
-        } catch (ExceededCapacityException | OverlappingEventsException exception) {
+        } catch (ExceededCapacityException | OverlappingEventsException | OverlappingDiscountsException exception) {
             assert false;
         }
     }

@@ -55,7 +55,7 @@ class ValidateTicketIntegrationTests {
         Booking booking = new Booking(LocalDateTime.now(), "user", event, null);
         bookingRepository.save(booking);
 
-        TicketCategory ticketCategory = new TicketCategory("title", "subtitle", (float) 3.4, "description", 4, true, event, null);
+        TicketCategory ticketCategory = new TicketCategory("title", "subtitle", (float) 3.4, "description", 4, true, event, null, null);
         ticketCategoryRepository.save(ticketCategory);
 
 
@@ -84,7 +84,7 @@ class ValidateTicketIntegrationTests {
         Booking booking = new Booking(LocalDateTime.now(), "user", event, null);
         bookingRepository.save(booking);
 
-        TicketCategory ticketCategory = new TicketCategory("titleTicketCategory", "subtitleCategory", (float) 3.4, "description", 4, true, event, null);
+        TicketCategory ticketCategory = new TicketCategory("titleTicketCategory", "subtitleCategory", (float) 3.4, "description", 4, true, event, null, null);
         ticketCategoryRepository.save(ticketCategory);
 
 
@@ -114,7 +114,7 @@ class ValidateTicketIntegrationTests {
         Booking booking = new Booking(LocalDateTime.now(), "user", event, null);
         bookingRepository.save(booking);
 
-        TicketCategory ticketCategory = new TicketCategory("titleCategory", "subtitleCategory", (float) 3.4, "description", 4, true, event, null);
+        TicketCategory ticketCategory = new TicketCategory("titleCategory", "subtitleCategory", (float) 3.4, "description", 4, true, event, null, null);
         ticketCategoryRepository.save(ticketCategory);
 
 

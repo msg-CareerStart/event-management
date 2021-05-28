@@ -30,16 +30,18 @@ public class LocationController {
     }
 
     @PostMapping(value="/insert/{maxCapacity}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Location addLocation(@RequestBody LocationDto locationDto, @PathVariable int maxCapacity) {
         Location newLocation = locationService.addLocation(locationDto, maxCapacity);
         return newLocation;
     }
 
     @GetMapping("/statistics")
+    @PreAuthorize(("hasRole('ROLE_ADMIN')"))
     public ResponseEntity<List<LocationStatistics> > getLocationStatistics()
     {
-        List<LocationStatistics>  statistcs = this.locationService.getLocationStatistics();
+        List<LocationStatistics>  statistics = this.locationService.getLocationStatistics();
 
-        return new ResponseEntity<>(statistcs, HttpStatus.OK);
+        return new ResponseEntity<>(statistics, HttpStatus.OK);
     }
 }

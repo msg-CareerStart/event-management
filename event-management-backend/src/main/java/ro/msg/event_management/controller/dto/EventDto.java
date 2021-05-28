@@ -51,5 +51,7 @@ public class EventDto {
 
     private List<Long> ticketCategoryToDelete;
 
+    private List<Long> discountsToDelete;
+
     private String ticketInfo;
 }

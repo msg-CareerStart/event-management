@@ -1,14 +1,20 @@
 package ro.msg.event_management.controller.converter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ro.msg.event_management.controller.dto.TicketCategoryDto;
 import ro.msg.event_management.entity.TicketCategory;
 
 @Component
+@AllArgsConstructor
 public class TicketCategoryConverter implements Converter<TicketCategoryDto, TicketCategory> {
+
+    private final DiscountConverter discountConverter;
+
     @Override
     public TicketCategory convert(TicketCategoryDto obj) {
         return TicketCategory.builder()
@@ -36,6 +42,23 @@ public class TicketCategoryConverter implements Converter<TicketCategoryDto, Tic
     }
 
     public List<TicketCategory> convertAllForUpdate(List<TicketCategoryDto> ticketCategoryDtoList){
-       return ticketCategoryDtoList.stream().map(this::convertWithId).collect(Collectors.toList());
+       List<TicketCategory> ticketCategories = new ArrayList<>();
+       for(TicketCategoryDto ticketCategoryDto: ticketCategoryDtoList) {
+           TicketCategory ticketCategory = this.convertWithId(ticketCategoryDto);
+           ticketCategory.setDiscounts(discountConverter.convertAllForUpdate(ticketCategoryDto.getDiscountDtoList()));
+           ticketCategories.add(ticketCategory);
+       }
+       return ticketCategories;
+    }
+
+    @Override
+    public List<TicketCategory> convertAll(List<TicketCategoryDto> ticketCategoryDtoList) {
+        List<TicketCategory> ticketCategories = new ArrayList<>();
+        for(TicketCategoryDto ticketCategoryDto: ticketCategoryDtoList) {
+            TicketCategory ticketCategory = this.convert(ticketCategoryDto);
+            ticketCategory.setDiscounts(discountConverter.convertAll(ticketCategoryDto.getDiscountDtoList()));
+            ticketCategories.add(ticketCategory);
+        }
+        return ticketCategories;
     }
 }
