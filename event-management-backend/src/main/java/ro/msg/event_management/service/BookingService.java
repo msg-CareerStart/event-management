@@ -46,11 +46,7 @@ import ro.msg.event_management.entity.Ticket;
 import ro.msg.event_management.entity.TicketCategory;
 import ro.msg.event_management.entity.TicketDocument;
 import ro.msg.event_management.exception.TicketBuyingException;
-import ro.msg.event_management.repository.BookingRepository;
-import ro.msg.event_management.repository.EventRepository;
-import ro.msg.event_management.repository.TicketCategoryRepository;
-import ro.msg.event_management.repository.TicketDocumentRepository;
-import ro.msg.event_management.repository.TicketRepository;
+import ro.msg.event_management.repository.*;
 import ro.msg.event_management.security.User;
 
 @Service
