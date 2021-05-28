@@ -137,4 +137,8 @@ public class TicketService {
             throw new NoSuchElementException("There is no ticket with id = " + idTicket);
         }
     }
+
+    public List<Ticket> findAll(){
+        return ticketRepository.findAll();
+    }
 }

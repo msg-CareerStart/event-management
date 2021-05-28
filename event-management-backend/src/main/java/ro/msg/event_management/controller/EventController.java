@@ -1,14 +1,17 @@
 package ro.msg.event_management.controller;
 
+import java.io.*;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -39,7 +42,7 @@ import ro.msg.event_management.controller.dto.EventDetailsForUserDto;
 import ro.msg.event_management.controller.dto.EventDto;
 import ro.msg.event_management.controller.dto.EventFilteringDto;
 import ro.msg.event_management.controller.dto.EventWithRemainingTicketsDto;
-import ro.msg.event_management.entity.Event;
+import ro.msg.event_management.entity.*;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
 import ro.msg.event_management.exception.OverlappingEventsException;
@@ -310,6 +313,121 @@ public class EventController {
         List<CardsUserEventDto> returnList = converterToUserCardsEventDto.convertAll(eventViews.getContent());
 
         return new ResponseEntity<>(returnList, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<InputStreamResource> getEventsCsv() throws FileNotFoundException {
+        var events = eventService.findAll();
+
+        var headers = new ArrayList<String>();
+        headers.add("title");
+        headers.add("subtitle");
+        headers.add("status");
+        headers.add("startDate");
+        headers.add("endDate");
+        headers.add("endHour");
+        headers.add("startHour");
+        headers.add("maxPeople");
+        headers.add("description");
+        headers.add("highlighted");
+        headers.add("observations");
+        headers.add("ticketsPerUser");
+        headers.add("creator");
+        headers.add("ticketInfo");
+        headers.add("picturesIds");
+        headers.add("eventSublocationIds");
+        headers.add("bookingsIds");
+        headers.add("ticketCategoriesIds");
+
+        try {
+            var writer = new FileWriter("trial.csv");
+            for(String s:headers){
+                writer.write(s);
+                writer.write(',');
+            }
+
+            writer.write("\n");
+            for(Event event: events){
+                writer.write(event.getTitle());
+                writer.write(',');
+
+                writer.write(event.getSubtitle());
+                writer.write(',');
+
+                writer.write(String.valueOf(event.isStatus()));
+                writer.write(',');
+
+                writer.write(String.valueOf(event.getStartDate()));
+                writer.write(',');
+
+                writer.write(String.valueOf(event.getEndDate()));
+                writer.write(',');
+
+                writer.write(String.valueOf(event.getEndHour()));
+                writer.write(',');
+
+                writer.write(String.valueOf(event.getStartHour()));
+                writer.write(',');
+
+                writer.write(event.getMaxPeople());
+                writer.write(',');
+
+                writer.write(event.getDescription());
+                writer.write(',');
+
+                writer.write(String.valueOf(event.isHighlighted()));
+                writer.write(',');
+
+                writer.write(event.getObservations());
+                writer.write(',');
+
+                writer.write(event.getTicketsPerUser());
+                writer.write(',');
+
+                writer.write(event.getCreator());
+                writer.write(',');
+
+                writer.write(event.getTicketInfo());
+                writer.write(',');
+
+                var pictures = event.getPictures();
+                for(Picture picture: pictures){
+                    writer.write(String.valueOf(picture.getId()));
+                    writer.write(';');
+                }
+                writer.write(',');
+
+                var sublocations = event.getEventSublocations();
+                for(EventSublocation sublocation: sublocations){
+                    writer.write(String.valueOf(sublocation.getEventSublocationID().getSublocation()));
+                    writer.write(';');
+                }
+                writer.write(',');
+
+                var bookings = event.getBookings();
+                for(Booking booking: bookings){
+                    writer.write(String.valueOf(booking.getId()));
+                    writer.write(';');
+                }
+                writer.write(',');
+
+                var categories = event.getTicketCategories();
+                for(TicketCategory category: categories){
+                    writer.write(String.valueOf(category.getId()));
+                    writer.write(';');
+                }
+                writer.write(',');
+                writer.write('\n');
+
+            }
+            writer.close();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<InputStreamResource>(new InputStreamResource(new FileInputStream("trial.csv")), HttpStatus.OK);
     }
 }
 

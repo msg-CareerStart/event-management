@@ -402,6 +402,15 @@ public class EventService {
         }
     }
 
+    public List<Event> findAll(){
+        return eventRepository.findAll();
+    }
+
+    public Event findOne(Long id){
+        var ev = eventRepository.findById(id);
+        return ev.orElse(null);
+    }
+
     public Page<Event> filterAndPaginateEventsAttendedByUser(User user, Pageable pageable) {
         return eventRepository.findByUserInPast(user.getIdentificationString(), pageable);
     }
