@@ -35,6 +35,7 @@ import ro.msg.event_management.entity.Event;
 import ro.msg.event_management.entity.EventStatistics;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.exception.TicketCategoryException;
 import ro.msg.event_management.security.User;
@@ -139,6 +140,8 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
+        } catch (OverlappingDiscountsException overlappingDiscountsException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
     }
 
@@ -177,7 +180,8 @@ public class EventController {
 
         try {
             List<Long> ticketCategoryToDelete = eventUpdateDto.getTicketCategoryToDelete();
-            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, eventUpdateDto.getLocation());
+            List<Long> discountsToDelete = eventUpdateDto.getDiscountsToDelete();
+            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, discountsToDelete, eventUpdateDto.getLocation());
             eventDto = convertToDto.convert(eventUpdated);
         } catch (NoSuchElementException noSuchElementException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, noSuchElementException.getMessage(), noSuchElementException);
@@ -187,6 +191,8 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
+        } catch (OverlappingDiscountsException overlappingDiscountsException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
         return new ResponseEntity<>(eventDto, HttpStatus.OK);
     }
@@ -194,7 +200,6 @@ public class EventController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteEvent(@PathVariable long id) {
-
         try {
             this.eventService.deleteEvent(id);
             return new ResponseEntity<>("Event deleted", HttpStatus.OK);

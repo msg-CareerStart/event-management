@@ -20,21 +20,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.msg.event_management.entity.BaseEntity;
-import ro.msg.event_management.entity.Event;
-import ro.msg.event_management.entity.EventSublocation;
-import ro.msg.event_management.entity.EventSublocationID;
-import ro.msg.event_management.entity.Location;
-import ro.msg.event_management.entity.Sublocation;
-import ro.msg.event_management.entity.TicketCategory;
+import ro.msg.event_management.entity.*;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
-import ro.msg.event_management.repository.EventRepository;
-import ro.msg.event_management.repository.EventSublocationRepository;
-import ro.msg.event_management.repository.LocationRepository;
-import ro.msg.event_management.repository.PictureRepository;
-import ro.msg.event_management.repository.SublocationRepository;
+import ro.msg.event_management.repository.*;
 import ro.msg.event_management.security.User;
 import ro.msg.event_management.utils.ComparisonSign;
 import ro.msg.event_management.utils.SortCriteria;
@@ -51,6 +42,8 @@ public class EventService {
     private final TicketCategoryService ticketCategoryService;
     private final EventSublocationRepository eventSublocationRepository;
     private final LocationRepository locationRepository;
+    private final DiscountService discountService;
+    private final DiscountRepository discountRepository;
 
     @PersistenceContext(type = PersistenceContextType.TRANSACTION)
     private final EntityManager entityManager;
@@ -94,7 +87,11 @@ public class EventService {
                 eventSublocations.add(eventSublocation);
             });
             event.setEventSublocations(eventSublocations);
-            ticketCategoryService.saveTicketCategories(savedEvent.getTicketCategories(), savedEvent);
+            List<TicketCategory> ticketCategories = savedEvent.getTicketCategories();
+            ticketCategoryService.saveTicketCategories(ticketCategories, savedEvent);
+            for(TicketCategory ticketCategory : ticketCategories) {
+                discountService.saveDiscounts(ticketCategory.getDiscounts(), ticketCategory);
+            }
             return savedEvent;
         } else if (!validSublocations) {
             throw new OverlappingEventsException("Event overlaps another scheduled event");
@@ -109,7 +106,7 @@ public class EventService {
     }
 
     @Transactional(rollbackFor = {OverlappingEventsException.class, ExceededCapacityException.class})
-    public Event updateEvent(Event event, List<Long> ticketCategoryToDelete, Long updatedLocation) throws OverlappingEventsException, ExceededCapacityException {
+    public Event updateEvent(Event event, List<Long> ticketCategoryToDelete, List<Long> discountsToDelete, Long updatedLocation) throws OverlappingEventsException, ExceededCapacityException {
         Optional<Event> eventOptional;
         eventOptional = eventRepository.findById(event.getId());
 
@@ -189,23 +186,43 @@ public class EventService {
                     //update ticket category
                     for (Long ticketCategoryId : ticketCategoryToDelete) {
                         this.ticketCategoryService.deleteTicketCategory(ticketCategoryId);
+                        this.discountRepository.deleteByTicketCategoryId(ticketCategoryId);
                     }
 
-                    List<TicketCategory> categoriesToSave = new ArrayList<>();
+                    if(discountsToDelete != null) {
+                        for (Long discountId : discountsToDelete) {
+                            this.discountService.deleteDiscount(discountId);
+                        }
+                    }
+
                     event.getTicketCategories().forEach(ticketCategory ->
                     {
+                        List<TicketCategory> categoriesToSave = new ArrayList<>();
                         if (ticketCategory.getId() < 0) {
                             categoriesToSave.add(ticketCategory);
+                            this.ticketCategoryService.saveTicketCategories(categoriesToSave, eventFromDB);
+                            this.discountService.saveDiscounts(ticketCategory.getDiscounts(), ticketCategory);
                         } else {
                             eventFromDB.getTicketCategories().forEach(ticketCategoryFromDB -> {
                                 if (ticketCategoryFromDB.getId().equals(ticketCategory.getId())) {
                                     this.ticketCategoryService.updateTicketCategory(ticketCategory);
+                                    if(ticketCategory.getDiscounts() != null && !ticketCategory.getDiscounts().isEmpty()) {
+                                        for(Discount discount: ticketCategory.getDiscounts()) {
+                                            if(discount.getId() < 0) {
+                                                List<Discount> discountToAdd = new ArrayList<>();
+                                                discountToAdd.add(discount);
+                                                this.discountService.saveDiscounts(discountToAdd, ticketCategory);
+                                            } else {
+                                                this.discountService.updateDiscount(discount);
+                                            }
+                                        }
+                                    }
                                 }
                             });
                         }
                     });
 
-                    this.ticketCategoryService.saveTicketCategories(categoriesToSave, eventFromDB);
+
 
                     return eventFromDB;
 
