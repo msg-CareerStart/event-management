@@ -26,6 +26,7 @@ import {
   watchFetchUserUpcomingEventsAsync,
   watchFetchHighlightedEventsAsync,
 } from './UserHomePageSaga';
+import { watchFetchLocationFromIdLocationAsync } from './UserMapPageSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -65,5 +66,7 @@ export default function* rootSaga() {
     watchValidateTicket(),
 
     watchFetchReserveEventAsync(),
+
+    watchFetchLocationFromIdLocationAsync(),
   ]);
 }

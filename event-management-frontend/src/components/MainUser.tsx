@@ -8,6 +8,8 @@ import UserEventDetailsSmart from './userEventDetailsPage/UserEventDetailsSmart'
 import { SecureRoute } from './SecureRoute';
 import BuyTicketFirstPageSmart from './userBuyTicketsPage/firstPage/BuyTicketFirstPageSmart';
 import BuyTicketsSecondPageSmart from './userBuyTicketsPage/secondPage/BuyTicketsSecondPageSmart';
+import UserMapEventsSmart from './userMapEvents/UserMapEventsSmart';
+import UserMapTest from './userMapEvents/UserMapTest';
 
 const MainUser = () => {
   return (
@@ -29,10 +31,11 @@ const MainUser = () => {
             component={(renderProps: any) => <BuyTicketFirstPageSmart matching={renderProps}></BuyTicketFirstPageSmart>}
           />
           <SecureRoute
-            exact
+            exacty
             path="/user/reserve-tickets/second-page/:id"
             component={(props: any) => <BuyTicketsSecondPageSmart match={props.match} />}
           />
+          <SecureRoute exact path="/user/map" component={(props: any) => <UserMapTest />} />
         </Switch>
       </main>
     </>

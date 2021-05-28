@@ -17,6 +17,7 @@ import {
   FetchUserUpcomingEventsAction,
 } from '../actions/UserHomePageActions';
 import { fetchHighlightedEvents, fetchBookings, fetchPastEvents, fetchUpcomingEvents } from '../api/UserHomePageAPI';
+import { store } from '../store/store';
 
 function* fetchBookingsAsync() {
   yield put(fetchBookingsRequest());
@@ -49,13 +50,15 @@ export function* watchFetchUserPastEventsAsync() {
 }
 
 function* fetchUserUpcomingEventsAsync(action: FetchUserUpcomingEventsAction) {
-  yield put(fetchUserUpcomingEventsRequest());
+  if (store.getState().userHome.upcoming.events.length === 0) {
+    yield put(fetchUserUpcomingEventsRequest());
 
-  try {
-    const result = yield call(() => fetchUpcomingEvents(action.page, action.limit));
-    yield put(fetchUserUpcomingEventsSuccess(result.events, result.more, result.noPages));
-  } catch (err) {
-    yield put(fetchUserUpcomingEventsError());
+    try {
+      const result = yield call(() => fetchUpcomingEvents(action.page, action.limit));
+      yield put(fetchUserUpcomingEventsSuccess(result.events, result.more, result.noPages));
+    } catch (err) {
+      yield put(fetchUserUpcomingEventsError());
+    }
   }
 }
 
