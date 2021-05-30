@@ -78,7 +78,10 @@ export type LocationAction =
   | LocationLoadingStatusAction
   | LocationErrorAction
   | LocationFetchSuccessAction
-  | SearchValueUpdate;
+  | SearchValueUpdate
+  | LocationsFetchStatistics
+  | LocationsFetchStatisticsSuccess
+  | LocationsFetchStatisticsError;
 
 export const locationisLoading = (loadingStatus: boolean): LocationLoadingStatusAction => {
   return {
