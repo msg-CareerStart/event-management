@@ -1,7 +1,7 @@
 import React from 'react';
-
+import DetailsDumb from './DetailsDumb';
 function DetailsSmart() {
-  return <div>details user</div>;
+  return <DetailsDumb />;
 }
 
 export default DetailsSmart;

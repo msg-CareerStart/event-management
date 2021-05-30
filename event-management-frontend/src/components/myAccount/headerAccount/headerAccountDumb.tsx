@@ -51,7 +51,7 @@ function HeaderAccDumb({}: Props) {
     <Grid container spacing={2} className={gridStyle.grid} direction="row" justify="space-between" alignItems="center">
       <Grid item sm={4} xs={5}>
         <Typography align="left" className={`${gridStyle.typography} ${gridStyle.position}`}>
-          MyPage
+          {t('welcome.myPage')}
         </Typography>
       </Grid>
 

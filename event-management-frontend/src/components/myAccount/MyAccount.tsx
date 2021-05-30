@@ -1,7 +1,7 @@
 import React from 'react';
 import HeaderAccSmart from './headerAccount/headerAccountSmart';
 import DetailsSmart from './userDetailsSection/DetailsSmart';
-import AppSettings from './appSettings/appSettings';
+import AppSettingsSmart from './appSettings/AppSettingsSmart';
 import StepperAccount from './StepperAccount';
 import { Paper } from '@material-ui/core';
 import { eventDetailsStyles } from '../../styles/EventDetailsStyle';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const userDetailComponent = <DetailsSmart />;
-const appSettingsComponent = <AppSettings />;
+const appSettingsComponent = <AppSettingsSmart />;
 
 const MyAccount = ({ match, isAdmin }: Props) => {
   //   const classes = myAccountStyles();

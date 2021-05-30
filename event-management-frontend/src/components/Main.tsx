@@ -9,6 +9,8 @@ import ValidateTicket from './validateTicket/ValidateTicketSmart';
 import MyAccount from './myAccount/MyAccount';
 
 const Main = () => {
+  console.log('........');
+  console.log(localStorage);
   return (
     <>
       <Header isAdmin={true} />

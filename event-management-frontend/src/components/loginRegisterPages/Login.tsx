@@ -38,6 +38,10 @@ const Login: React.FC<Props> = (props: Props) => {
   };
 
   const onSubmit = async () => {
+    console.log('////////////');
+    console.log(props);
+    console.log('...');
+
     props.loginisLoading(true);
     Auth.signIn(props.username, props.password)
       .then((user) => {
@@ -83,6 +87,9 @@ const Login: React.FC<Props> = (props: Props) => {
 const mapStateToProps = (state: AppState) => ({
   username: state.login.username,
   password: state.login.password,
+  firstNamee: state.registration.firstName,
+  email: state.registration.email,
+  pas: state.registration.password,
   isLoading: state.login.isLoading,
   error: state.login.error,
   succes: state.login.success,

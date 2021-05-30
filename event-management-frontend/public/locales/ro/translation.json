@@ -178,7 +178,20 @@
         "backButton": "Înapoi",
         "joinButton": "Participă",
 
-        "loading": "Se încarcă"
+        "loading": "Se încarcă",
+       
+        "accDetailsName":"Nume",
+        "accDetailsPrenume":"Prenume",
+        "accDetailsEmail":"Email",
+        "accDetailsUsername":"Username",
+        "notificationSwitch":"Porneste notificarile",
+        "occupancyRate":"Rata de ocupare %",
+        "occuppancyInfo":"Va rog adaugati o rata de ocupare de la care doriti sa fiti notificati",
+        "myPage":"Pagina Mea",
+        "usernameDetails": "Pagina detalii",
+        "usernameAppSettings": "Setari aplicatie"
+
+
     },
     "images": {
         "imageErrorMessage": "A apărut o eroare la încărcarea imaginilor",

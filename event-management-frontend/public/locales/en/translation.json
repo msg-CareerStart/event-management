@@ -177,7 +177,22 @@
         "backButton": "Back",
         "joinButton": "Join",
 
-        "loading": "Loading"
+        "loading": "Loading",
+        
+        "accDetailsName":"LastName",
+        "accDetailsPrenume":"FirstName",
+        "accDetailsEmail":"Email",
+        "accDetailsUsername":"Username",
+
+        "notificationSwitch":"Turn on Notifications",
+        "occupancyRate":"Occupancy rate %",
+        "occuppancyInfo":"Please eneter an occupancy rate condition from where you want to get a notification ",
+
+        "myPage":"My Page",
+        "usernameDetails": "Detail's Page",
+        "usernameAppSettings": "App's Settings"
+
+
     },
 
     "images": {
