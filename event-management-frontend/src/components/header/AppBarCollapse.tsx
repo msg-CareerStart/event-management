@@ -14,7 +14,7 @@ const AppBarCollapse = () => {
   const handleOnClick = (index: string) => {
     setActiveIndex(index);
   };
-  
+
   const role = localStorage.getItem('role');
 
   return (
@@ -55,6 +55,15 @@ const AppBarCollapse = () => {
             <MenuItem>
               <Typography variant="h6" className={classes.light}>
                 {t('eventList.tickets')}&nbsp;&nbsp;
+              </Typography>
+            </MenuItem>
+          </Link>
+        )}
+        {role === 'user' && (
+          <Link to={'/user/map'} className={classes.linkDecoration}>
+            <MenuItem>
+              <Typography variant="h6" className={classes.light}>
+                {t('eventList.map')}&nbsp;&nbsp;
               </Typography>
             </MenuItem>
           </Link>
@@ -110,6 +119,18 @@ const AppBarCollapse = () => {
               className={activeIndex === 'tickets' ? classes.active : classes.inactive}
             >
               <Typography variant="h6">{t('eventList.tickets')}&nbsp;&nbsp;</Typography>
+            </NavLink>
+          </Button>
+        )}
+
+        {role === 'user' && (
+          <Button>
+            <NavLink
+              to="/user/map"
+              onClick={() => handleOnClick('map')}
+              className={activeIndex === 'map' ? classes.active : classes.inactive}
+            >
+              <Typography variant="h6">{t('eventList.map')}&nbsp;&nbsp;</Typography>
             </NavLink>
           </Button>
         )}
