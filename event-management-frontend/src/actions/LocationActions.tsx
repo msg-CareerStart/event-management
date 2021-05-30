@@ -1,3 +1,4 @@
+import { LocationStatistics } from '../model/LocationStatistics';
 import { LocationType } from '../model/LocationType';
 
 export enum LocationActionTypes {
@@ -6,6 +7,31 @@ export enum LocationActionTypes {
   LOCATION_FETCH_SUCCESS = 'LOCATION_FETCH_SUCCESS',
   LOCATION_ERROR = 'LOCATION_ERROR',
   UPDATE_SEARCH_VALUE = 'UPDATE_SEARCH_VALUE',
+  LOCATIONS_FETCH_STATISTICS = 'LOCATIONS_FETCH_STATISTICS',
+  LOCATIONS_FETCH_STATISTICS_SUCCESS = 'LOCATIONS_FETCH_STATISTICS_SUCCESS',
+  LOCATIONS_FETCH_STATISTICS_ERROR = 'LOCATIONS_FETCH_STATISTICS_ERROR',
+}
+
+export class LocationsFetchStatistics {
+  public readonly type = LocationActionTypes.LOCATIONS_FETCH_STATISTICS;
+}
+
+export class LocationsFetchStatisticsSuccess {
+  public readonly type = LocationActionTypes.LOCATIONS_FETCH_STATISTICS_SUCCESS;
+  public locationsStatistics: LocationStatistics[];
+
+  constructor(locationsStatistics: LocationStatistics[]) {
+    this.locationsStatistics = locationsStatistics;
+  }
+}
+
+export class LocationsFetchStatisticsError {
+  public readonly type = LocationActionTypes.LOCATIONS_FETCH_STATISTICS_ERROR;
+  public errorStatus: string;
+
+  constructor(errorStatus: string) {
+    this.errorStatus = errorStatus;
+  }
 }
 
 export class LocationFetchAction {
@@ -85,5 +111,27 @@ export const updateSearchValue = (searchValue: string): SearchValueUpdate => {
   return {
     type: LocationActionTypes.UPDATE_SEARCH_VALUE,
     searchValue: searchValue,
+  };
+};
+
+export const fetchAllLocationsStatistics = (): LocationsFetchStatistics => {
+  return {
+    type: LocationActionTypes.LOCATIONS_FETCH_STATISTICS,
+  };
+};
+
+export const fetchAllLocationsStatisticsSuccess = (
+  locationsStatistics: LocationStatistics[]
+): LocationsFetchStatisticsSuccess => {
+  return {
+    type: LocationActionTypes.LOCATIONS_FETCH_STATISTICS_SUCCESS,
+    locationsStatistics: locationsStatistics,
+  };
+};
+
+export const fetchAllLocationsStatisticsError = (errorStatus: string): LocationsFetchStatisticsError => {
+  return {
+    type: LocationActionTypes.LOCATIONS_FETCH_STATISTICS_ERROR,
+    errorStatus: errorStatus,
   };
 };
