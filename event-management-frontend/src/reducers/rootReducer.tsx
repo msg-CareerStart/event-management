@@ -13,7 +13,11 @@ import ReservePageReducer from './ReservePageReducer';
 import TicketCategoriesReducer from './TicketReservationReducer';
 import RegistrationPageReducer from './RegistrationPageReducer';
 import { FormReducer } from './FormReducer';
+<<<<<<< Updated upstream
 import { LocationStatisticsReducer } from './LocationStatisticsReducer';
+=======
+import { EventsStatisticsReducer } from './EventStatisticsPageReducer';
+>>>>>>> Stashed changes
 
 export default combineReducers({
   events: EventsPageReducer,
@@ -30,5 +34,9 @@ export default combineReducers({
   reserveTicket: ReservePageReducer,
   ticketCategories: TicketCategoriesReducer,
   step: FormReducer,
+<<<<<<< Updated upstream
   locationStatistics: LocationStatisticsReducer,
+=======
+  eventStatistics: EventsStatisticsReducer,
+>>>>>>> Stashed changes
 });
