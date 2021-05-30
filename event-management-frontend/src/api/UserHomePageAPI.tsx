@@ -19,7 +19,6 @@ export const fetchPastEvents = (page: number, limit: number) => {
   return fetchWrapper(url)
     .then((response) => response.json())
     .then((json) => {
-      console.log(json);
       return json;
     });
 };
@@ -30,7 +29,6 @@ export const fetchUpcomingEvents = (page: number, limit: number) => {
   return fetchWrapper(url)
     .then((response) => response.json())
     .then((json) => {
-      console.log(json);
       return json;
     });
 };

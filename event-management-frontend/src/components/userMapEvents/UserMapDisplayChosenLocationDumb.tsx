@@ -1,46 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { greenMarkerPoint } from './userMarkerPointIcons';
-import { LatLngExpression, marker } from 'leaflet';
-import useStylesMapWrapper from '../../styles/MapWrapperStyle';
 import { useHistory } from 'react-router-dom';
-import { AppState } from '../../store/store';
-import { connect } from 'react-redux';
-import { EventCard } from '../../model/userHome/EventCard';
-import { fetchEventLocation } from '../../api/UserMapPageAPI';
-import { LocationType } from '../../model/LocationType';
-import { EventWithLocation } from './UserMapEventsDumb';
+import { EventCardsWithLoction } from './UserMapEventsSmart';
+import { useUserMapEvents } from '../../styles/userMapEvents/UserMapEventsStyle';
 
 interface Props {
-  event: EventCard;
+  event: EventCardsWithLoction;
 }
 
 const UserMapDisplayChosenLocationDumb = (props: Props) => {
-  const classesMap = useStylesMapWrapper();
-
+  const classesMap = useUserMapEvents();
   const history = useHistory();
-
   const goToEventDetails = (eventId: number) => {
     history.push(`/user/events/${eventId}`);
   };
 
   return (
     <div>
-      <Marker key={props.event.id} position={[46, 23]} icon={greenMarkerPoint}>
+      <Marker
+        key={props.event.location.id}
+        position={[parseFloat(props.event.location.latitude), parseFloat(props.event.location.longitude)]}
+        icon={greenMarkerPoint}
+      >
         <Popup>
           <div className={classesMap.wrapperPopup}>
             <p className={classesMap.locationAddress}>
-              {'Loc name'}
+              {props.event.location.name}
               {', '}
-              {'Loc address'}
+              {props.event.location.address}
             </p>
-            <h1 className={classesMap.locationTitle} onClick={() => goToEventDetails(props.event.id)}>
-              {props.event.title}
-              {', '}
-              {props.event.startDate}
-              {', '}
-              {props.event.startDate}
-            </h1>
+            {props.event.eventCards.map((x) => (
+              <div key={x.id}>
+                <h1 className={classesMap.locationTitle} onClick={() => goToEventDetails(x.id)}>
+                  {x.title}
+                </h1>
+                <p className={classesMap.eventDetails}>
+                  {' '}
+                  {', '}
+                  {x.startDate}
+                  {', '}
+                  {x.startHour}
+                </p>
+              </div>
+            ))}
           </div>
         </Popup>
       </Marker>

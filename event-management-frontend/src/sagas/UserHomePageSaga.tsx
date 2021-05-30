@@ -50,16 +50,16 @@ export function* watchFetchUserPastEventsAsync() {
 }
 
 function* fetchUserUpcomingEventsAsync(action: FetchUserUpcomingEventsAction) {
-  if (store.getState().userHome.upcoming.events.length === 0) {
-    yield put(fetchUserUpcomingEventsRequest());
+  //if (store.getState().userHome.upcoming.events.length === 0) {
+  yield put(fetchUserUpcomingEventsRequest());
 
-    try {
-      const result = yield call(() => fetchUpcomingEvents(action.page, action.limit));
-      yield put(fetchUserUpcomingEventsSuccess(result.events, result.more, result.noPages));
-    } catch (err) {
-      yield put(fetchUserUpcomingEventsError());
-    }
+  try {
+    const result = yield call(() => fetchUpcomingEvents(action.page, action.limit));
+    yield put(fetchUserUpcomingEventsSuccess(result.events, result.more, result.noPages));
+  } catch (err) {
+    yield put(fetchUserUpcomingEventsError());
   }
+  //}
 }
 
 export function* watchFetchUserUpcomingEventsAsync() {
