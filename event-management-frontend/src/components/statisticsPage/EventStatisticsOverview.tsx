@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from 'react';
 import MultiSelect from 'react-multi-select-component';
-import Checkbox from '@material-ui/core/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { EventCrud } from '../../model/EventCrud';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Grid } from '@material-ui/core';
+import { EventStatisticsPageState } from '../../reducers/EventStatisticsPageReducer';
+import { AppState } from '../../store/store';
+import { connect } from 'react-redux';
+import { availableColor, occupancyRateColor, validatedColor } from '../../styles/ChartColors';
 
 interface EventStatisticsProps {
   events: [];
+  eventStatistics: EventStatisticsPageState;
 }
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -29,30 +29,15 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
     options.push(option);
   });
 
-  const { t } = useTranslation();
   const [selected, setSelected] = useState([]);
 
-  useEffect(() => {
-    console.log(selected);
-    selected.map((s: any) => {
-      console.log(s.label);
-    });
-  }, [selected]);
-
-  const chartOption = {
-    title: {
-      text: 'My event',
-    },
-    chart: {
-      type: 'pie',
-    },
-    series: [
-      {
-        data: [1, 2, 3],
-      },
-    ],
+  const sum = (unvalidated: number | undefined, validated: number | undefined) => {
+    if (unvalidated != undefined && validated != undefined) {
+      return unvalidated + validated;
+    } else {
+      return 0;
+    }
   };
-
   return (
     <>
       <div>
@@ -60,8 +45,48 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
       </div>
       <Grid container spacing={2}>
         {selected.map((select: any) => (
-          <Grid item xs={12} sm={6} key={select.id}>
-            <HighchartsReact highcharts={Highcharts} options={chartOption} />
+          <Grid item xs={12} sm={6} key={select.value}>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={{
+                title: {
+                  text: select.label,
+                },
+
+                series: [
+                  {
+                    type: 'pie',
+                    showInLegend: true,
+                    data: [
+                      {
+                        name: 'Available',
+                        y: props.eventStatistics.events.find((element) => element.id == select.value)?.availableTickets,
+                        color: availableColor,
+                      },
+
+                      {
+                        name: 'Validated',
+                        y: props.eventStatistics.events.find((element) => element.id == select.value)?.validatedTickets,
+                        color: validatedColor,
+                      },
+
+                      {
+                        name: 'Occupancy Rate',
+                        y: sum(
+                          props.eventStatistics.events.find((element) => element.id == select.value)
+                            ?.unvalidatedTickets,
+                          props.eventStatistics.events.find((element) => element.id == select.value)?.validatedTickets
+                        ),
+                        color: occupancyRateColor,
+                      },
+                    ],
+                    dataLabels: {
+                      enabled: true,
+                    },
+                  },
+                ],
+              }}
+            />
           </Grid>
         ))}
       </Grid>
@@ -69,4 +94,10 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
   );
 }
 
-export default EventStatisticsOverview;
+const mapStateToProps = (state: AppState) => {
+  return {
+    eventStatistics: state.eventStatistics,
+  };
+};
+
+export default connect(mapStateToProps)(EventStatisticsOverview);

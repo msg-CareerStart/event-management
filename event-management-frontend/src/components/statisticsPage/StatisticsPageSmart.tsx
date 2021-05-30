@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { fetchAllEvents } from '../../actions/EventsPageActions';
+import { fetchAllEvents, fetchAllExistingEvents } from '../../actions/EventsPageActions';
 import { AppState } from '../../store/store';
 
 import { Dispatch } from 'redux';
-import { Paper } from '@material-ui/core';
+import { CircularProgress, Paper } from '@material-ui/core';
 import { eventDetailsStyles } from '../../styles/EventDetailsStyle';
 import OverviewSmart from '../eventCreateOrEdit/overviewSection/OverviewSmart';
 import StepperStatistics from './StepperStatistics';
@@ -13,43 +13,59 @@ import LocationStatisticsOverview from './LocationStatisticsOverview';
 import { LocationType } from '../../model/LocationType';
 import { locationFetch } from '../../actions/LocationActions';
 import EventStatisticsOverview from './EventStatisticsOverview';
+import { EventStatisticsPageState } from '../../reducers/EventStatisticsPageReducer';
+import { fetchStatisticsEvent } from '../../actions/EventStatisticsAction';
 
 interface Props {
   match: any;
   isAdmin: boolean;
   events: [];
   locations: LocationType[];
-  fetchAllEvents: () => { type: string };
+  eventStatistics: EventStatisticsPageState;
+  fetchStatisticsEvent: () => void;
+  fetchAllExistingEvents: () => { type: string };
   locationFetch: () => { type: string };
 }
 
-function StatisticsPage({ match, isAdmin, events, locations, fetchAllEvents, locationFetch }: Props) {
+function StatisticsPage({
+  match,
+  isAdmin,
+  events,
+  locations,
+  eventStatistics,
+  fetchStatisticsEvent,
+  fetchAllExistingEvents,
+  locationFetch,
+}: Props) {
   const backgroundStyle = eventDetailsStyles();
   let newEvent = match.path === '/admin/newEvent';
-  const [open, setOpen] = useState(false);
-  const [msgUndo, setMsgUndo] = useState('');
-  const [dialogTitle, setDialogTitle] = useState('');
-  const [dialogDescription, setDialogDescription] = useState('');
 
   const eventsOverviewStatistics = <EventStatisticsOverview events={events} />;
 
-  const [idLocation, setidLocation] = useState('');
   const locationComponent = <LocationStatisticsOverview locations={locations} />;
 
   useEffect(() => {
-    fetchAllEvents();
+    fetchAllExistingEvents();
     locationFetch();
-  }, []);
+    fetchStatisticsEvent();
+  }, [fetchStatisticsEvent, fetchAllEvents, locationFetch]);
 
   return (
-    <Paper className={backgroundStyle.paper}>
-      <StepperStatistics eventsComponent={eventsOverviewStatistics} locationComponent={locationComponent} />
-    </Paper>
+    <div>
+      {eventStatistics.isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Paper className={backgroundStyle.paper}>
+          <StepperStatistics eventsComponent={eventsOverviewStatistics} locationComponent={locationComponent} />
+        </Paper>
+      )}
+    </div>
   );
 }
 
 const mapStateToProps = (state: AppState) => {
   return {
+    eventStatistics: state.eventStatistics,
     events: state.events.allEvents,
     locations: state.location.locations,
   };
@@ -57,8 +73,9 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    fetchAllEvents: () => dispatch(fetchAllEvents()),
+    fetchAllExistingEvents: () => dispatch(fetchAllExistingEvents()),
     locationFetch: () => dispatch(locationFetch()),
+    fetchStatisticsEvent: () => dispatch(fetchStatisticsEvent()),
   };
 };
 

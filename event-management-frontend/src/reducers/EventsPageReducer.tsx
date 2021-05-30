@@ -42,6 +42,7 @@ import {
   UPDATE_ERROR_END_HOUR,
   LAST_PAGE_HOME,
   CLEAR_VALIDATION_DATA,
+  FETCH_EVENTS_ALL_REQUEST,
 } from '../actions/EventsPageActions';
 import { Severity, initialSeverity } from '../components/validateTicket/ValidateTicketAlert';
 import { MathRelation } from '../model/MathRelation';
@@ -228,6 +229,11 @@ export const EventsPageReducer = (state = initialState, action: ReducerActionPro
     case FILTER_EVENTS_ERROR:
       return {
         ...state,
+      };
+    case FETCH_EVENTS_ALL_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
       };
     case FETCH_EVENTS_REQUEST:
       return {
