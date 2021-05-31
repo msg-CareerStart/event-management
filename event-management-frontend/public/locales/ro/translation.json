@@ -135,6 +135,9 @@
         "ticketsTab": "Bilete",
         "imagesTab": "Imagini",
 
+        "eventStatisticTab": "Evenimente",
+        "locationStatisticTab": "Locații",
+
         "errMsgOverviewMinCharacters": "minim 3 charactere necesare",
         "errMsgOverviewFirstDayInPast": "prima zi a evenimentului nu poate fi în trecut",
         "errMsgOverviewFirstDayAfterLast": "prima zi a evenimentului nu poate fi după ultima",

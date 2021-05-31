@@ -33,7 +33,15 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
 
   const sum = (unvalidated: number | undefined, validated: number | undefined) => {
     if (unvalidated != undefined && validated != undefined) {
-      return unvalidated + validated;
+      return parseFloat((unvalidated + validated).toFixed(2));
+    } else {
+      return 0;
+    }
+  };
+
+  const getPercentage = (value: number | undefined, total: number | undefined) => {
+    if (value != undefined && total != undefined) {
+      return parseFloat(((100 * value) / total).toFixed(2));
     } else {
       return 0;
     }
@@ -60,22 +68,31 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
                     data: [
                       {
                         name: 'Available',
-                        y: props.eventStatistics.events.find((element) => element.id == select.value)?.availableTickets,
+                        y: getPercentage(
+                          props.eventStatistics.events.find((element) => element.id == select.value)?.availableTickets,
+                          props.eventStatistics.events.find((element) => element.id == select.value)?.totalTickets
+                        ),
                         color: availableColor,
                       },
 
                       {
                         name: 'Validated',
-                        y: props.eventStatistics.events.find((element) => element.id == select.value)?.validatedTickets,
+                        y: getPercentage(
+                          props.eventStatistics.events.find((element) => element.id == select.value)?.validatedTickets,
+                          props.eventStatistics.events.find((element) => element.id == select.value)?.totalTickets
+                        ),
                         color: validatedColor,
                       },
 
                       {
                         name: 'Occupancy Rate',
-                        y: sum(
-                          props.eventStatistics.events.find((element) => element.id == select.value)
-                            ?.unvalidatedTickets,
-                          props.eventStatistics.events.find((element) => element.id == select.value)?.validatedTickets
+                        y: getPercentage(
+                          sum(
+                            props.eventStatistics.events.find((element) => element.id == select.value)
+                              ?.unvalidatedTickets,
+                            props.eventStatistics.events.find((element) => element.id == select.value)?.validatedTickets
+                          ),
+                          props.eventStatistics.events.find((element) => element.id == select.value)?.totalTickets
                         ),
                         color: occupancyRateColor,
                       },
