@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { AppState } from '../../store/store';
 import { Dispatch } from 'redux';
@@ -30,6 +30,8 @@ import {
 } from '../../validation/RegistrationValidation';
 import { useTranslation } from 'react-i18next';
 import RegistrationDumb from './RegistrationDumb';
+import UserForm from '../../model/UserForm';
+import { addUser, editUser, loadUserByUsername } from '../../actions/UserFormActions';
 
 interface Props {
   isLoading: boolean;
@@ -63,6 +65,8 @@ interface Props {
   registrationUsernameError: (usernameError: string) => void;
   registrationPasswordError: (passwordError: string) => void;
   registrationConfirmPasswordError: (confirmPasswordError: string) => void;
+  addUserAction: (userForm: UserForm) => void;
+  editUserAction: (userForm: UserForm) => void;
 }
 
 const Registration = ({
@@ -95,6 +99,8 @@ const Registration = ({
   registrationUsernameError,
   registrationPasswordError,
   registrationConfirmPasswordError,
+  addUserAction,
+  editUserAction,
 }: Props) => {
   const [values, setValues] = useState<{ showPassword: boolean }>({
     showPassword: false,

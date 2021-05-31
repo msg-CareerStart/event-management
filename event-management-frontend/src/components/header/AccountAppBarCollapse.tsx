@@ -6,6 +6,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useTranslation } from 'react-i18next';
 import { useStylesHeader } from '../../styles/HeaderStyle';
 import { Auth } from 'aws-amplify';
+import { AppState } from '../../store/store';
+import { Dispatch } from 'redux';
+import { loadUserByUsername } from '../../actions/UserFormActions';
+import { connect } from 'react-redux';
 
 interface Props {
   isAdmin: boolean;
@@ -39,9 +43,7 @@ const AccountAppBarCollapse = ({ isAdmin }: Props) => {
       .catch(() => {});
   };
 
-  const checkUser = () => {
-    console.log(isAdmin);
-  };
+  const checkUser = () => {};
 
   return (
     <>

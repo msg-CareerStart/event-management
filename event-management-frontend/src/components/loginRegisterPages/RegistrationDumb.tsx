@@ -23,6 +23,7 @@ import EN from '../../languageImages/EN.png';
 import { RegistrationSucces } from './SuccessfulRegistrationMessage';
 import { validateConfirmPassword, validatePassword, validateEmail } from '../../validation/RegistrationValidation';
 import { useStylesRegistration } from '../../styles/RegistrationPageStyle';
+import UserForm from '../../model/UserForm';
 
 interface Props {
   error: string;

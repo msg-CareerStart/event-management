@@ -14,39 +14,21 @@ import { connect } from 'react-redux';
 interface Props {
   match: any;
   isAdmin: boolean;
-  user: UserForm;
-  fetchUserByIDAction: (id: number) => void;
-  fetchUserByUsernameAction: (username: string) => void;
-  addUserAction: (user: UserForm) => void;
-  editUserAction: (user: UserForm) => void;
+  userForm: UserForm;
+  editUserAction: (userForm: UserForm) => void;
 }
 
-const userDetailComponent = <DetailsSmart />;
-const appSettingsComponent = <AppSettingsSmart />;
-
-const MyAccount = ({
-  match,
-  isAdmin,
-  user,
-  fetchUserByIDAction,
-  fetchUserByUsernameAction,
-  addUserAction,
-  editUserAction,
-}: Props) => {
+const MyAccount = ({ match, isAdmin, userForm, editUserAction }: Props) => {
   //   const classes = myAccountStyles();
-
-  useEffect(() => {
-    console.log(user);
-    console.log(user);
-    console.log(user);
-    console.log(user);
-  });
 
   const backgroundStyle = eventDetailsStyles();
 
+  const userDetailComponent = <DetailsSmart userForm={userForm} editUserAction={editUserAction} />;
+  const appSettingsComponent = <AppSettingsSmart userForm={userForm} editUserAction={editUserAction} />;
+
   return (
     <Paper className={backgroundStyle.paper}>
-      <HeaderAccSmart />
+      <HeaderAccSmart userForm={userForm} editUserAction={editUserAction} />
       <StepperAccount userDetailComponent={userDetailComponent} appSettingsComponent={appSettingsComponent} />
     </Paper>
   );
@@ -54,16 +36,13 @@ const MyAccount = ({
 
 const mapStateToProps = (state: AppState) => {
   return {
-    user: state.userForm.user,
+    userForm: state.userForm.user,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    fetchUserByIDAction: (id: number) => dispatch(loadUserById(id)),
-    fetchUserByUsernameAction: (username: string) => dispatch(loadUserByUsername(username)),
-    addUserAction: (user: UserForm) => dispatch(addUser(user)),
-    editUserAction: (user: UserForm) => dispatch(editUser(user)),
+    editUserAction: (userForm: UserForm) => dispatch(editUser(userForm)),
   };
 };
 

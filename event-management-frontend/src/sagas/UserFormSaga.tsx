@@ -67,7 +67,7 @@ function* addUserAsync(props: AddProps) {
     if (res.status !== true) {
       throw res;
     } else {
-      yield put(addUserSuccess(user));
+      yield put(addUserSuccess());
     }
   } catch (e) {
     yield put(addUserFailure(e));
@@ -93,6 +93,6 @@ function* editUserAsync(props: AddProps) {
   }
 }
 
-export function* watchEditEventAsync() {
+export function* watchEditUserAsync() {
   yield takeLatest(EDIT_USERFORM, editUserAsync);
 }

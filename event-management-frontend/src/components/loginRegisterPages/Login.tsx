@@ -11,6 +11,8 @@ import { Dispatch } from 'redux';
 import { loginUsername, loginPassword, loginisLoading, loginError, loginSuccess } from '../../actions/LoginPageActions';
 import { connect } from 'react-redux';
 import LoginDumb from './LoginDumb';
+import { loadUserByUsername } from '../../actions/UserFormActions';
+import UserForm from '../../model/UserForm';
 
 interface Props {
   isLoading: boolean;
@@ -18,11 +20,14 @@ interface Props {
   password: string;
   error: string;
   success: string;
+
   loginPassword: (password: string) => void;
   loginUsername: (username: string) => void;
   loginError: (error: string) => void;
   loginisLoading: (isLoading: boolean) => void;
   loginSuccess: (succes: string) => void;
+
+  loadUserByUsernameAction: (username: string) => void;
 }
 
 const Login: React.FC<Props> = (props: Props) => {
@@ -46,7 +51,6 @@ const Login: React.FC<Props> = (props: Props) => {
     Auth.signIn(props.username, props.password)
       .then((user) => {
         localStorage.setItem('username', props.username);
-
         if (user.signInUserSession.accessToken.payload['cognito:groups'] !== undefined) {
           localStorage.setItem('role', 'admin');
           history.push('/admin/');
@@ -56,6 +60,7 @@ const Login: React.FC<Props> = (props: Props) => {
         }
 
         displaySuccessMessage(<Trans i18nKey="login.successMessage">Successful login</Trans>, props.loginSuccess);
+        props.loadUserByUsernameAction(props.username);
         props.loginError('');
       })
       .catch((error) => {
@@ -100,6 +105,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   loginisLoading: (loadingStatus: boolean) => dispatch(loginisLoading(loadingStatus)),
   loginError: (error: string) => dispatch(loginError(error)),
   loginSuccess: (success: string) => dispatch(loginSuccess(success)),
+
+  loadUserByUsernameAction: (username: string) => dispatch(loadUserByUsername(username)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

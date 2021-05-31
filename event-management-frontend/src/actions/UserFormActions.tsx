@@ -101,10 +101,9 @@ export const fetchUserByUsernameFailure = (error: string) => {
   };
 };
 
-export const addUserSuccess = (user: UserForm) => {
+export const addUserSuccess = () => {
   return {
     type: ADD_USER_SUCCESS,
-    payload: user,
   };
 };
 

@@ -8,6 +8,7 @@ export const createTextField = (
   style: string,
   name: string,
   labelText: string,
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
   defaultValueText: string | number,
   errorText: string,
   inputType: string
@@ -21,6 +22,7 @@ export const createTextField = (
           fullWidth
           label={labelText}
           variant="outlined"
+          onChange={handleChange}
           defaultValue={defaultValueText}
           error={errorText.length > 0}
           helperText={errorText}

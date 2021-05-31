@@ -22,7 +22,7 @@ export const addUserAPI = (user: UserForm) => {
 };
 
 export const editUserAPI = (user: UserForm) => {
-  return fetchWrapper(`${serverURL}/events/${user.id}`, {
+  return fetchWrapper(`${serverURL}/users/${user.id}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',

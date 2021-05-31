@@ -6,11 +6,14 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SaveIcon from '@material-ui/icons/Save';
 import { headerCrudDumbStyles } from '../../../styles/HeaderCrudStyles';
 import { useTranslation } from 'react-i18next';
+import UserForm from '../../../model/UserForm';
+
 interface Props {
-  isAdmin: boolean;
+  userForm: UserForm;
+  editUserAction: (userForm: UserForm) => void;
 }
 
-function HeaderAccDumb({}: Props) {
+function HeaderAccDumb(props: Props) {
   const buttonStyle = useStyles();
   const gridStyle = headerCrudDumbStyles();
   const { t } = useTranslation();
@@ -27,6 +30,12 @@ function HeaderAccDumb({}: Props) {
     </IconButton>
   );
 
+  const handleSave = () => {
+    props.editUserAction(props.userForm);
+    //change mail here TO DO
+    //last name and first name TO DO as well
+  };
+
   // const clearIconButton =
   //     isAdmin ===true ? (
   //         title === t()
@@ -34,7 +43,11 @@ function HeaderAccDumb({}: Props) {
   //     ): null
 
   const saveButton = (
-    <Button variant="contained" className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle}`}>
+    <Button
+      variant="contained"
+      onClick={handleSave}
+      className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle}`}
+    >
       {t('welcome.headerCRUDSave')}
     </Button>
   );
