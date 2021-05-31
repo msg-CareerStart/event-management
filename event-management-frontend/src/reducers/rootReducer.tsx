@@ -31,6 +31,6 @@ export default combineReducers({
   reserveTicket: ReservePageReducer,
   ticketCategories: TicketCategoriesReducer,
   step: FormReducer,
-  locationStatistics: LocationStatisticsReducer,
   eventStatistics: EventsStatisticsReducer,
+  locationsStatistics: LocationStatisticsReducer,
 });

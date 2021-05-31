@@ -21,9 +21,6 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 function LocationStatisticsOverview(props: LocationStatisticsProps) {
   const options: { label: string; value: number }[] = [];
-
-  console.log(props.locationsStatistics);
-
   props.locations.map((loc: any) => {
     const option = {
       label: loc.name,

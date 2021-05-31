@@ -5,7 +5,6 @@ export const LOCATIONS_FETCH_STATISTICS_SUCCESS = 'LOCATIONS_FETCH_STATISTICS_SU
 export const LOCATIONS_FETCH_STATISTICS_ERROR = 'LOCATIONS_FETCH_STATISTICS_ERROR';
 
 export const fetchAllLocationsStatistics = () => {
-  console.log('Sunt in LocationActions, in fetchAllLocationsStatistics()');
   return {
     type: LOCATIONS_FETCH_STATISTICS,
   };

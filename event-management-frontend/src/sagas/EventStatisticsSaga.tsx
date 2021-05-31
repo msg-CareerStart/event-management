@@ -8,9 +8,7 @@ import {
 import { fetchEventStatistics } from '../api/HeaderEventCrudAPI';
 
 function* fetchStatisticsEventAsync() {
-  console.log('LULULU');
   try {
-    console.log('lulu?');
     yield put(fetchStatisticsEventRequest());
     const events = yield call(() => fetchEventStatistics());
     yield put(fetchStatisticsEventSuccess(events));

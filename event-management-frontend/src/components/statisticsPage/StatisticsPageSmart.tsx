@@ -47,7 +47,7 @@ function StatisticsPage({
     locationFetch();
     fetchStatisticsEvent();
     fetchAllLocationsStatistics();
-    console.log(locationsStatistics);
+    console.log(locationsStatistics.locations);
   }, [fetchStatisticsEvent, fetchAllEvents, locationFetch]);
 
   return (

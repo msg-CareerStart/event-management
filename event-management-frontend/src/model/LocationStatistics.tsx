@@ -1,6 +1,6 @@
 import { EventStatistics } from './EventStatistics';
 
 export interface LocationStatistics {
-  id: number;
-  events: EventStatistics[];
+  idLocation: number;
+  eventStatistics: EventStatistics[];
 }

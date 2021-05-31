@@ -22,9 +22,7 @@ export function* watchFetchLocationAsync() {
 }
 
 function* fetchStatistics() {
-  console.log('STATISTICS');
   try {
-    console.log('WEEEE');
     const response = yield call(() => fetchLocationStatistics());
     yield put(fetchAllLocationsStatisticsSuccess(response));
   } catch (error) {
@@ -33,6 +31,5 @@ function* fetchStatistics() {
 }
 
 export function* watchFetchLocationsStatisticsAsync() {
-  console.log('LocationPageSaga pentru primul fetch');
   yield takeEvery(LOCATIONS_FETCH_STATISTICS, fetchStatistics);
 }
