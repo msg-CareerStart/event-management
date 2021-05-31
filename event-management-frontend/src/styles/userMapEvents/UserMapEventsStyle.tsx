@@ -9,6 +9,7 @@ export const useUserMapEvents = makeStyles((theme) => ({
     fontSize: '13px',
   },
   locationTitle: {
+    cursor: 'pointer',
     display: 'inline',
     verticalAlign: 'top',
     fontSize: '14px',
