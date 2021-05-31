@@ -1,13 +1,12 @@
 import { put, takeLatest, call, takeEvery } from 'redux-saga/effects';
+import { locationFetchSucces, LocationActionTypes, locationError } from '../actions/LocationActions';
 import {
-  locationFetchSucces,
-  LocationActionTypes,
-  locationError,
-  fetchAllLocationsStatisticsSuccess,
   fetchAllLocationsStatisticsError,
-} from '../actions/LocationActions';
+  fetchAllLocationsStatisticsSuccess,
+  LOCATIONS_FETCH_STATISTICS,
+} from '../actions/LocationStatisticsAction';
 import { fetchLocation } from '../api/HeaderEventCrudAPI';
-import { getLocationsStatistics } from '../api/LocationServiceAPI';
+import { fetchLocationStatistics } from '../api/LocationServiceAPI';
 
 function* fetchLocations() {
   try {
@@ -22,9 +21,11 @@ export function* watchFetchLocationAsync() {
   yield takeLatest(LocationActionTypes.LOCATION_FETCH, fetchLocations);
 }
 
-function* fetchAllLocationsStatistics() {
+function* fetchStatistics() {
+  console.log('STATISTICS');
   try {
-    const response = yield call(() => getLocationsStatistics());
+    console.log('WEEEE');
+    const response = yield call(() => fetchLocationStatistics());
     yield put(fetchAllLocationsStatisticsSuccess(response));
   } catch (error) {
     yield put(fetchAllLocationsStatisticsError(error));
@@ -32,5 +33,6 @@ function* fetchAllLocationsStatistics() {
 }
 
 export function* watchFetchLocationsStatisticsAsync() {
-  yield takeEvery(LocationActionTypes.LOCATIONS_FETCH_STATISTICS, fetchAllLocationsStatistics);
+  console.log('LocationPageSaga pentru primul fetch');
+  yield takeEvery(LOCATIONS_FETCH_STATISTICS, fetchStatistics);
 }

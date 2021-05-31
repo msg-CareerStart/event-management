@@ -6,48 +6,48 @@ import { AppState } from '../../store/store';
 import { Dispatch } from 'redux';
 import { CircularProgress, Paper } from '@material-ui/core';
 import { eventDetailsStyles } from '../../styles/EventDetailsStyle';
-import OverviewSmart from '../eventCreateOrEdit/overviewSection/OverviewSmart';
 import StepperStatistics from './StepperStatistics';
-import MapWrapper from '../eventCreateOrEdit/locationSection/Map';
 import LocationStatisticsOverview from './LocationStatisticsOverview';
 import { LocationType } from '../../model/LocationType';
 import { locationFetch } from '../../actions/LocationActions';
 import EventStatisticsOverview from './EventStatisticsOverview';
 import { EventStatisticsPageState } from '../../reducers/EventStatisticsPageReducer';
 import { fetchStatisticsEvent } from '../../actions/EventStatisticsAction';
+import { LocationPageStatistics } from '../../reducers/LocationStatisticsReducer';
+import { fetchAllLocationsStatistics } from '../../actions/LocationStatisticsAction';
 
 interface Props {
   match: any;
-  isAdmin: boolean;
   events: [];
   locations: LocationType[];
   eventStatistics: EventStatisticsPageState;
-  fetchStatisticsEvent: () => void;
+  locationsStatistics: LocationPageStatistics;
+  fetchStatisticsEvent: () => { type: string };
   fetchAllExistingEvents: () => { type: string };
   locationFetch: () => { type: string };
+  fetchAllLocationsStatistics: () => { type: string };
 }
 
 function StatisticsPage({
-  match,
-  isAdmin,
   events,
   locations,
   eventStatistics,
+  locationsStatistics,
   fetchStatisticsEvent,
   fetchAllExistingEvents,
   locationFetch,
+  fetchAllLocationsStatistics,
 }: Props) {
   const backgroundStyle = eventDetailsStyles();
-  let newEvent = match.path === '/admin/newEvent';
-
   const eventsOverviewStatistics = <EventStatisticsOverview events={events} />;
-
   const locationComponent = <LocationStatisticsOverview locations={locations} />;
 
   useEffect(() => {
     fetchAllExistingEvents();
     locationFetch();
     fetchStatisticsEvent();
+    fetchAllLocationsStatistics();
+    console.log(locationsStatistics);
   }, [fetchStatisticsEvent, fetchAllEvents, locationFetch]);
 
   return (
@@ -68,6 +68,7 @@ const mapStateToProps = (state: AppState) => {
     eventStatistics: state.eventStatistics,
     events: state.events.allEvents,
     locations: state.location.locations,
+    locationsStatistics: state.locationsStatistics,
   };
 };
 
@@ -76,6 +77,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     fetchAllExistingEvents: () => dispatch(fetchAllExistingEvents()),
     locationFetch: () => dispatch(locationFetch()),
     fetchStatisticsEvent: () => dispatch(fetchStatisticsEvent()),
+    fetchAllLocationsStatistics: () => dispatch(fetchAllLocationsStatistics()),
   };
 };
 

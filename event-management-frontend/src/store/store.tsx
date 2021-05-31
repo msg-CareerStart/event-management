@@ -17,6 +17,7 @@ import { RegistrationPageState } from '../reducers/RegistrationPageReducer';
 import { UserEventDetailsState } from '../reducers/UserEventDetailsReducer';
 import { FormState } from '../reducers/FormReducer';
 import { EventStatisticsPageState } from '../reducers/EventStatisticsPageReducer';
+import { LocationPageStatistics } from '../reducers/LocationStatisticsReducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -39,4 +40,5 @@ export interface AppState {
   eventWithLocation: UserEventDetailsState;
   step: FormState;
   eventStatistics: EventStatisticsPageState;
+  locationsStatistics: LocationPageStatistics;
 }

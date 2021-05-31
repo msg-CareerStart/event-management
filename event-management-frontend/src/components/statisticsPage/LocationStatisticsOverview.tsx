@@ -7,9 +7,13 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Grid } from '@material-ui/core';
 import { LocationType } from '../../model/LocationType';
+import { LocationPageStatistics } from '../../reducers/LocationStatisticsReducer';
+import { AppState } from '../../store/store';
+import { connect } from 'react-redux';
 
 interface LocationStatisticsProps {
   locations: LocationType[];
+  locationsStatistics: LocationPageStatistics;
 }
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -17,6 +21,8 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 function LocationStatisticsOverview(props: LocationStatisticsProps) {
   const options: { label: string; value: number }[] = [];
+
+  console.log(props.locationsStatistics);
 
   props.locations.map((loc: any) => {
     const option = {
@@ -33,21 +39,8 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
     selected.map((s: any) => {
       console.log(s.label);
     });
+    console.log(props.locationsStatistics);
   }, [selected]);
-
-  const chartOption = {
-    title: {
-      text: 'My location',
-    },
-    chart: {
-      type: 'bar',
-    },
-    series: [
-      {
-        data: [1, 2, 3],
-      },
-    ],
-  };
 
   return (
     <>
@@ -57,7 +50,45 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
       <Grid container spacing={2}>
         {selected.map((select: any) => (
           <Grid item xs={12} sm={6} key={select.id}>
-            <HighchartsReact highcharts={Highcharts} options={chartOption} />
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={{
+                title: {
+                  text: select.label,
+                },
+                xAxis: {
+                  categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
+                },
+                yAxis: {
+                  min: 0,
+                  title: {
+                    text: 'Total fruit consumption',
+                  },
+                },
+                legend: {
+                  reversed: true,
+                },
+                plotOptions: {
+                  series: {
+                    stacking: 'normal',
+                  },
+                },
+                series: [
+                  {
+                    name: 'Occupied, unvalidated',
+                    data: [5, 3, 4, 7, 2],
+                  },
+                  {
+                    name: 'Occupied, validated',
+                    data: [2, 2, 3, 2, 1],
+                  },
+                  {
+                    name: 'Available',
+                    data: [3, 4, 4, 2, 5],
+                  },
+                ],
+              }}
+            />
           </Grid>
         ))}
       </Grid>
@@ -65,4 +96,10 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
   );
 }
 
-export default LocationStatisticsOverview;
+const mapStateToProps = (state: AppState) => {
+  return {
+    locationsStatistics: state.locationsStatistics,
+  };
+};
+
+export default connect(mapStateToProps)(LocationStatisticsOverview);

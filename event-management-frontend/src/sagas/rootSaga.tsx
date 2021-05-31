@@ -14,7 +14,7 @@ import {
   watchAddEventAsync,
   watchDeletEventAsync,
 } from './HeaderEventCrudSaga';
-import { watchFetchLocationAsync } from './LocationPageSaga';
+import { watchFetchLocationAsync, watchFetchLocationsStatisticsAsync } from './LocationPageSaga';
 import { watchLoadTicketCategoriesAsync, watchAddBookingsAsync } from './TicketReservationSaga';
 import { watchFetchReserveEventAsync } from './ReservePageSaga';
 import { watchFetchTicketsAsync } from './TicketsPageSaga';
@@ -71,5 +71,7 @@ export default function* rootSaga() {
     watchFetchStatisticsEventAsync(),
 
     watchFetchAllExistingEventsAsync(),
+
+    watchFetchLocationsStatisticsAsync(),
   ]);
 }

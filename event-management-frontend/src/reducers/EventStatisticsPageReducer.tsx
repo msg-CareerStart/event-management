@@ -16,7 +16,7 @@ const initialState: EventStatisticsPageState = {
 };
 
 export const EventsStatisticsReducer = (
-  state = initialState,
+  state: EventStatisticsPageState = initialState,
   action: { type: string; payload: EventStatistics[]; err: string }
 ) => {
   switch (action.type) {

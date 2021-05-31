@@ -1,4 +1,7 @@
-import { LocationAction, LocationActionTypes } from '../actions/LocationActions';
+import {
+  LOCATIONS_FETCH_STATISTICS_ERROR,
+  LOCATIONS_FETCH_STATISTICS_SUCCESS,
+} from '../actions/LocationStatisticsAction';
 import { LocationStatistics } from '../model/LocationStatistics';
 
 export interface LocationPageStatistics {
@@ -13,18 +16,16 @@ const initialState: LocationPageStatistics = {
   error: '',
 };
 
-export const LocationStatisticsReducer = (
-  state: LocationPageStatistics = initialState,
-  action: LocationAction
-): LocationPageStatistics => {
+export const LocationStatisticsReducer = (state: LocationPageStatistics = initialState, action: any) => {
   switch (action.type) {
-    case LocationActionTypes.LOCATIONS_FETCH_STATISTICS_SUCCESS: {
+    case LOCATIONS_FETCH_STATISTICS_SUCCESS: {
+      console.log(action.payload);
       return {
         ...state,
-        locations: action.locationsStatistics,
+        locations: action.payload,
       };
     }
-    case LocationActionTypes.LOCATIONS_FETCH_STATISTICS_ERROR: {
+    case LOCATIONS_FETCH_STATISTICS_ERROR: {
       return {
         ...state,
         error: action.errorStatus,
