@@ -46,10 +46,23 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
       return 0;
     }
   };
+
+  const customRenderer = (selected: any, _options: any) => {
+    return selected.length
+      ? selected.map((sel: { value: number }) => options.find((elem) => elem.value == sel.value)?.label + '✔️  ')
+      : '❌ No Items Selected';
+  };
+
   return (
     <>
       <div>
-        <MultiSelect options={options} value={selected} onChange={setSelected} labelledBy="Select" />
+        <MultiSelect
+          options={options}
+          value={selected}
+          onChange={setSelected}
+          labelledBy="Select"
+          valueRenderer={customRenderer}
+        />
       </div>
       <Grid container spacing={2}>
         {selected.map((select: any) => (
