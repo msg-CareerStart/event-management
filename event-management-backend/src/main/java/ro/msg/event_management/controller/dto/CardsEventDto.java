@@ -1,6 +1,7 @@
 package ro.msg.event_management.controller.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,9 @@ public class CardsEventDto {
     private Float occupancyRate;
     private LocalDate startDate;
     private LocalDate endDate;
+    private LocalTime startHour;
+    private LocalTime endHour;
+    private LocationDto locationDto;
     private String location;
     private String pictureUrl;
 }
