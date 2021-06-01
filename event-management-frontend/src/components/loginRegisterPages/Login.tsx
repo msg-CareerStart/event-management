@@ -45,7 +45,7 @@ const Login: React.FC<Props> = (props: Props) => {
   const onSubmit = async () => {
     console.log('////////////');
     console.log(props);
-    console.log('...');
+    console.log('....');
 
     props.loginisLoading(true);
     Auth.signIn(props.username, props.password)
