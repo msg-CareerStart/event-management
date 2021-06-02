@@ -22,4 +22,10 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
                                             @Param("ticketCategory") long ticketCategory,
                                             @Param("code") String code);
 
+
+    @Query("SELECT d FROM Discount d " +
+            "WHERE ((d.ticketCategory.id = :idTicketCategory) and (d.endDate >= :currentTime) and (d.startDate <= :currentTime)) " +
+            "order by d.startDate ASC "
+    )
+    List<Discount> findCurrentDiscountsForTicketCategory(@Param("idTicketCategory") long idTicketCategory,@Param("currentTime") LocalDate currentTime);
 }
