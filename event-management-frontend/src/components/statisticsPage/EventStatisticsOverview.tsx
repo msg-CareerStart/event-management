@@ -62,6 +62,16 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
                   {
                     type: 'pie',
                     showInLegend: true,
+                    tooltip: {
+                      pointFormat:
+                        '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+                      shared: false,
+                    },
+                    plotOptions: {
+                      series: {
+                        stacking: 'percent',
+                      },
+                    },
                     data: [
                       {
                         name: 'Available',

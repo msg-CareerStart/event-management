@@ -12,6 +12,7 @@ import { AppState } from '../../store/store';
 import { connect } from 'react-redux';
 import { EventStatistics } from '../../model/EventStatistics';
 import { getPercentage, sum } from './EventStatisticsOverview';
+import { availableColor, occupancyRateColor, validatedColor } from '../../styles/ChartColors';
 
 interface LocationStatisticsProps {
   events: [];
@@ -129,9 +130,14 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
                 legend: {
                   reversed: true,
                 },
+                tooltip: {
+                  pointFormat:
+                    '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+                  shared: false,
+                },
                 plotOptions: {
                   series: {
-                    stacking: 'normal',
+                    stacking: 'percent',
                   },
                 },
                 series: [
@@ -141,6 +147,7 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
                       props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
                         ?.eventStatistics
                     ),
+                    color: availableColor,
                   },
                   {
                     name: 'Validated',
@@ -148,6 +155,7 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
                       props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
                         ?.eventStatistics
                     ),
+                    color: validatedColor,
                   },
                   {
                     name: 'Occupancy rate',
@@ -155,6 +163,7 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
                       props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
                         ?.eventStatistics
                     ),
+                    color: occupancyRateColor,
                   },
                 ],
               }}
