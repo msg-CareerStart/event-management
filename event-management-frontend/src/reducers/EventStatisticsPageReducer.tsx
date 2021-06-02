@@ -1,4 +1,8 @@
-import { FETCH_STATISTICS_EVENT_REQUEST, FETCH_STATISTICS_EVENT_SUCCESS } from '../actions/EventStatisticsAction';
+import {
+  FETCH_STATISTICS_EVENT_ERROR,
+  FETCH_STATISTICS_EVENT_REQUEST,
+  FETCH_STATISTICS_EVENT_SUCCESS,
+} from '../actions/EventStatisticsAction';
 import { EventStatistics } from '../model/EventStatistics';
 
 export interface EventStatisticsPageState {
@@ -31,7 +35,7 @@ export const EventsStatisticsReducer = (
         isLoading: false,
         events: action.payload,
       };
-    case FETCH_STATISTICS_EVENT_REQUEST:
+    case FETCH_STATISTICS_EVENT_ERROR:
       return {
         ...state,
         isLoading: false,

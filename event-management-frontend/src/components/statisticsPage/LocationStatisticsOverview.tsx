@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultiSelect from 'react-multi-select-component';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Highcharts from 'highcharts';
+import Highcharts, { seriesType } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Grid } from '@material-ui/core';
 import { LocationType } from '../../model/LocationType';
@@ -124,7 +124,7 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
                 yAxis: {
                   min: 0,
                   title: {
-                    text: 'Total number of tickets / event',
+                    text: "Percentage of tickets' distribution / event",
                   },
                 },
                 legend: {
@@ -150,15 +150,7 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
                     color: availableColor,
                   },
                   {
-                    name: 'Validated',
-                    data: getValidatedTickets(
-                      props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
-                        ?.eventStatistics
-                    ),
-                    color: validatedColor,
-                  },
-                  {
-                    name: 'Occupancy rate',
+                    name: 'Occupancy Rate',
                     data: getOccupancyRate(
                       props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
                         ?.eventStatistics

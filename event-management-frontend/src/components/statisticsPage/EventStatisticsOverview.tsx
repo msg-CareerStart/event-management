@@ -81,16 +81,6 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
                         ),
                         color: availableColor,
                       },
-
-                      {
-                        name: 'Validated',
-                        y: getPercentage(
-                          props.eventStatistics.events.find((element) => element.id == select.value)?.validatedTickets,
-                          props.eventStatistics.events.find((element) => element.id == select.value)?.totalTickets
-                        ),
-                        color: validatedColor,
-                      },
-
                       {
                         name: 'Occupancy Rate',
                         y: getPercentage(

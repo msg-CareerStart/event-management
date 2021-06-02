@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchAllEvents, fetchAllExistingEvents } from '../../actions/EventsPageActions';
 import { AppState } from '../../store/store';
-
 import { Dispatch } from 'redux';
 import { CircularProgress, Paper } from '@material-ui/core';
 import { eventDetailsStyles } from '../../styles/EventDetailsStyle';

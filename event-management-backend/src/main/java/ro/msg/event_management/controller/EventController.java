@@ -300,7 +300,7 @@ public class EventController {
     }
 
     @GetMapping("/user/future")
-//    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<JSONObject> userEventsWillAttend(Pageable pageable) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
