@@ -13,7 +13,6 @@ import { locationFetch } from '../../actions/LocationActions';
 import EventStatisticsOverview from './EventStatisticsOverview';
 import { EventStatisticsPageState } from '../../reducers/EventStatisticsPageReducer';
 import { fetchStatisticsEvent } from '../../actions/EventStatisticsAction';
-import { LocationPageStatistics } from '../../reducers/LocationStatisticsReducer';
 import { fetchAllLocationsStatistics } from '../../actions/LocationStatisticsAction';
 
 interface Props {
@@ -21,7 +20,6 @@ interface Props {
   events: [];
   locations: LocationType[];
   eventStatistics: EventStatisticsPageState;
-  locationsStatistics: LocationPageStatistics;
   fetchStatisticsEvent: () => { type: string };
   fetchAllExistingEvents: () => { type: string };
   locationFetch: () => { type: string };
@@ -32,7 +30,6 @@ function StatisticsPage({
   events,
   locations,
   eventStatistics,
-  locationsStatistics,
   fetchStatisticsEvent,
   fetchAllExistingEvents,
   locationFetch,
@@ -40,14 +37,13 @@ function StatisticsPage({
 }: Props) {
   const backgroundStyle = eventDetailsStyles();
   const eventsOverviewStatistics = <EventStatisticsOverview events={events} />;
-  const locationComponent = <LocationStatisticsOverview locations={locations} />;
+  const locationComponent = <LocationStatisticsOverview locations={locations} events={events} />;
 
   useEffect(() => {
     fetchAllExistingEvents();
     locationFetch();
     fetchStatisticsEvent();
     fetchAllLocationsStatistics();
-    console.log(locationsStatistics.locations);
   }, [fetchStatisticsEvent, fetchAllEvents, locationFetch]);
 
   return (
@@ -68,7 +64,6 @@ const mapStateToProps = (state: AppState) => {
     eventStatistics: state.eventStatistics,
     events: state.events.allEvents,
     locations: state.location.locations,
-    locationsStatistics: state.locationsStatistics,
   };
 };
 

@@ -11,7 +11,6 @@ export const fetchAllLocationsStatistics = () => {
 };
 
 export const fetchAllLocationsStatisticsSuccess = (locationsStatistics: LocationStatistics[]) => {
-  console.log('SUCCES IN LocationActions');
   return {
     type: LOCATIONS_FETCH_STATISTICS_SUCCESS,
     payload: locationsStatistics,
@@ -19,7 +18,6 @@ export const fetchAllLocationsStatisticsSuccess = (locationsStatistics: Location
 };
 
 export const fetchAllLocationsStatisticsError = (errorStatus: string) => {
-  console.log('ERROR IN LocationActions');
   return {
     type: LOCATIONS_FETCH_STATISTICS_ERROR,
     errorStatus: errorStatus,

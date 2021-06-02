@@ -31,22 +31,6 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
 
   const [selected, setSelected] = useState([]);
 
-  const sum = (unvalidated: number | undefined, validated: number | undefined) => {
-    if (unvalidated != undefined && validated != undefined) {
-      return parseFloat((unvalidated + validated).toFixed(2));
-    } else {
-      return 0;
-    }
-  };
-
-  const getPercentage = (value: number | undefined, total: number | undefined) => {
-    if (value != undefined && total != undefined) {
-      return parseFloat(((100 * value) / total).toFixed(2));
-    } else {
-      return 0;
-    }
-  };
-
   const customRenderer = (selected: any, _options: any) => {
     return selected.length
       ? selected.map((sel: { value: number }) => options.find((elem) => elem.value == sel.value)?.label + '✔️  ')
@@ -128,6 +112,22 @@ const mapStateToProps = (state: AppState) => {
   return {
     eventStatistics: state.eventStatistics,
   };
+};
+
+export const sum = (unvalidated: number | undefined, validated: number | undefined) => {
+  if (unvalidated != undefined && validated != undefined) {
+    return parseFloat((unvalidated + validated).toFixed(2));
+  } else {
+    return 0;
+  }
+};
+
+export const getPercentage = (value: number | undefined, total: number | undefined) => {
+  if (value != undefined && total != undefined) {
+    return parseFloat(((100 * value) / total).toFixed(2));
+  } else {
+    return 0;
+  }
 };
 
 export default connect(mapStateToProps)(EventStatisticsOverview);

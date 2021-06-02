@@ -10,8 +10,11 @@ import { LocationType } from '../../model/LocationType';
 import { LocationPageStatistics } from '../../reducers/LocationStatisticsReducer';
 import { AppState } from '../../store/store';
 import { connect } from 'react-redux';
+import { EventStatistics } from '../../model/EventStatistics';
+import { getPercentage, sum } from './EventStatisticsOverview';
 
 interface LocationStatisticsProps {
+  events: [];
   locations: LocationType[];
   locationsStatistics: LocationPageStatistics;
 }
@@ -20,29 +23,80 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 function LocationStatisticsOverview(props: LocationStatisticsProps) {
-  const options: { label: string; value: number }[] = [];
+  const locationOptions: { label: string; value: number }[] = [];
   props.locations.map((loc: any) => {
     const option = {
       label: loc.name,
-      value: loc.address,
+      value: loc.id,
     };
-    options.push(option);
+    locationOptions.push(option);
+  });
+
+  const eventOptions: { label: string; value: number }[] = [];
+  props.events.map((e: any) => {
+    const event = {
+      label: e.title,
+      value: e.id,
+    };
+    eventOptions.push(event);
   });
 
   const { t } = useTranslation();
   const [selected, setSelected] = useState<any[]>([]);
 
-  useEffect(() => {
-    selected.map((s: any) => {
-      console.log(s.label);
-    });
-    console.log(props.locationsStatistics);
-  }, [selected]);
+  const customRenderer = (selected: any, _options: any) => {
+    return selected.length
+      ? selected.map(
+          (sel: { value: number }) => locationOptions.find((elem) => elem.value == sel.value)?.label + '✔️  '
+        )
+      : '❌ No Items Selected';
+  };
+
+  const getNamesOfEventsById = (eventIds: number[] | undefined) => {
+    if (eventIds != undefined) {
+      const searchedEvents = eventOptions.filter((eventOption) => eventIds.includes(eventOption.value));
+      return searchedEvents.map((searchedEvent) => searchedEvent.label);
+    } else {
+      return undefined;
+    }
+  };
+
+  const getAvailableTickets = (eventStatistics: EventStatistics[] | undefined) => {
+    if (eventStatistics != undefined) {
+      return eventStatistics.map((event) => getPercentage(event.availableTickets, event.totalTickets));
+    } else {
+      return 0;
+    }
+  };
+
+  const getValidatedTickets = (eventStatistics: EventStatistics[] | undefined) => {
+    if (eventStatistics != undefined) {
+      return eventStatistics.map((event) => getPercentage(event.validatedTickets, event.totalTickets));
+    } else {
+      return 0;
+    }
+  };
+
+  const getOccupancyRate = (eventStatistics: EventStatistics[] | undefined) => {
+    if (eventStatistics != undefined) {
+      return eventStatistics.map((event) =>
+        getPercentage(sum(event.unvalidatedTickets, event.validatedTickets), event.totalTickets)
+      );
+    } else {
+      return 0;
+    }
+  };
 
   return (
     <>
       <div>
-        <MultiSelect options={options} value={selected} onChange={setSelected} labelledBy="Select" />
+        <MultiSelect
+          options={locationOptions}
+          value={selected}
+          onChange={setSelected}
+          labelledBy="Select"
+          valueRenderer={customRenderer}
+        />
       </div>
       <Grid container spacing={2}>
         {selected.map((select: any) => (
@@ -50,16 +104,26 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
             <HighchartsReact
               highcharts={Highcharts}
               options={{
+                chart: {
+                  type: 'bar',
+                },
                 title: {
                   text: select.label,
                 },
                 xAxis: {
-                  categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
+                  title: {
+                    text: 'Events',
+                  },
+                  categories: getNamesOfEventsById(
+                    props.locationsStatistics.locations
+                      .find((location) => location.idLocation == select.value)
+                      ?.eventStatistics.map((event) => event.id)
+                  ),
                 },
                 yAxis: {
                   min: 0,
                   title: {
-                    text: 'Total fruit consumption',
+                    text: 'Total number of tickets / event',
                   },
                 },
                 legend: {
@@ -72,16 +136,25 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
                 },
                 series: [
                   {
-                    name: 'Occupied, unvalidated',
-                    data: [5, 3, 4, 7, 2],
-                  },
-                  {
-                    name: 'Occupied, validated',
-                    data: [2, 2, 3, 2, 1],
-                  },
-                  {
                     name: 'Available',
-                    data: [3, 4, 4, 2, 5],
+                    data: getAvailableTickets(
+                      props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
+                        ?.eventStatistics
+                    ),
+                  },
+                  {
+                    name: 'Validated',
+                    data: getValidatedTickets(
+                      props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
+                        ?.eventStatistics
+                    ),
+                  },
+                  {
+                    name: 'Occupancy rate',
+                    data: getOccupancyRate(
+                      props.locationsStatistics.locations.find((location) => location.idLocation == select.value)
+                        ?.eventStatistics
+                    ),
                   },
                 ],
               }}
