@@ -70,14 +70,6 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
     }
   };
 
-  const getValidatedTickets = (eventStatistics: EventStatistics[] | undefined) => {
-    if (eventStatistics != undefined) {
-      return eventStatistics.map((event) => getPercentage(event.validatedTickets, event.totalTickets));
-    } else {
-      return 0;
-    }
-  };
-
   const getOccupancyRate = (eventStatistics: EventStatistics[] | undefined) => {
     if (eventStatistics != undefined) {
       return eventStatistics.map((event) =>
