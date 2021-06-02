@@ -9,30 +9,13 @@ import UserMapDisplayChosenLocationDumb from './UserMapDisplayChosenLocationDumb
 
 interface Props {
   eventCardsWithLocation: EventCardsWithLoction[];
+  show: boolean;
+  selectedEvent: EventCardsWithLoction;
+  submitLocation: (lat: string, long: string) => void;
 }
 
 const UserMapEventsDumb: React.FC<Props> = (props: Props) => {
   const classesMap = useStylesMapWrapper();
-  const [selectedEvent, setSelectedEvent] = useState<EventCardsWithLoction>({
-    eventCards: [],
-    location: {
-      id: 0,
-      name: '',
-      address: '',
-      latitude: '',
-      longitude: '',
-    },
-  });
-  const [show, setShow] = useState(false);
-
-  const submitLocation = (lat: string, long: string) => {
-    props.eventCardsWithLocation.map((e) => {
-      if (e.location.latitude === lat && e.location.longitude === long) {
-        setSelectedEvent(e);
-        setShow(true);
-      }
-    });
-  };
 
   return (
     <div className={`${classesMap.mapWrapper} mapResponsive`}>
@@ -43,10 +26,12 @@ const UserMapEventsDumb: React.FC<Props> = (props: Props) => {
         />
         <UserMapDisplayLocationsDumb
           eventCards={props.eventCardsWithLocation}
-          submitLocation={submitLocation}
+          submitLocation={props.submitLocation}
         ></UserMapDisplayLocationsDumb>
 
-        {show && <UserMapDisplayChosenLocationDumb event={selectedEvent}></UserMapDisplayChosenLocationDumb>}
+        {props.show && (
+          <UserMapDisplayChosenLocationDumb event={props.selectedEvent}></UserMapDisplayChosenLocationDumb>
+        )}
       </Map>
     </div>
   );

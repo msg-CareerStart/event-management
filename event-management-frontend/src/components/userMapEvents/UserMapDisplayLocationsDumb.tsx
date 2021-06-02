@@ -21,9 +21,7 @@ const UserMapDisplayLocationsDumb = (props: Props) => {
     <div>
       {props.eventCards.map((e) => (
         <Marker
-          onClick={() => {
-            return props.submitLocation(e.location.latitude, e.location.longitude);
-          }}
+          onClick={() => props.submitLocation(e.location.latitude, e.location.longitude)}
           key={e.location.id}
           position={[parseFloat(e.location.latitude), parseFloat(e.location.longitude)]}
           icon={blackMarkerPoint}

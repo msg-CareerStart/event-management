@@ -8,6 +8,7 @@ import { CircularProgress } from '@material-ui/core';
 import { EventProps } from '../userHomePage/eventsSection/EventsSectionSmart';
 import { LocationType } from '../../model/LocationType';
 import UserMapEventsDumb from './UserMapEventsDumb';
+import { MAX_NUMBER_EVENTS } from './userMapConstants';
 
 interface UserHomePageProps {
   upcomingEvents: EventProps;
@@ -22,21 +23,42 @@ export interface EventCardsWithLoction {
 const UserMapEventsSmart = (props: UserHomePageProps) => {
   const [eventCardsWithLocation, setEventCardsWithLocation] = useState<EventCardsWithLoction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  var result: EventCardsWithLoction[] = [];
+  let result: EventCardsWithLoction[] = [];
+
+  const [selectedEvent, setSelectedEvent] = useState<EventCardsWithLoction>({
+    eventCards: [],
+    location: {
+      id: 0,
+      name: '',
+      address: '',
+      latitude: '',
+      longitude: '',
+    },
+  });
+  const [show, setShow] = useState(false);
+
+  const submitLocation = (lat: string, long: string) => {
+    eventCardsWithLocation.map((e) => {
+      if (e.location.latitude === lat && e.location.longitude === long) {
+        setSelectedEvent(e);
+        setShow(true);
+      }
+    });
+  };
 
   useEffect(() => {
     setIsLoading(true);
 
-    fetchUserUpcomingEvents(0, 30);
+    fetchUserUpcomingEvents(0, MAX_NUMBER_EVENTS);
 
-    var locations: LocationType[] = [];
+    let locations: LocationType[] = [];
     props.upcomingEvents.events.map((x) => {
       if (-1 === locations.findIndex((element) => element.id === x.locationDto.id)) {
         locations.push(x.locationDto);
       }
     });
     locations.map((loc) => {
-      var events: EventCard[] = [];
+      let events: EventCard[] = [];
       props.upcomingEvents.events.map((x) => {
         if (x.locationDto.id === loc.id) {
           events.push(x);
@@ -54,7 +76,12 @@ const UserMapEventsSmart = (props: UserHomePageProps) => {
       {isLoading || props.upcomingEvents.isLoading ? (
         <CircularProgress />
       ) : (
-        <UserMapEventsDumb eventCardsWithLocation={eventCardsWithLocation} />
+        <UserMapEventsDumb
+          eventCardsWithLocation={eventCardsWithLocation}
+          show={show}
+          selectedEvent={selectedEvent}
+          submitLocation={submitLocation}
+        />
       )}
     </div>
   );
