@@ -1,16 +1,14 @@
 package ro.msg.event_management.controller;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvParser;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import lombok.AllArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.core.io.InputStreamResource;
@@ -24,10 +22,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ro.msg.event_management.controller.converter.Converter;
 import ro.msg.event_management.controller.dto.AvailableTicketsPerCategory;
-import ro.msg.event_management.controller.dto.EventDto;
 import ro.msg.event_management.controller.dto.TicketListingDto;
 import ro.msg.event_management.entity.Booking;
 import ro.msg.event_management.entity.Ticket;
@@ -115,10 +113,12 @@ public class TicketController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/import", consumes = "text/csv")
+    @PostMapping(value = "/import")
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public void exportTicketsCsv(@RequestBody InputStream csv) throws IOException {
-        var reader = new BufferedReader(new InputStreamReader(csv));
+    public void exportTicketsCsv(@RequestParam MultipartFile csv) throws IOException {
+        InputStream inputStream = csv.getInputStream();
+
+        var reader = new BufferedReader(new InputStreamReader(inputStream));
 
         reader.readLine(); // skip header
 
@@ -141,35 +141,86 @@ public class TicketController {
             var bookingEventId = fields[12];
 
             var category = new TicketCategory();
+            if(categoryTitle.equals("")) {
+                continue;
+            }
             category.setTitle(categoryTitle);
+
+            if(categorySubtitle.equals("")) {
+                continue;
+            }
             category.setSubtitle(categorySubtitle);
+
+            if(categoryPrice.equals("")) {
+                continue;
+            }
             category.setPrice(Float.parseFloat(categoryPrice));
+
+            if(categoryDescription.equals("")) {
+                continue;
+            }
             category.setDescription(categoryDescription);
+
+            if(categoryNr.equals("")) {
+                continue;
+            }
             category.setTicketsPerCategory(Integer.parseInt(categoryNr));
+
+            if(categoryAvailable.equals("")) {
+                continue;
+            }
             category.setAvailable(Boolean.parseBoolean(categoryAvailable));
+
+            if(categoryEventId.equals("")) {
+                continue;
+            }
             var event = eventService.findOne(Long.valueOf(categoryEventId));
             category.setEvent(event);
 
             var document = new TicketDocument();
-            document.setPdfUrl(documentPdfUrl);
-            //ticket id + validate?
+
+//            if(documentPdfUrl.equals("")) {
+//                continue;
+//            }
+//            document.setPdfUrl(documentPdfUrl);
 
             var booking = new Booking();
+
+            if(bookingDate.equals("")) {
+                continue;
+            }
             booking.setBookingDate(LocalDateTime.parse(bookingDate));
+
+            if(bookingUser.equals("")) {
+                continue;
+            }
             booking.setUser(bookingUser);
-            //eventID
+
+            if(bookingEventId.equals("")) {
+                continue;
+            }
             var eventBooking = eventService.findOne(Long.valueOf(bookingEventId));
             booking.setEvent(eventBooking);
 
             var ticket = new Ticket();
+
+            if(name.equals("")) {
+                continue;
+            }
             ticket.setName(name);
+
+            if(email.equals("")) {
+                continue;
+            }
             ticket.setEmailAddress(email);
+
             ticket.setTicketCategory(category);
             ticket.setTicketDocument(document);
             ticket.setBooking(booking);
+            ticket.setId(0L);
 
             int x=4;
-
+            ticketService.save(ticket);
         }
     }
 
@@ -193,8 +244,11 @@ public class TicketController {
         headers.add("bookingUser");
         headers.add("bookingEventId");
 
+        var date = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date());
+        var filename = "TicketCSV" + date + ".csv";
+
         try {
-            var writer = new FileWriter("trial.csv");
+            var writer = new FileWriter(filename);
             for(String s:headers){
                 writer.write(s);
                 writer.write(',');
@@ -221,7 +275,7 @@ public class TicketController {
                 writer.write(category.getDescription());
                 writer.write(',');
 
-                writer.write(category.getTicketsPerCategory());
+                writer.write(Integer.toString(category.getTicketsPerCategory()));
                 writer.write(',');
 
                 writer.write(String.valueOf(category.isAvailable()));
@@ -248,6 +302,6 @@ public class TicketController {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<InputStreamResource>(new InputStreamResource(new FileInputStream("trial.csv")), HttpStatus.OK);
+        return new ResponseEntity<>(new InputStreamResource(new FileInputStream(filename)), HttpStatus.OK);
     }
 }
