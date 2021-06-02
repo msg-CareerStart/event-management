@@ -203,3 +203,7 @@ export const validateTicketAPI = (ticketID: number, eventID: number) => {
     },
   }).then((response) => response.json());
 };
+
+export const discountCodesForEventAPI = (eventId: number) => {
+  return fetchWrapper(`${serverURL}/discount/${eventId}`).then((response) => response.json());
+};
