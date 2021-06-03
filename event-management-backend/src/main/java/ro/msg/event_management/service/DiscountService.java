@@ -79,6 +79,7 @@ public class DiscountService {
     }
 
     public CheckDiscountDto checkDiscount(CheckDiscountDto checkDiscountDto) {
+        List<Long> discountIDs = new ArrayList<>();
         List<Long> ticketCategories = checkDiscountDto.getTicketCategories();
         CheckDiscountDto response = CheckDiscountDto.builder().code(checkDiscountDto.getCode()).build();
         List<Long> validCategories = new ArrayList<>();
@@ -90,10 +91,12 @@ public class DiscountService {
                 LocalDate endDate = discount.getEndDate();
                 if(!currentDate.isAfter(endDate) && !currentDate.isBefore(startDate)) {
                     validCategories.add(ticketCategory);
+                    discountIDs.add(discount.getId());
                 }
             }
         }
         response.setTicketCategories(validCategories);
+        response.setDiscountIDs(discountIDs);
         return response;
     }
 

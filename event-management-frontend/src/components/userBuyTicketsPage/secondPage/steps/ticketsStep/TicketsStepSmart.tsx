@@ -134,19 +134,9 @@ function TicketsStepSmart({
     // Check if the user has bad input for at least 1 category
     let hasBadInput: boolean = false;
     for (let i = 0; i < ticketCategories.length; i++) {
-      console.log(
-        'Category: ' +
-          ticketCategories[i].title +
-          ' | Ticket nr: ' +
-          getTicketNumber(i) +
-          ' | Available: ' +
-          ticketCategories[i].remaining
-      );
       if (getTicketNumber(i) > 0) isBuyingTickets = true;
       if (getTicketNumber(i) < 0 || getTicketNumber(i) > ticketCategories[i].remaining) hasBadInput = true;
     }
-    console.log('Buying tickets: ' + isBuyingTickets);
-    console.log('Bad input: ' + hasBadInput);
     return isBuyingTickets && !hasBadInput;
   }
 
@@ -175,6 +165,7 @@ function TicketsStepSmart({
           ticketCategory={ticketCategories[i].title}
           ticketNumber={getTicketNumber(i)}
           available={getTicketNumber(i) < ticketCategories[i].remaining}
+          categoryID={ticketCategories[i].categoryID}
         />
       </Grid>
     );

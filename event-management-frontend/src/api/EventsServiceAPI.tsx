@@ -215,3 +215,18 @@ export const validateTicketAPI = (ticketID: number, eventID: number) => {
 export const discountCodesForEventAPI = (eventId: number) => {
   return fetchWrapper(`${serverURL}/discount/forEvent/${eventId}`).then((response) => response.json());
 };
+
+export const checkDiscountCodeValidityAPI = (discountCode: string, categoryID: number) => {
+  let body = {
+    code: discountCode,
+    ticketCategories: [categoryID],
+  };
+  return fetchWrapper(`${serverURL}/discount/check`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  }).then((response) => response.json());
+};

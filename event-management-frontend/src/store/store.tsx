@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from '../reducers/rootReducer';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas/rootSaga';
@@ -20,10 +20,19 @@ import { DiscountsForEventState } from '../reducers/DiscountsForEventReducer';
 import { EventStatisticsPageState } from '../reducers/EventStatisticsPageReducer';
 import { LocationPageStatistics } from '../reducers/LocationStatisticsReducer';
 
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const sagaMiddleware = createSagaMiddleware();
 
-export const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+const enhancer = composeEnhancers(applyMiddleware(sagaMiddleware));
+
+export const store = createStore(rootReducer, enhancer);
 sagaMiddleware.run(rootSaga);
 
 export interface AppState {

@@ -71,7 +71,7 @@ public class TicketService {
         if (event.isEmpty()) {
             throw new NoSuchElementException("There is no event with id " + id);
         }
-        return event.get().getTicketCategories().stream().map(category -> new AvailableTicketsPerCategory(category.getTitle(), category.getTickets() == null ? 0 : (long) category.getTickets().size(), (long) category.getTicketsPerCategory() - (category.getTickets() == null ? 0 : (long) category.getTickets().size()))).collect(Collectors.toList());
+        return event.get().getTicketCategories().stream().map(category -> new AvailableTicketsPerCategory(category.getId(), category.getTitle(), category.getTickets() == null ? 0 : (long) category.getTickets().size(), (long) category.getTicketsPerCategory() - (category.getTickets() == null ? 0 : (long) category.getTickets().size()))).collect(Collectors.toList());
 
     }
 
