@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import CategoryCardDumb from './CategoryCardDumb';
 import { EventCrud } from '../../../../model/EventCrud';
-import { updateEvent, removeCategoryCard, updateFormErrors } from '../../../../actions/HeaderEventCrudActions';
+import {
+  updateEvent,
+  removeCategoryCard,
+  updateFormErrors,
+  addEmptyDiscountCard,
+} from '../../../../actions/HeaderEventCrudActions';
 import { EventFormErrors } from '../../../../model/EventFormErrors';
 import { TicketAvailabilityData } from '../../../../model/TicketAvailabilityData';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +30,7 @@ type Props = {
   removeCard: (id: number) => void;
   updateEvent: (event: EventCrud) => void;
   updateFormErrors: (errors: EventFormErrors) => void;
+  addDiscount: (id: number) => void;
 };
 
 const CategoryCardSmart: React.FC<Props> = ({
@@ -41,6 +47,7 @@ const CategoryCardSmart: React.FC<Props> = ({
   removeCard,
   updateEvent,
   updateFormErrors,
+  addDiscount,
 }: Props) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -70,6 +77,10 @@ const CategoryCardSmart: React.FC<Props> = ({
     } else {
       removalApproved();
     }
+  };
+
+  const addNewDiscount = () => {
+    addDiscount(id);
   };
 
   const handleClose = () => {
@@ -181,6 +192,7 @@ const CategoryCardSmart: React.FC<Props> = ({
         formErrors={formErrors}
         removeThisCard={removeThisCard}
         handleChange={handleChange}
+        addNewDiscount={addNewDiscount}
       />
       <TicketDialog
         open={open}
@@ -220,6 +232,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   removeCard: (id: number) => dispatch(removeCategoryCard(id)),
   updateEvent: (event: EventCrud) => dispatch(updateEvent(event)),
   updateFormErrors: (errors: EventFormErrors) => dispatch(updateFormErrors(errors)),
+  addDiscount: (id: number) => dispatch(addEmptyDiscountCard(id)),
 });
 
 const CategoryCard = connect(mapStateToProps, mapDispatchToProps)(CategoryCardSmart);

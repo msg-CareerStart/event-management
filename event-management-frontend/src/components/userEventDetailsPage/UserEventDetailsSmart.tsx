@@ -7,10 +7,15 @@ import { Container, CircularProgress } from '@material-ui/core';
 import { loadEventWithLocations } from '../../actions/UserEventDetailsActions';
 import { Dispatch } from 'redux';
 import { AppState } from '../../store/store';
+import { loadDiscountsForEvent } from '../../actions/DiscountForEventActions';
+import { DiscountsForEvent } from '../../model/DiscountsForEvent';
+import { DiscountsForEventState } from '../../reducers/DiscountsForEventReducer';
 
 interface UserEventDetailsProps {
   match: any;
   fetchData: (id: string) => void;
+  fetchDiscounts: (id: number) => void;
+  discountState: DiscountsForEventState;
   loading: boolean;
   event: EventCrud;
   images: EventImage[];
@@ -21,27 +26,33 @@ interface UserEventDetailsProps {
 function UserEventDetailsSmart({
   match,
   fetchData,
+  fetchDiscounts,
+  discountState,
   loading,
   event,
   images,
   locationAddress,
   locationName,
 }: UserEventDetailsProps) {
-
   useEffect(() => {
+    fetchDiscounts(match.params.id);
     fetchData(match.params.id);
   }, [match.params.id, fetchData]);
 
-  if (loading) {
-    return (
-      <Container maxWidth="lg">
-        <CircularProgress />
-      </Container>
-    );
-  }
-
   return (
-    <UserEventDetailsDumb event={event} images={images} locationAddress={locationAddress} locationName={locationName} />
+    <div>
+      {discountState.isLoading && loading ? (
+        <CircularProgress />
+      ) : (
+        <UserEventDetailsDumb
+          event={event}
+          images={images}
+          locationAddress={locationAddress}
+          locationName={locationName}
+          discounts={discountState.discounts}
+        />
+      )}
+    </div>
   );
 }
 
@@ -52,12 +63,14 @@ const mapStateToProps = (state: AppState) => {
     images: state.eventWithLocation.images,
     locationAddress: state.eventWithLocation.locationAddress,
     locationName: state.eventWithLocation.locationName,
+    discountState: state.discounts,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     fetchData: (id: string) => dispatch(loadEventWithLocations(id)),
+    fetchDiscounts: (id: number) => dispatch(loadDiscountsForEvent(id)),
   };
 };
 

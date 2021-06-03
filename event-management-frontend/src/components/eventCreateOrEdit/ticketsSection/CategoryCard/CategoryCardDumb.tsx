@@ -13,7 +13,9 @@ import {
   withStyles,
   Checkbox,
   CheckboxProps,
+  IconButton,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import { useStylesCategoryCard } from '../../../../styles/CategoryCardStyle';
 import React from 'react';
 import '../../../../styles/Responsivity.css';
@@ -35,6 +37,7 @@ type Props = {
     ticketCategoryDtoList: CategoryCardErrors[];
   };
   removeThisCard: () => void;
+  addNewDiscount: (id: number) => void;
 };
 
 const YellowCheckbox = withStyles({
@@ -59,6 +62,7 @@ const CategoryCardDumb: React.FC<Props> = ({
   handleChange,
   formErrors,
   removeThisCard,
+  addNewDiscount,
 }: Props) => {
   const { t } = useTranslation();
   const classes = useStylesCategoryCard();
@@ -69,26 +73,33 @@ const CategoryCardDumb: React.FC<Props> = ({
       <Grid item xl={12} lg={12} md={10} sm={11} xs={12}>
         <Card variant="outlined" className={classes.root}>
           <CardContent className={classes.cardStyle}>
-            <Grid item xl={4} sm={7} xs={10}>
-              <TextField
-                required
-                className={classes.marginBasic}
-                InputProps={{
-                  className: classes.inputBasic,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                name="title"
-                fullWidth
-                variant="outlined"
-                label={t('categoryCard.title')}
-                error={formErrors.ticketCategoryDtoList[index].title.length > 0}
-                helperText={formErrors.ticketCategoryDtoList[index].title}
-                defaultValue={title}
-                disabled={id >= 0 ? true : false || !available}
-                onChange={handleChange}
-              />
+            <Grid item container justify="space-between">
+              <Grid item xl={8} sm={8} xs={8}>
+                <TextField
+                  required
+                  className={classes.marginBasic}
+                  InputProps={{
+                    className: classes.inputBasic,
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  name="title"
+                  fullWidth
+                  variant="outlined"
+                  label={t('categoryCard.title')}
+                  error={formErrors.ticketCategoryDtoList[index].title.length > 0}
+                  helperText={formErrors.ticketCategoryDtoList[index].title}
+                  defaultValue={title}
+                  disabled={id >= 0 ? true : false || !available}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xl={1} sm={1} xs={1}>
+                <IconButton disabled={!available} onClick={removeThisCard} size="small">
+                  <CloseIcon />
+                </IconButton>
+              </Grid>
             </Grid>
 
             <Grid item xl={4} sm={7} xs={10}>
@@ -188,8 +199,15 @@ const CategoryCardDumb: React.FC<Props> = ({
               </Grid>
 
               <Grid item lg={2} md={3} sm={3} xs={3}>
-                <Button disabled={!available} className={classes.removeButton} onClick={removeThisCard} size="small">
-                  {t('categoryCard.remove')}
+                <Button
+                  disabled={!available}
+                  className={classes.removeButton}
+                  onClick={() => {
+                    addNewDiscount(id);
+                  }}
+                  size="small"
+                >
+                  {t('categoryCard.addPromotion')}
                 </Button>
               </Grid>
             </Grid>

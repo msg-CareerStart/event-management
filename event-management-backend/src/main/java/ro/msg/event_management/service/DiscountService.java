@@ -1,12 +1,19 @@
 package ro.msg.event_management.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.msg.event_management.controller.converter.DiscountConverter;
+import ro.msg.event_management.controller.converter.DiscountReverseConverter;
 import ro.msg.event_management.controller.dto.CheckDiscountDto;
+import ro.msg.event_management.controller.dto.DiscountDto;
 import ro.msg.event_management.entity.*;
 import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.repository.DiscountRepository;
+import ro.msg.event_management.repository.TicketCategoryRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,6 +26,8 @@ import java.util.Optional;
 public class DiscountService {
 
     private final DiscountRepository discountRepository;
+    private final DiscountReverseConverter discountReverseConverter;
+    private final TicketCategoryRepository ticketCategoryRepository;
 
     @Transactional
     public List<Discount> saveDiscounts  (List<Discount> discounts, TicketCategory ticketCategory) {
@@ -86,5 +95,29 @@ public class DiscountService {
         }
         response.setTicketCategories(validCategories);
         return response;
+    }
+
+    public List<DiscountDetailsView> getDiscountsForEvent(long idEvent)
+    {
+        List<DiscountDetailsView> discountsView = new ArrayList<DiscountDetailsView>();
+
+        List<TicketCategory> ticketCategories = ticketCategoryRepository.getAllForEvent(idEvent);
+
+        LocalDate currentTime = LocalDate.now();
+
+        for (TicketCategory ticketCategory: ticketCategories) {
+            List<Discount> d = discountRepository.findCurrentDiscountsForTicketCategory(ticketCategory.getId(), currentTime);
+            if(!d.isEmpty()) {
+                discountsView.add(
+                  new DiscountDetailsView().builder()
+                        .ticketCategoryId(ticketCategory.getId())
+                        .discountCode(d.get(0).getCode())
+                        .ticketCategory(ticketCategory.getTitle())
+                        .build()
+                );
+            }
+        }
+
+        return discountsView;
     }
 }

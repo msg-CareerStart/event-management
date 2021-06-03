@@ -22,13 +22,16 @@ import {
   ADD_LOCATION_FAILURE,
   ADD_LOCATION_SUCCESS,
   ADD_LOCATION_TO_EVENT,
+  ADD_EMPTY_DISCOUNT_CARD,
+  REMOVE_DISCOUNT_CARD,
 } from '../actions/HeaderEventCrudActions';
 import { EventCrud } from '../model/EventCrud';
 import { EventImage } from '../model/EventImage';
-import { EventFormErrors, CategoryCardErrors } from '../model/EventFormErrors';
+import { EventFormErrors, CategoryCardErrors, DiscountCardErrors } from '../model/EventFormErrors';
 import { TicketAvailabilityData } from '../model/TicketAvailabilityData';
 import { CategoryCardItem } from '../model/TicketType';
 import { LocationType } from '../model/LocationType';
+import { DiscountCardItem } from '../model/DiscountType';
 
 export interface EventState {
   eventIsLoading: boolean;
@@ -53,12 +56,20 @@ const dateAndTime = today.split('T');
 const currDate = dateAndTime[0];
 const currTime = dateAndTime[1].replace(/:\d\d([ ap]|$)/, '$1');
 
+export const noDiscountCardError: DiscountCardErrors = {
+  code: '',
+  percentage: '',
+  startDate: '',
+  endDate: '',
+};
+
 export const noCardError: CategoryCardErrors = {
   title: '',
   subtitle: '',
   price: '',
   description: '',
   ticketsPerCategory: '',
+  discountDtoList: [noDiscountCardError],
 };
 
 export const emptyCard: CategoryCardItem = {
@@ -69,6 +80,15 @@ export const emptyCard: CategoryCardItem = {
   description: '',
   ticketsPerCategory: 0,
   available: true,
+  discountDtoList: [],
+};
+
+export const emptyDiscount: DiscountCardItem = {
+  id: -1,
+  code: '',
+  percentage: 0,
+  startDate: '',
+  endDate: '',
 };
 
 export const newTicket: TicketAvailabilityData = {
@@ -99,6 +119,7 @@ export const initialState: EventState = {
     noTicketEvent: true,
     ticketCategoryDtoList: [],
     ticketCategoryToDelete: [],
+    discountsToDelete: [],
     ticketInfo: '',
   },
   ticketData: [newTicket],
@@ -198,10 +219,24 @@ const HeaderReducer = (
 
     case FETCH_EVENT_SUCCESS:
       let ticketCategoryErrors: CategoryCardErrors[] = [];
-      let TCElenght = action.payload.ticketCategoryDtoList.length;
-      for (var i = 0; i < TCElenght; i++) {
-        ticketCategoryErrors.push({ title: '', subtitle: '', price: '', description: '', ticketsPerCategory: '' });
-      }
+      action.payload.ticketCategoryDtoList.forEach((data, index) => {
+        ticketCategoryErrors.push({
+          title: '',
+          subtitle: '',
+          price: '',
+          description: '',
+          ticketsPerCategory: '',
+          discountDtoList: [],
+        });
+        action.payload.ticketCategoryDtoList[index].discountDtoList.forEach((data, index) => {
+          ticketCategoryErrors[ticketCategoryErrors.length - 1].discountDtoList.push({
+            code: '',
+            percentage: '',
+            startDate: '',
+            endDate: '',
+          });
+        });
+      });
       return {
         ...state,
         eventIsLoading: false,
@@ -335,6 +370,7 @@ const HeaderReducer = (
               description: '',
               ticketsPerCategory: 0,
               available: true,
+              discountDtoList: [],
             },
           ],
         },
@@ -342,18 +378,104 @@ const HeaderReducer = (
           ...state.formErrors,
           ticketCategoryDtoList: [
             ...state.formErrors.ticketCategoryDtoList,
-            { title: '', subtitle: '', price: '', description: '', ticketsPerCategory: '' },
+            {
+              title: '',
+              subtitle: '',
+              price: '',
+              description: '',
+              ticketsPerCategory: '',
+              discountDtoList: [{ code: '', percentage: '', startDate: '', endDate: '' }],
+            },
           ],
         },
       };
 
     case REMOVE_CATEGORY_CARD: {
+      let copiedTicketCategoryToDelete = [...state.event.ticketCategoryToDelete];
+      if (action.id > 0) {
+        copiedTicketCategoryToDelete.push(action.id);
+      }
       return {
         ...state,
         event: {
           ...state.event,
           ticketCategoryDtoList: state.event.ticketCategoryDtoList.filter((data) => data.id !== action.id),
-          ticketCategoryToDelete: [...state.event.ticketCategoryToDelete, action.id],
+          ticketCategoryToDelete: copiedTicketCategoryToDelete,
+        },
+      };
+    }
+
+    case ADD_EMPTY_DISCOUNT_CARD: {
+      let element = state.event.ticketCategoryDtoList.findIndex((ticketCategory) => ticketCategory.id === action.id);
+      let nextDiscount = 0;
+      state.event.ticketCategoryDtoList.forEach((ticketCategory) => {
+        ticketCategory.discountDtoList.forEach((discount) => {
+          if (Math.abs(discount.id) > nextDiscount) {
+            nextDiscount = Math.abs(discount.id);
+          }
+        });
+      });
+      nextDiscount = nextDiscount + 1;
+      nextDiscount *= -1;
+      let copiedTicketCategories = [...state.event.ticketCategoryDtoList];
+      let copiedFormErrorTicketCategories = [...state.formErrors.ticketCategoryDtoList];
+      copiedTicketCategories.forEach((ticketCategory: CategoryCardItem, index: number) => {
+        if (index === element) {
+          ticketCategory.discountDtoList = [...state.event.ticketCategoryDtoList[index].discountDtoList];
+          ticketCategory.discountDtoList.push({
+            id: nextDiscount,
+            code: '',
+            percentage: 1,
+            startDate: '',
+            endDate: '',
+          });
+        } else {
+          ticketCategory.discountDtoList = [...state.event.ticketCategoryDtoList[index].discountDtoList];
+        }
+      });
+      copiedFormErrorTicketCategories.forEach((formErrorTicketCategory: CategoryCardErrors, index: number) => {
+        if (index === element) {
+          console.log(state.formErrors.ticketCategoryDtoList[index]);
+          formErrorTicketCategory.discountDtoList = [...state.formErrors.ticketCategoryDtoList[index].discountDtoList];
+          formErrorTicketCategory.discountDtoList.push({ code: '', percentage: '', startDate: '', endDate: '' });
+        }
+      });
+
+      return {
+        ...state,
+        event: {
+          ...state.event,
+          ticketCategoryDtoList: copiedTicketCategories,
+        },
+        formErrors: {
+          ...state.formErrors,
+          ticketCategoryDtoList: copiedFormErrorTicketCategories,
+        },
+      };
+    }
+
+    case REMOVE_DISCOUNT_CARD: {
+      let copiedTicketCategories = [...state.event.ticketCategoryDtoList];
+      copiedTicketCategories.forEach((ticketCategory, index) => {
+        ticketCategory.discountDtoList = [...state.event.ticketCategoryDtoList[index].discountDtoList].filter(
+          (discount) => discount.id !== action.id
+        );
+      });
+      let copiedDiscountsToDelete;
+      if (action.id > 0) {
+        if (state.event.discountsToDelete === null || state.event.discountsToDelete === undefined) {
+          copiedDiscountsToDelete = [action.id];
+        } else {
+          copiedDiscountsToDelete = [...state.event.discountsToDelete];
+          copiedDiscountsToDelete.push(action.id);
+        }
+      }
+      return {
+        ...state,
+        event: {
+          ...state.event,
+          ticketCategoryDtoList: copiedTicketCategories,
+          discountsToDelete: copiedDiscountsToDelete,
         },
       };
     }

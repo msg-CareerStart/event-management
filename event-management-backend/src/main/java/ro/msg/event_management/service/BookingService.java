@@ -331,7 +331,7 @@ public class BookingService {
     public List<BookingCalendarDto> getMyBookings(String user) {
         TypedQuery<BookingCalendarDto> query
             = entityManager.createQuery(
-            "SELECT NEW ro.msg.event.management.eventmanagementbackend.controller.dto.BookingCalendarDto(b.id, e.startDate, e.endDate, e.title)" +
+            "SELECT NEW ro.msg.event_management.controller.dto.BookingCalendarDto(b.id, e.startDate, e.endDate, e.title)" +
             " FROM Booking b JOIN b.event e WHERE b.user = :user ORDER BY e.startDate", BookingCalendarDto.class);
         query.setParameter("user", user);
         return query.getResultList();

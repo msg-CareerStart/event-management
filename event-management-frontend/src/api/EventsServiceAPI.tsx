@@ -134,6 +134,14 @@ export const fetchEvents = () => {
     });
 };
 
+export const fetchAllExistingEvents = () => {
+  return fetchWrapper(`${serverURL}/events`)
+    .then((response) => response.json())
+    .then((json) => {
+      return json;
+    });
+};
+
 export const getLastNumber = (filters: EventFilters) => {
   const filtersToSend = computeFilterQueryString(filters);
   const limitToSend = computeLimit();
@@ -202,4 +210,8 @@ export const validateTicketAPI = (ticketID: number, eventID: number) => {
       'Content-Type': 'application/json',
     },
   }).then((response) => response.json());
+};
+
+export const discountCodesForEventAPI = (eventId: number) => {
+  return fetchWrapper(`${serverURL}/discount/forEvent/${eventId}`).then((response) => response.json());
 };

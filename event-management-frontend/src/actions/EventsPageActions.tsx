@@ -59,6 +59,21 @@ export const CLEAR_VALIDATION_DATA = 'CLEAR_VALIDATION_DATA';
 
 export const LAST_PAGE_HOME = 'LAST_PAGE_HOME';
 
+export const FETCH_EVENTS_ALL = 'FETCH_EVENTS_ALL';
+export const FETCH_EVENTS_ALL_REQUEST = 'FETCH_EVENTS_ALL_REQUEST';
+
+export const fetchAllExistingEvents = () => {
+  return {
+    type: FETCH_EVENTS_ALL,
+  };
+};
+
+export const fetchAllExistingEventsRequest = () => {
+  return {
+    type: FETCH_EVENTS_ALL_REQUEST,
+  };
+};
+
 export const updateFilters = (filters: EventFilters) => {
   return {
     type: UPDATE_FILTERS,
