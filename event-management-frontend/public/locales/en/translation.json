@@ -236,6 +236,12 @@
     "notAValidPercent": "Invalid percent"
   },
 
+    "discountCodeBox":{
+        "label" : "discount code",
+        "applyButton" : "Apply",
+        "tooltip" : "Apply discount code"
+    },
+
   "categoryCard": {
     "lengthError": "Min. 3 characters required",
     "priceError": "Must be positive",
@@ -340,4 +346,5 @@
     "successfulAdd": "Event added successfully!",
     "successfulEdit": "Event updated successfully!"
   }
+  
 }
