@@ -384,7 +384,7 @@ const HeaderReducer = (
               price: '',
               description: '',
               ticketsPerCategory: '',
-              discountDtoList: [{ code: '', percentage: 1, startDate: '', endDate: '' }],
+              discountDtoList: [{ code: '', percentage: '', startDate: '', endDate: '' }],
             },
           ],
         },
