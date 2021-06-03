@@ -7,12 +7,14 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CarouselSlide from './CarouselSlide';
 import { userEventDetailsStyles } from '../../styles/UserEventDetailsStyles';
+import { DiscountsForEvent } from '../../model/DiscountsForEvent';
 
 interface UserEventDetailsDumbProps {
   event: EventCrud;
   images: EventImage[];
   locationAddress: string;
   locationName: string;
+  discounts: DiscountsForEvent[];
 }
 
 function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
@@ -26,6 +28,8 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
   const history = useHistory();
   const { t } = useTranslation();
 
+  console.log(props.discounts);
+
   let handleBackButton = (): void => {
     history.push('/user/events');
   };
@@ -33,7 +37,6 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
   let handleJoinButton = (): void => {
     history.push(`/user/reserve-tickets/first-page/${props.event.id}`);
   };
-
   return (
     <Grid container spacing={0} direction="column" justify="space-between" alignItems="center">
       <CarouselSlide images={props.images} />
@@ -111,8 +114,8 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
                   {props.event.status ? (
                     <TableCell align="right"> {t('welcome.overviewStatusActive')}</TableCell>
                   ) : (
-                      <TableCell align="right">{t('welcome.overviewStatusInactive')}</TableCell>
-                    )}
+                    <TableCell align="right">{t('welcome.overviewStatusInactive')}</TableCell>
+                  )}
                 </TableRow>
               </TableBody>
             </Table>
@@ -120,9 +123,19 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
         </Grid>
       </Grid>
 
-      <Grid item container justify="center" alignItems="flex-end" direction="row" className={userEventDetailsStyle.position}>
+      <Grid
+        item
+        container
+        justify="center"
+        alignItems="flex-end"
+        direction="row"
+        className={userEventDetailsStyle.position}
+      >
         <Grid item xs={3} sm={2} md={1} lg={1} xl={1}>
-          <Button className={`${commonStyles.mainButtonStyle} ${commonStyles.pinkGradientButtonStyle}`} onClick={handleBackButton}>
+          <Button
+            className={`${commonStyles.mainButtonStyle} ${commonStyles.pinkGradientButtonStyle}`}
+            onClick={handleBackButton}
+          >
             {t('welcome.backButton')}
           </Button>
         </Grid>
@@ -130,8 +143,11 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
         <Grid item xs={3} sm={2} md={1} lg={1} xl={1}>
           <Button
             className={`${commonStyles.mainButtonStyle} ${commonStyles.pinkGradientButtonStyle} ${userEventDetailsStyle.disabled}`}
-            disabled={props.event.endDate < currDate || (props.event.endDate === currDate && props.event.endHour < currTime)}
-            onClick={handleJoinButton}>
+            disabled={
+              props.event.endDate < currDate || (props.event.endDate === currDate && props.event.endHour < currTime)
+            }
+            onClick={handleJoinButton}
+          >
             {t('welcome.joinButton')}
           </Button>
         </Grid>
