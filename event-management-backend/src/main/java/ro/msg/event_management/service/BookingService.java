@@ -351,4 +351,8 @@ public class BookingService {
         var book = bookingRepository.findById(id);
         return book.orElse(null);
     }
+
+    public Booking save(Booking booking){
+        return bookingRepository.save(booking);
+    }
 }

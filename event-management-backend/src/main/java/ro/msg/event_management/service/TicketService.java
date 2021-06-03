@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import ro.msg.event_management.controller.dto.AvailableTicketsPerCategory;
 import ro.msg.event_management.entity.Event;
 import ro.msg.event_management.entity.Ticket;
+import ro.msg.event_management.entity.TicketCategory;
 import ro.msg.event_management.entity.TicketDocument;
 import ro.msg.event_management.entity.view.TicketView;
 import ro.msg.event_management.exception.TicketCorrespondingEventException;
@@ -142,7 +143,7 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    public void save(Ticket ticket){
-        ticketRepository.save(ticket);
+    public Ticket save(Ticket ticket){
+        return ticketRepository.save(ticket);
     }
 }

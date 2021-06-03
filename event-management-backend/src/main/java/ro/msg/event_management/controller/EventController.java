@@ -4,7 +4,6 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,9 +64,8 @@ public class EventController {
 
     private final EventService eventService;
     private final PictureService pictureService;
-    private final EventSublocationService sublocationService;
-    private final BookingService bookingService;
-    private final TicketCategoryService categoryService;
+    private final SublocationService sublocationService;
+    private final EventSublocationService eventSublocationService;
     private final Converter<Event, EventDto> convertToDto;
     private final Converter<EventDto, Event> convertToEntity;
     private final Converter<EventView, EventFilteringDto> converter;
@@ -323,13 +321,14 @@ public class EventController {
     }
 
     @PostMapping(value = "/import")
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public void exportEventsCsv(@RequestBody MultipartFile csv) throws IOException, OverlappingEventsException, ExceededCapacityException {
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity exportEventsCsv(@RequestParam MultipartFile csv) throws IOException, OverlappingEventsException, ExceededCapacityException {
         InputStream inputStream = csv.getInputStream();
 
         var reader = new BufferedReader(new InputStreamReader(inputStream));
 
         reader.readLine(); // skip header
+        String errorString = "";
 
         while(reader.ready()){
             String line = reader.readLine();
@@ -350,131 +349,161 @@ public class EventController {
             var creator = fields[12];
             var ticketInfo = fields[13];
 
-            var picturesIds = fields[14];
-            var locationId = fields[15];
+            var picturesUrls = fields[14];
 
-            var ids1 = picturesIds.split(";");
-            var pictureList = new ArrayList<Picture>();
-            for(String id: ids1){
-                if(!id.equals("")) {
-                    pictureList.add(pictureService.findOne(Long.parseLong(id)));
-                }
-            }
-
-            var sublocationIds = fields[15];
-            var ids2 = sublocationIds.split(";");
-            var sublocationList = new ArrayList<EventSublocation>();
-            for(String id: ids2){
-                if(!id.equals("")) {
-                    sublocationList.add(sublocationService.findOne(Long.parseLong(id)));
-                }
-            }
-
-            var bookingsIds = fields[16];
-            var ids3 = bookingsIds.split(";");
-            var bookingsList = new ArrayList<Booking>();
-            for(String id: ids3){
-                if(!id.equals("")) {
-                    bookingsList.add(bookingService.findOne(Long.parseLong(id)));
-                }
-            }
-
-            var categoryIds = fields[17];
-            var ids4 = categoryIds.split(";");
-            var categoryList = new ArrayList<TicketCategory>();
-            for(String id: ids4){
-                if(!id.equals("")){
-                    categoryList.add(categoryService.findOne(Long.parseLong(id)));
-                }
-            }
+            var locationId = fields[17];
 
             var event = new Event();
             if(title.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setTitle(title);
 
             if(subtitle.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setSubtitle(subtitle);
 
             if(status.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setStatus(Boolean.parseBoolean(status));
 
             if(startDate.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setStartDate(LocalDate.parse(startDate));
 
             if(endDate.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setEndDate(LocalDate.parse(endDate));
 
             if(endHour.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setEndHour(LocalTime.parse(endHour));
 
             if(startHour.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setStartHour(LocalTime.parse(startHour));
 
             if(maxPeople.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setMaxPeople(Integer.parseInt(maxPeople));
 
             if(description.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setDescription(description);
 
             if(highlighted.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setHighlighted(Boolean.parseBoolean(highlighted));
 
             if(observations.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setObservations(observations);
 
             if(ticketsPerUser.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setTicketsPerUser(Integer.parseInt(ticketsPerUser));
 
             if(creator.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setCreator(creator);
 
             if(ticketInfo.equals("")) {
+                errorString += "Skipped invalid row\n";
                 continue;
             }
             event.setTicketInfo(ticketInfo);
 
-            event.setPictures(pictureList);
-            event.setEventSublocations(sublocationList);
-            event.setBookings(bookingsList);
-            event.setTicketCategories(categoryList);
-
-            int x=4;
             if(locationId.equals("")){
+                errorString += "Skipped invalid row\n";
                 continue;
             }
 
-            eventService.saveEvent(event, Long.parseLong(locationId));
+            //add category
+            var categories = fields[16];
+            var ids4 = categories.split(";");
+            var list = new ArrayList<TicketCategory>();
+            for(String category: ids4){
+                var data = category.split("\\|");
+                var cat = new TicketCategory();
+                cat.setTitle(data[0]);
+                cat.setSubtitle(data[1]);
+                cat.setPrice(Float.parseFloat(data[2]));
+                cat.setDescription(data[3]);
+                cat.setTicketsPerCategory(Integer.parseInt(data[4]));
+                cat.setAvailable(Boolean.parseBoolean(data[5]));
+
+                list.add(cat);
+            }
+            event.setTicketCategories(list);
+
+            try {
+                Long.parseLong(locationId);
+            }catch (NumberFormatException e){
+                errorString += "Location id must be a number!\n";
+            }
+            event = eventService.saveEvent(event, Long.parseLong(locationId));
+
+            //add pictures to db
+            var urls = picturesUrls.split(";");
+            for(String url: urls){
+                var pic = new Picture();
+                pic.setEvent(event);
+                pic.setUrl(url);
+                pictureService.savePicture(pic);
+            }
+
+            //add eventsublocation to db
+            var sublocationIds = fields[15];
+            var ids2 = sublocationIds.split(";");
+            for(String id: ids2){
+                if(!id.equals("")) {
+                    try {
+                        var subLocation = sublocationService.findById(Long.parseLong(id));
+                        var eventSublocation = new EventSublocation();
+                        eventSublocation.setEvent(event);
+                        eventSublocation.setSublocation(subLocation);
+                        eventSublocationService.saveES(eventSublocation);
+                    }
+                    catch (Exception e){
+
+                    }
+                }
+            }
         }
+
+        if(errorString.equals("")){
+            errorString = "Success";
+        }
+        return new ResponseEntity(errorString, HttpStatus.OK);
     }
 
     @GetMapping(value = "/export", produces = "text/csv")
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<InputStreamResource> getEventsCsv() throws FileNotFoundException {
         var events = eventService.findAll();
 
@@ -493,10 +522,9 @@ public class EventController {
         headers.add("ticketsPerUser");
         headers.add("creator");
         headers.add("ticketInfo");
-        headers.add("picturesIds");
-        headers.add("eventSublocationIds");
-        headers.add("bookingsIds");
-        headers.add("ticketCategoriesIds");
+        headers.add("picturesUrls");
+        headers.add("sublocationIds");
+        headers.add("ticketCategoryTitle|ticketCategorySubtitle|ticketCategoryPrice|ticketCategoryDescription|ticketCategoryMax|ticketCategoryAvailable");
 
         var date = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date());
         var filename = "EventCSV" + date + ".csv";
@@ -554,7 +582,7 @@ public class EventController {
 
                 var pictures = event.getPictures();
                 for(Picture picture: pictures){
-                    writer.write(String.valueOf(picture.getId()));
+                    writer.write(String.valueOf(picture.getUrl()));
                     writer.write(';');
                 }
                 writer.write(',');
@@ -566,19 +594,26 @@ public class EventController {
                 }
                 writer.write(',');
 
-                var bookings = event.getBookings();
-                for(Booking booking: bookings){
-                    writer.write(String.valueOf(booking.getId()));
-                    writer.write(';');
-                }
-                writer.write(',');
-
                 var categories = event.getTicketCategories();
                 for(TicketCategory category: categories){
-                    writer.write(String.valueOf(category.getId()));
+                    writer.write(category.getTitle());
+                    writer.write('|');
+
+                    writer.write(category.getSubtitle());
+                    writer.write('|');
+
+                    writer.write(Float.valueOf(category.getPrice()).toString());
+                    writer.write('|');
+
+                    writer.write(category.getDescription());
+                    writer.write('|');
+
+                    writer.write(Integer.valueOf(category.getTicketsPerCategory()).toString());
+                    writer.write('|');
+
+                    writer.write(String.valueOf(category.isAvailable()));
                     writer.write(';');
                 }
-                writer.write(',');
                 writer.write('\n');
 
             }
