@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import MultiSelect from 'react-multi-select-component';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Highcharts, { seriesType } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Grid } from '@material-ui/core';
 import { LocationType } from '../../model/LocationType';
@@ -12,7 +12,7 @@ import { AppState } from '../../store/store';
 import { connect } from 'react-redux';
 import { EventStatistics } from '../../model/EventStatistics';
 import { getPercentage, sum } from './EventStatisticsOverview';
-import { availableColor, occupancyRateColor, validatedColor } from '../../styles/ChartColors';
+import { availableColor, occupancyRateColor } from '../../styles/ChartColors';
 
 interface LocationStatisticsProps {
   events: [];
@@ -50,7 +50,7 @@ function LocationStatisticsOverview(props: LocationStatisticsProps) {
       ? selected.map(
           (sel: { value: number }) => locationOptions.find((elem) => elem.value == sel.value)?.label + '✔️  '
         )
-      : '❌ No Items Selected';
+      : '❌ ' + t('welcome.noItemsSelected');
   };
 
   const getNamesOfEventsById = (eventIds: number[] | undefined) => {
