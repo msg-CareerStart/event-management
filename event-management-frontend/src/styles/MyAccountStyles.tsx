@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 export const myAccountStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
-      margin: theme.spacing(1),
+      margin: theme.spacing(2.5),
       width: '100%',
     },
   },
@@ -17,7 +17,7 @@ export const myAccountStyles = makeStyles((theme) => ({
   },
 
   typography: {
-    padding: '1%',
+    padding: '2%',
     fontSize: '2em',
     color: theme.palette.primary.dark,
   },
@@ -28,7 +28,7 @@ export const myAccountStyles = makeStyles((theme) => ({
   },
 
   formControl: {
-    minWidth: 100,
+    minWidth: 120,
     marginBottom: '1.2em',
   },
   fundal: {
@@ -47,5 +47,8 @@ export const myAccountStyles = makeStyles((theme) => ({
   margin: {
     marginTop: '1%',
     marginBottom: '1%',
+  },
+  icon: {
+    fontSize: 60,
   },
 }));

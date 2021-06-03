@@ -154,6 +154,10 @@
         "errMsgOverviewOneDayEventStartTimeErr": "you must choose the start time to be earlier than the end time",
         "errMsgOverviewOneDayEventEndTimeErr": "you must choose the end time to be later than the start time",
         "errMsgOverviewMaxPpl": "minimum of 2 people required",
+        "errMsgUserMinCharacters":"minimum 3 characters required",
+        "errMsgUserInvalidEmail":"Invalid Email",
+        "errMsgUserInvalidRate":"Invalid Rate (need to be between 0-100 )",
+
 
         "overviewHighlighted": "Highlighted",
         "overviewStatusActive": "ACTIVE",
@@ -189,9 +193,16 @@
         "occuppancyInfo":"Please eneter an occupancy rate condition from where you want to get a notification ",
 
         "myPage":"My Page",
-        "usernameDetails": "Detail's Page",
-        "usernameAppSettings": "App's Settings"
+        "usernameDetails": "Details Page for ",
+        "usernameAppSettings": "Application Settings for ",
+        "userEnglishS":"'s",
+        "userDialogErrorTitle":"Save Error",
+        "userDialogErrorText":"Incorect input data",
+        "userDialogSuccesTitle":"Update Succesful",
+        "userDialogSuccesText":"User update done successfully"
+  
 
+        
 
     },
 

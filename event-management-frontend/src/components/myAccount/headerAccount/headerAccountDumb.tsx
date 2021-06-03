@@ -11,6 +11,7 @@ import UserForm from '../../../model/UserForm';
 interface Props {
   userForm: UserForm;
   editUserAction: (userForm: UserForm) => void;
+  validForm: () => boolean;
 }
 
 function HeaderAccDumb(props: Props) {
@@ -18,20 +19,25 @@ function HeaderAccDumb(props: Props) {
   const gridStyle = headerCrudDumbStyles();
   const { t } = useTranslation();
 
-  const clearButton = (
-    <Button variant="contained" className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle} `}>
-      {t('welcome.headerCRUDClear')}
-    </Button>
-  );
+  // const clearButton = (
+  //   <Button variant="contained" className={`${buttonStyle.mainButtonStyle} ${buttonStyle.pinkGradientButtonStyle} `}>
+  //     {t('welcome.headerCRUDClear')}
+  //   </Button>
+  // );
 
-  const clearIcon = (
-    <IconButton>
-      <ClearIcon color="secondary"></ClearIcon>
-    </IconButton>
-  );
+  // const clearIcon = (
+  //   <IconButton>
+  //     <ClearIcon color="secondary"></ClearIcon>
+  //   </IconButton>
+  // );
 
   const handleSave = () => {
-    props.editUserAction(props.userForm);
+    let err: boolean;
+    err = props.validForm();
+    console.log(err + ' ss');
+    if (err == false) props.editUserAction(props.userForm);
+
+    // put handdle save to ICON BUTTOn
     //change mail here TO DO
     //last name and first name TO DO as well
   };
@@ -77,9 +83,9 @@ function HeaderAccDumb(props: Props) {
           justify="flex-end"
           alignItems="center"
         >
-          <Grid item xs={6} md={4} lg={3}>
+          {/* <Grid item xs={6} md={4} lg={3}>
             {clearButton}
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={6} md={4} lg={3}>
             {saveButton}
@@ -93,7 +99,7 @@ function HeaderAccDumb(props: Props) {
     <Grid container className={gridStyle.grid} direction="row" justify="space-between" alignItems="center">
       <Grid item sm={7} xs={8}>
         <Typography align="left" className={`${gridStyle.typography} ${gridStyle.position}`}>
-          "MyAccount"
+          {t('welcome.myPage')}
         </Typography>
       </Grid>
 
@@ -107,7 +113,7 @@ function HeaderAccDumb(props: Props) {
         justify="flex-end"
         alignItems="center"
       >
-        {clearIcon}
+        {/* {clearIcon} */}
         {saveIconButton}
       </Grid>
     </Grid>

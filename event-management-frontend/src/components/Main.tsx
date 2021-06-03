@@ -40,7 +40,9 @@ const Main = () => {
             admin
             exact
             path="/admin/account"
-            component={(props: any) => <MyAccount match={props.match} isAdmin={true} />}
+            component={(props: any) => (
+              <MyAccount match={props.match} isAdmin={true} isRequest={false} isError={false} />
+            )}
           />
         </Switch>
       </main>

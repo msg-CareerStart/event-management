@@ -13,23 +13,31 @@ import {
   EDIT_USER_REQUEST,
   EDIT_USER_SUCCESS,
   EDIT_USER_FAILURE,
+  UPDATE_FORM_ERRORS,
 } from '../actions/UserFormActions';
 import UserForm from '../model/UserForm';
+import { UserFormErrors } from '../model/UserFormError';
 
 export interface UserFormState {
   user: UserForm;
   isLoading: boolean;
   isError: boolean;
   error: string;
+  formErrors: UserFormErrors;
 }
 
 //hardcode if its not ok the {} state
-
 export const initialState: UserFormState = {
   user: {} as UserForm,
   isLoading: false,
   isError: false,
   error: '',
+  formErrors: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    ocupancyRate: '',
+  },
 };
 
 const UserFormReducer = (state = initialState, action: any) => {
@@ -142,6 +150,12 @@ const UserFormReducer = (state = initialState, action: any) => {
         ...state,
         isLoading: false,
         error: action.payload,
+      };
+
+    case UPDATE_FORM_ERRORS:
+      return {
+        ...state,
+        formErrors: action.payload,
       };
 
     default:

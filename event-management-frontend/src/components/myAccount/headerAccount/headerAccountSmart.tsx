@@ -11,10 +11,11 @@ let saveInfo = (): void => {};
 interface Props {
   userForm: UserForm;
   editUserAction: (userForm: UserForm) => void;
+  validForm: () => boolean;
 }
 
 function HeaderAccSmart(props: Props) {
-  return <HeaderAccDumb userForm={props.userForm} editUserAction={props.editUserAction} />;
+  return <HeaderAccDumb userForm={props.userForm} editUserAction={props.editUserAction} validForm={props.validForm} />;
 }
 
 export default HeaderAccSmart;

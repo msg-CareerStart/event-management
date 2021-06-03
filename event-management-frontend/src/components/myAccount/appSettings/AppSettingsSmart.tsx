@@ -1,13 +1,18 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import UserForm from '../../../model/UserForm';
+import { UserFormErrors } from '../../../model/UserFormError';
 import AppSettingsDumb from './AppSettingsDumb';
 
 interface Props {
   userForm: UserForm;
+  formErrors: UserFormErrors;
   editUserAction: (userForm: UserForm) => void;
+  updateFormErrors: (errors: UserFormErrors) => void;
 }
 
 function AppSettingsSmart(props: Props) {
+  const { t } = useTranslation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -29,9 +34,24 @@ function AppSettingsSmart(props: Props) {
     }
     console.log(props.userForm);
     // update form errors
-    //TO DO
+    let newFormErrors = Object.assign({}, props.formErrors);
+
+    switch (name) {
+      case 'rate':
+        console.log('aics');
+        newFormErrors.ocupancyRate =
+          !Number.isNaN(value) && parseFloat(value) >= 0 && parseFloat(value) <= 100
+            ? ''
+            : t('welcome.errMsgUserInvalidRate');
+
+        console.log(newFormErrors);
+        break;
+      default:
+        break;
+    }
+    props.updateFormErrors(newFormErrors);
   };
-  return <AppSettingsDumb userForm={props.userForm} handleChange={handleChange} />;
+  return <AppSettingsDumb userForm={props.userForm} formErros={props.formErrors} handleChange={handleChange} />;
 }
 
 export default AppSettingsSmart;

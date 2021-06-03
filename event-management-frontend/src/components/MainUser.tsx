@@ -38,7 +38,9 @@ const MainUser = () => {
           <SecureRoute
             exact
             path="/user/account"
-            component={(props: any) => <MyAccount match={props.match} isAdmin={false} />}
+            component={(props: any) => (
+              <MyAccount match={props.match} isAdmin={false} isRequest={false} isError={false} />
+            )}
           />
         </Switch>
       </main>

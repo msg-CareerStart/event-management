@@ -1,4 +1,5 @@
 import UserForm from '../model/UserForm';
+import { UserFormErrors } from '../model/UserFormError';
 
 export const LOAD_USER_BY_ID = 'FETCH_USER_BY_ID';
 export const LOAD_USER_BY_USERNAME = 'FETCH_USER_BY_USERNAME';
@@ -23,6 +24,8 @@ export const ADD_USER_FAILURE = 'ADD_USER_FAILURE';
 export const EDIT_USER_REQUEST = 'EDIT_USER_REQUEST';
 export const EDIT_USER_SUCCESS = 'EDIT_USER_SUCCESS';
 export const EDIT_USER_FAILURE = 'EDIT_USER_FAILURE';
+
+export const UPDATE_FORM_ERRORS = 'UPDATE_FORM_ERRORS';
 
 //---------------------------------- for SAGA
 export const loadUserById = (id: number) => {
@@ -137,5 +140,12 @@ export const editUserFailure = (error: string) => {
   return {
     type: EDIT_USER_FAILURE,
     payload: error,
+  };
+};
+
+export const updateFormErrors = (errors: UserFormErrors) => {
+  return {
+    type: UPDATE_FORM_ERRORS,
+    payload: errors,
   };
 };

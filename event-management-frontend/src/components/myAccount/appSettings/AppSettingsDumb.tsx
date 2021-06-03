@@ -8,14 +8,16 @@ import { myAccountStyles } from '../../../styles/MyAccountStyles';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../../store/store';
 import UserForm from '../../../model/UserForm';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 interface Props {
-  // formErros: {
-  //   firstName: string;
-  //   lastName: string;
-  //   email: string;
-  // };
   userForm: UserForm;
+  formErros: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    ocupancyRate: string;
+  };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -34,12 +36,15 @@ function AppSettingsDumb(props: Props) {
 
   return (
     <div className={classes.fundal}>
-      <Typography className={classes.typography}>
-        {' '}
-        {props.userForm.userName} {t('welcome.usernameAppSettings')}
-      </Typography>
       <Grid item container className={classes.grid} direction="column" justify="center" alignItems="center">
-        <Grid className={classes.gridpadding} item xl={1} lg={3} md={2} sm={4} xs={7}>
+        <Typography className={classes.typography}>
+          {' '}
+          {t('welcome.usernameAppSettings') + props.userForm.userName}
+        </Typography>
+
+        <SettingsIcon className={classes.icon}></SettingsIcon>
+
+        <Grid className={classes.gridpadding} direction="row" item xl={1} lg={3} md={2} sm={4} xs={7}>
           <Switch color="primary" checked={notify.checked} onChange={handleChangeNotify} name="checked" />
           <Typography className={classes.typographyInfo}> {t('welcome.notificationSwitch')} </Typography>
         </Grid>
@@ -50,7 +55,7 @@ function AppSettingsDumb(props: Props) {
           t('welcome.occupancyRate'),
           props.handleChange,
           props.userForm.occupancyRate,
-          '',
+          props.formErros.ocupancyRate,
           'number'
         )}
         <Typography className={classes.typographyInfo}>({t('welcome.occuppancyInfo')})</Typography>

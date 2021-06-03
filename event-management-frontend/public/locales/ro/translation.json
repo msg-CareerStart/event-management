@@ -1,4 +1,4 @@
-{
+  {
     "ticketList": {
         "id": "ID Rezervare",
         "date": "Dată rezervare",
@@ -143,8 +143,8 @@
         "locationAddress": "Adresa Locației",
         "ticketsTab": "Bilete",
         "imagesTab": "Imagini",
-        "appSettingsTab": "Setari App",
-        "userDetails": "Detalii User",
+        "appSettingsTab": "Setari Aplicatie",
+        "userDetails": "Detalii Utilizator",
 
         "errMsgOverviewMinCharacters": "minim 3 charactere necesare",
         "errMsgOverviewFirstDayInPast": "prima zi a evenimentului nu poate fi în trecut",
@@ -153,6 +153,9 @@
         "errMsgOverviewOneDayEventStartTimeErr": "timpul de inceput trebuie să fie inaintea timpului de incheiere",
         "errMsgOverviewOneDayEventEndTimeErr": "timpul incheierii trebuie să fie după timpul de începere",
         "errMsgOverviewMaxPpl": "sunt necesare minim 2 persoane",
+        "errMsgUserMinCharacters":"minim 3 charactere necesare",
+        "errMsgUserInvalidEmail":"Email invalid",
+        "errMsgUserInvalidRate":"Rata Invalida (trebuie sa fie intre 0-100 )",
 
         "overviewHighlighted": "Evidențiat",
         "overviewStatusActive": "ACTIV",
@@ -188,8 +191,14 @@
         "occupancyRate":"Rata de ocupare %",
         "occuppancyInfo":"Va rog adaugati o rata de ocupare de la care doriti sa fiti notificati",
         "myPage":"Pagina Mea",
-        "usernameDetails": "Pagina detalii",
-        "usernameAppSettings": "Setari aplicatie"
+        "usernameDetails": "Detalii pentru ",
+        "usernameAppSettings": "Setari aplicatie pentru ",
+        "userEnglishS":"",
+        "userDialogErrorTitle":"Eroare Salvare",
+        "userDialogErrorText":"Date introduse incorecte",
+        "userDialogSuccesTitle":"Succes modificare",
+        "userDialogSuccesText":"Modificare realizata cu succes"
+  
 
 
     },
