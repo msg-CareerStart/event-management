@@ -160,6 +160,11 @@
     "overviewEndTime": "End Time",
     "overviewStatus": "Status",
 
+    "ticketCategoryDiscount": "Category",
+    "discountCode": "Promo Code",
+
+    "promos": "Promotions",
+
     "newEventTitle": "NEW EVENT",
 
     "headerCRUDDelete": "Delete",
