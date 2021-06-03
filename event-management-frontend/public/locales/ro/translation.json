@@ -156,6 +156,9 @@
         "overviewEndTime": "Timpul de sfârșit",
         "overviewStatus": "Status",
 
+        "ticketCategoryDiscount": "Categoria",
+        "discountCode": "Cod Promoțional",
+
         "newEventTitle": "EVENIMENT NOU",
 
         "headerCRUDDelete": "Șterge",
