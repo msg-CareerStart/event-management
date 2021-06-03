@@ -41,8 +41,6 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
   const history = useHistory();
   const { t } = useTranslation();
 
-  console.log(props.discounts);
-
   const discountCodes = props.discounts.map((discount) => (
     <TableRow key={discount.ticketCategoryId}>
       <TableCell component="th" scope="row" className={`${tableProps.thStyle} ${tableProps.rightBorder}`}>
