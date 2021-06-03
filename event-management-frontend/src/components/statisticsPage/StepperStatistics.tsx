@@ -8,7 +8,7 @@ import { stepperStyles } from '../../styles/StepperStyle';
 import Overview from '@material-ui/icons/Assignment';
 import Location from '@material-ui/icons/Room';
 import { a11yProps } from '../../utils/CrudStepperUtils';
-import { Grid, useMediaQuery } from '@material-ui/core';
+import { Grid, Tooltip, useMediaQuery } from '@material-ui/core';
 import TabPanel from '../eventCreateOrEdit/TabPanel';
 
 interface StatisticsProps {
@@ -34,8 +34,12 @@ function StepperStatistics(props: StatisticsProps) {
 
   const iconTab = (
     <Tabs orientation="vertical" value={value} onChange={handleTabChange} className={stepperClasses.iconTabs} centered>
-      <Tab icon={<Overview />} {...a11yProps(0)} />
-      <Tab icon={<Location />} {...a11yProps(1)} />
+      <Tooltip title={t('welcome.eventStatistics') as string} placement="right" arrow>
+        <Tab icon={<Overview />} {...a11yProps(0)} />
+      </Tooltip>
+      <Tooltip title={t('welcome.locationStatistics') as string} placement="right" arrow>
+        <Tab icon={<Location />} {...a11yProps(1)} />
+      </Tooltip>
     </Tabs>
   );
 
