@@ -1,13 +1,25 @@
 import React from 'react';
 import { EventCrud } from '../../model/EventCrud';
 import { EventImage } from '../../model/EventImage';
-import { Button, Grid, Typography, TableContainer, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Typography,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  Box,
+} from '@material-ui/core';
 import { useStyles } from '../../styles/CommonStyles';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CarouselSlide from './CarouselSlide';
 import { userEventDetailsStyles } from '../../styles/UserEventDetailsStyles';
 import { DiscountsForEvent } from '../../model/DiscountsForEvent';
+import { tableStyle } from '../../styles/TableStyle';
 
 interface UserEventDetailsDumbProps {
   event: EventCrud;
@@ -24,11 +36,23 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
   const currTime = dateAndTime[1];
 
   const commonStyles = useStyles();
+  const tableProps = tableStyle();
   const userEventDetailsStyle = userEventDetailsStyles();
   const history = useHistory();
   const { t } = useTranslation();
 
   console.log(props.discounts);
+
+  const discountCodes = props.discounts.map((discount) => (
+    <TableRow key={discount.ticketCategoryId}>
+      <TableCell component="th" scope="row" className={`${tableProps.thStyle} ${tableProps.rightBorder}`}>
+        {discount.ticketCategory}
+      </TableCell>
+      <TableCell align="right" className={tableProps.thStyle}>
+        {discount.discountCode}
+      </TableCell>
+    </TableRow>
+  ));
 
   let handleBackButton = (): void => {
     history.push('/user/events');
@@ -120,6 +144,24 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
               </TableBody>
             </Table>
           </TableContainer>
+
+          {props.discounts.length !== 0 && (
+            <TableContainer>
+              <Table aria-label="simple table" className={tableProps.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell component="th" scope="row" className={`${tableProps.thStyle} ${tableProps.rightBorder}`}>
+                      {t('welcome.ticketCategoryDiscount')}
+                    </TableCell>
+                    <TableCell align="right" className={tableProps.thStyle}>
+                      {t('welcome.discountCode')}
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>{discountCodes}</TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Grid>
       </Grid>
 
