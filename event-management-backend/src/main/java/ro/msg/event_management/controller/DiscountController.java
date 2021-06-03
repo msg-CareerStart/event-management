@@ -28,7 +28,7 @@ public class DiscountController {
 
 
     @GetMapping("/{id}")
-    //@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<DiscountDetailsView>> getDiscountsForEvent(@PathVariable long id)
     {
         List<DiscountDetailsView> discountForEvent = discountService.getDiscountsForEvent(id);
