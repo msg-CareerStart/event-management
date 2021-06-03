@@ -24,4 +24,11 @@ export const tableStyle = makeStyles((theme) => ({
   table: {
     tableLayout: 'fixed',
   },
+  cellText: {
+    fontWeight: 'bold',
+    fontSize: '18px',
+  },
+  spaceTable: {
+    marginTop: '25px',
+  },
 }));

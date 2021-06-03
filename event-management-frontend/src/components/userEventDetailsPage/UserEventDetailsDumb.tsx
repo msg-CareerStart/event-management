@@ -146,21 +146,38 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
           </TableContainer>
 
           {props.discounts.length !== 0 && (
-            <TableContainer>
-              <Table aria-label="simple table" className={tableProps.table}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell component="th" scope="row" className={`${tableProps.thStyle} ${tableProps.rightBorder}`}>
-                      {t('welcome.ticketCategoryDiscount')}
-                    </TableCell>
-                    <TableCell align="right" className={tableProps.thStyle}>
-                      {t('welcome.discountCode')}
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>{discountCodes}</TableBody>
-              </Table>
-            </TableContainer>
+            <div>
+              <TableContainer>
+                <Table aria-label="simple table" className={`${tableProps.table} ${tableProps.spaceTable}`}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell component="th" scope="row" className={`${tableProps.thStyle} ${tableProps.cellText}`}>
+                        {t('welcome.promos')}
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                </Table>
+              </TableContainer>
+              <TableContainer>
+                <Table aria-label="simple table" className={tableProps.table}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className={`${tableProps.thStyle} ${tableProps.rightBorder}`}
+                      >
+                        {t('welcome.ticketCategoryDiscount')}
+                      </TableCell>
+                      <TableCell align="right" className={tableProps.thStyle}>
+                        {t('welcome.discountCode')}
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{discountCodes}</TableBody>
+                </Table>
+              </TableContainer>
+            </div>
           )}
         </Grid>
       </Grid>

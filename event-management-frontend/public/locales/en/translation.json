@@ -163,6 +163,8 @@
         "ticketCategoryDiscount": "Category",
         "discountCode": "Promo Code",
 
+        "promos": "Promotions",
+
         "newEventTitle": "NEW EVENT",
 
         "headerCRUDDelete": "Delete",
