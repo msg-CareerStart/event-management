@@ -18,4 +18,12 @@ export interface CategoryCardErrors {
   price: string;
   description: string;
   ticketsPerCategory: string;
+  discountDtoList: DiscountCardErrors[];
+}
+
+export interface DiscountCardErrors {
+  code: string;
+  percentage: string;
+  startDate: string;
+  endDate: string;
 }

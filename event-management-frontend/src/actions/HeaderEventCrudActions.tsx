@@ -36,6 +36,9 @@ export const RESET_ERRORS = 'RESET_ERRORS';
 export const ADD_EMPTY_CATEGORY_CARD = 'ADD_EMPTY_CATEGORY_CARD';
 export const REMOVE_CATEGORY_CARD = 'REMOVE_CATEGORY_CARD';
 
+export const ADD_EMPTY_DISCOUNT_CARD = 'ADD_EMPTY_DISCOUNT_CARD';
+export const REMOVE_DISCOUNT_CARD = 'REMOVE_DISCOUNT_CARD';
+
 export const ADD_LOCATION_SUCCESS = 'ADD_LOCATION_SUCCESS';
 export const ADD_LOCATION_FAILURE = 'ADD_LOCATION_FAILURE';
 
@@ -221,6 +224,20 @@ export const addEmptyCategoryCard = () => {
 export const removeCategoryCard = (id: number) => {
   return {
     type: REMOVE_CATEGORY_CARD,
+    id: id,
+  };
+};
+
+export const addEmptyDiscountCard = (id: number) => {
+  return {
+    type: ADD_EMPTY_DISCOUNT_CARD,
+    id: id,
+  };
+};
+
+export const removeDiscountCard = (id: number) => {
+  return {
+    type: REMOVE_DISCOUNT_CARD,
     id: id,
   };
 };
