@@ -18,6 +18,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 import { AppState } from '../../../../../store/store';
+import DiscountCodeBox from './DiscountCodeBox';
 
 interface TicketsStepSmartProps {
   nextStep: () => void;
@@ -91,6 +92,9 @@ function TicketsStepSmart({
 
     //check for errors
     if (Number(value) < 0) {
+      updateTicketAmount(
+        ticketAmount.map((item) => (item.category === name ? { ...item, quantity: Number(value) } : item))
+      );
       updateTicketsStepErrorsLocally(
         ticketsStepFormErrors,
         name,
@@ -99,7 +103,7 @@ function TicketsStepSmart({
       );
     } else if (remaining < Number(value)) {
       updateTicketAmount(
-        ticketAmount.map((item) => (item.category === name ? { ...item, quantity: remaining } : item))
+        ticketAmount.map((item) => (item.category === name ? { ...item, quantity: Number(value) } : item))
       );
       updateTicketsStepErrorsLocally(
         ticketsStepFormErrors,
@@ -117,31 +121,73 @@ function TicketsStepSmart({
     }
   };
 
+  // Get the number of tickets for the category at index i in 'ticketCategories'
+  function getTicketNumber(i: number): number {
+    var a = ticketAmount.find((ticket) => ticket.category === ticketCategories[i].title)?.quantity;
+    if (typeof a === 'undefined') return 0;
+    return a;
+  }
+
+  function isNrOfTicketsOK(): boolean {
+    // Check if the user is buying tickets for at least 1 category
+    let isBuyingTickets: boolean = false;
+    // Check if the user has bad input for at least 1 category
+    let hasBadInput: boolean = false;
+    for (let i = 0; i < ticketCategories.length; i++) {
+      console.log(
+        'Category: ' +
+          ticketCategories[i].title +
+          ' | Ticket nr: ' +
+          getTicketNumber(i) +
+          ' | Available: ' +
+          ticketCategories[i].remaining
+      );
+      if (getTicketNumber(i) > 0) isBuyingTickets = true;
+      if (getTicketNumber(i) < 0 || getTicketNumber(i) > ticketCategories[i].remaining) hasBadInput = true;
+    }
+    console.log('Buying tickets: ' + isBuyingTickets);
+    console.log('Bad input: ' + hasBadInput);
+    return isBuyingTickets && !hasBadInput;
+  }
+
   let inputs: JSX.Element[] = [];
   for (let i = 0; i < ticketCategories.length; i++) {
-    const currError = ticketsStepFormErrors.find((error) => error.ticketCategoryTitle === ticketCategories[i].title)!
-      .error;
+    const currError = ticketsStepFormErrors.find(
+      (error) => error.ticketCategoryTitle === ticketCategories[i].title
+    )!.error;
     inputs.push(
       <Grid item xs={10} sm={10} md={10} lg={10} xl={10} key={ticketCategories[i].title}>
         <TextField
           className={ticketsPageStyle.position}
           onKeyDown={handleEnterKey}
-          type='number'
+          type="number"
           name={ticketCategories[i].title}
           fullWidth
           defaultValue={ticketAmount.find((ticket) => ticket.category === ticketCategories[i].title)?.quantity}
           label={ticketCategories[i].title}
-          variant='outlined'
+          variant="outlined"
           onChange={handleTicketsStepChange}
           error={currError.length > 0}
           helperText={currError}
           InputProps={{ inputProps: { min: 0 } }}
         />
+        <DiscountCodeBox
+          ticketCategory={ticketCategories[i].title}
+          ticketNumber={getTicketNumber(i)}
+          available={getTicketNumber(i) < ticketCategories[i].remaining}
+        />
       </Grid>
     );
   }
 
-  return <TicketsStepDumb gotoFirstPage={gotoFirstPage} nextStep={nextStep} inputs={inputs} />;
+  return (
+    <TicketsStepDumb
+      gotoFirstPage={gotoFirstPage}
+      nextStep={nextStep}
+      inputs={inputs}
+      allowNextStep={isNrOfTicketsOK()}
+    />
+  );
 }
 
 const mapStateToProps = (state: AppState) => {

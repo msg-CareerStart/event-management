@@ -10,33 +10,37 @@ import '../../../../../styles/ReservePageStyle.css';
 interface TicketsStepDumbProps {
   nextStep: () => void;
   inputs: JSX.Element[];
-  gotoFirstPage: () => void,
+  gotoFirstPage: () => void;
+  allowNextStep: boolean;
 }
 
-function TicketsStepDumb({ nextStep, inputs, gotoFirstPage }: TicketsStepDumbProps) {
+function TicketsStepDumb({ nextStep, inputs, gotoFirstPage, allowNextStep }: TicketsStepDumbProps) {
   const buttonStyles = BuyTicketsSecondPageStyle();
   const ticketsPageStyle = userBuyTicketsStyle();
   const { t } = useTranslation();
 
   return (
     <>
-      <HtmlTooltip className={ticketsPageStyle.alignHelpIcon} title={<>{t('buyTicketsSecondPage.chooseDesiredTickets')}</>}>
-        <HelpIcon color='primary' fontSize='small' />
+      <HtmlTooltip
+        className={ticketsPageStyle.alignHelpIcon}
+        title={<>{t('buyTicketsSecondPage.chooseDesiredTickets')}</>}
+      >
+        <HelpIcon color="primary" fontSize="small" />
       </HtmlTooltip>
 
-      <Typography className={ticketsPageStyle.typography} align='center'>
+      <Typography className={ticketsPageStyle.typography} align="center">
         {t('buyTicketsSecondPage.numberOfTickets')}
       </Typography>
 
-      <Grid container justify='center' alignItems='center'>
+      <Grid container justify="center" alignItems="center">
         {inputs}
 
         <Grid
           item
           container
-          direction='row'
-          justify='center'
-          alignItems='center'
+          direction="row"
+          justify="center"
+          alignItems="center"
           className={`${ticketsPageStyle.button} buttonStyleResp`}
         >
           <Tooltip title={t('buyTicketsSecondPage.gotoFirstPage') as string}>
@@ -44,16 +48,17 @@ function TicketsStepDumb({ nextStep, inputs, gotoFirstPage }: TicketsStepDumbPro
               onClick={gotoFirstPage}
               className={`${buttonStyles.positionLeft} ${buttonStyles.prevButtonStyle} buttonStyleLeftSecond`}
             >
-              <NavigateNextIcon color='secondary' />
+              <NavigateNextIcon color="secondary" />
             </IconButton>
           </Tooltip>
 
           <Tooltip title={t('eventList.next') as string}>
             <IconButton
+              disabled={!allowNextStep}
               onClick={nextStep}
               className={`${buttonStyles.positionRight} ${buttonStyles.nextButtonStyle} buttonStyleRightSecond`}
             >
-              <NavigateNextIcon color='secondary' />
+              <NavigateNextIcon color="secondary" />
             </IconButton>
           </Tooltip>
         </Grid>

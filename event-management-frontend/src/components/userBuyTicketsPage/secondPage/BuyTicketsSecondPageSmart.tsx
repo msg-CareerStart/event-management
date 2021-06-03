@@ -62,8 +62,8 @@ function BuyTicketsSecondPageSmart({
 }: BuyTicketsSecondPageSmartProps) {
   const [step, setStep] = useState(1);
   const history = useHistory();
-  const [ t ] = useTranslation();
-  
+  const [t] = useTranslation();
+
   useEffect(() => {
     fetchTicketCategories(match.params.id);
   }, [match.params.id, fetchTicketCategories]);
@@ -78,18 +78,18 @@ function BuyTicketsSecondPageSmart({
 
   if (isLoadingTicketCategories) {
     return (
-      <Grid container direction='row' justify='center' alignItems='center'>
-        <Container maxWidth='lg'>
+      <Grid container direction="row" justify="center" alignItems="center">
+        <Container maxWidth="lg">
           <CircularProgress />
         </Container>
-        <h6>{t("welcome.loading")}</h6>
+        <h6>{t('welcome.loading')}</h6>
       </Grid>
     );
   } else if (isErrorTicketCategories) {
     return (
-      <Grid container direction='row' justify='center' alignItems='center'>
+      <Grid container direction="row" justify="center" alignItems="center">
         <ErrorIcon color={'primary'} fontSize={'large'} />
-        <h2>{t("userEventList.errorMessage")}</h2>
+        <h2>{t('userEventList.errorMessage')}</h2>
       </Grid>
     );
   }
