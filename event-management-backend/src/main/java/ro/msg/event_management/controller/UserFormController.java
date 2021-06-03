@@ -30,7 +30,7 @@ public class UserFormController {
     //@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public UserForm addUserForm(@RequestBody UserFormDto userFormDto)
     {
-        System.out.println("poate poate");
+        System.out.println("MERGE");
         //validation of available username exists in frontend, used for testing in postman
         if(userService.findByUserName(userFormDto.getUserName()) == null)
             return userService.addUserForm(userFormDto);

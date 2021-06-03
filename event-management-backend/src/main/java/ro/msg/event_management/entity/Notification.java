@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
@@ -22,10 +19,14 @@ public class Notification implements Serializable {
     @EmbeddedId
     private NotificationId id;
 
-    @Column(name="user_id")
-    private Long userID;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("user")
+    @JoinColumn(name = "user")
+    private UserForm user;
 
-    @Column(name="event_id")
-    private Long eventID;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("event")
+    @JoinColumn(name = "event")
+    private Event event;
 
 }

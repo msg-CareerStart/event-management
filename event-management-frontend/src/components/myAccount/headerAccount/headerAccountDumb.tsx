@@ -7,6 +7,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import { headerCrudDumbStyles } from '../../../styles/HeaderCrudStyles';
 import { useTranslation } from 'react-i18next';
 import UserForm from '../../../model/UserForm';
+import { Auth } from 'aws-amplify';
 
 interface Props {
   userForm: UserForm;
@@ -31,11 +32,18 @@ function HeaderAccDumb(props: Props) {
   //   </IconButton>
   // );
 
-  const handleSave = () => {
+  const handleSave = async () => {
     let err: boolean;
     err = props.validForm();
     console.log(err + ' ss');
-    if (err == false) props.editUserAction(props.userForm);
+    if (err == false) {
+      props.editUserAction(props.userForm);
+      let user = await Auth.currentAuthenticatedUser();
+      let result = await Auth.updateUserAttributes(user, {
+        email: props.userForm.email,
+      });
+      console.log(result);
+    }
 
     // put handdle save to ICON BUTTOn
     //change mail here TO DO

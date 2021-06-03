@@ -6,5 +6,5 @@ import ro.msg.event_management.entity.Notification;
 import ro.msg.event_management.entity.NotificationId;
 
 public interface NotificationRepository extends JpaRepository<Notification, NotificationId> {
-    public void deleteNotificationByUserIDAndEventID(long userID, long eventID);
+    public void deleteNotificationByUserAndEvent(long userID, long eventID);
 }

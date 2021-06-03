@@ -1,13 +1,20 @@
 package ro.msg.event_management.service;
 
+import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.msg.event_management.entity.*;
 import ro.msg.event_management.repository.EventRepository;
 import ro.msg.event_management.repository.NotificationRepository;
 import ro.msg.event_management.repository.UserFormRepository;
 
+import javax.mail.MessagingException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -19,8 +26,7 @@ public class NotificationService {
     private final EventRepository eventRepository;
     private final EmailSenderService emailSenderService;
 
-    public void notifyUsers(long eventID)
-    {
+    public void notifyUsers(long eventID) throws MessagingException, IOException {
         int reserved = 0;
         int total;
         float rate;
@@ -33,24 +39,33 @@ public class NotificationService {
             {
                 reserved += el.getTickets().size();
             }
-            rate = (float)reserved/(float)total;
+            rate = ((float)reserved/(float)total)*100;
             List<UserForm> verifyToNotify = userFormRepository.findForNotification(rate,eventID);
             for(UserForm element: verifyToNotify)
             {
                 this.sendEmail(element,obj);
-                notificationRepository.deleteNotificationByUserIDAndEventID(element.getId(), eventID);
+                notificationRepository.deleteNotificationByUserAndEvent(element.getId(), eventID);
             }
         }
     }
-
-    public void sendEmail(UserForm user, Event obj)
-    {
-
+    @Transactional(
+            rollbackFor = {FileNotFoundException.class, DocumentException.class, MessagingException.class,
+                    IOException.class})
+    public void sendEmail(UserForm user, Event obj) throws MessagingException, IOException {
+        Map<String, Object> model = new HashMap<>();
+        model.put("begin", "Draga utilizator: ");
+        model.put("firstName", user.getFirstName());
+        model.put("lastName", user.getLastName());
+        model.put("alert", "pentru evenimentul");
+        model.put("eventName", obj.getTitle());
+        model.put("rateAlert", "s-a depasit capacitatea de");
+        model.put("rate", user.getOccupancyRate());
+        emailSenderService.sendNotificationEmail(emailSenderService.getNotificationMail(model, user.getEmail()));
     }
 
     public Notification addNotification(long userID, long eventID)
     {
-        Notification notification = new Notification(new NotificationId(userID,eventID), userID, eventID);
+        Notification notification = new Notification(new NotificationId(userID,eventID), userFormRepository.getOne(userID), eventRepository.getOne(eventID));
         this.notificationRepository.save(notification);
         return notification;
     }

@@ -1,4 +1,3 @@
-
 package ro.msg.event_management.entity;
 
 
@@ -15,9 +14,10 @@ import java.io.Serializable;
 public class NotificationId implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Column
-    private Long userid;
-    @Column
-    private Long eventid;
+    @Column(name = "user")
+    private Long user;
+
+    @Column(name = "event")
+    private Long event;
 
 }

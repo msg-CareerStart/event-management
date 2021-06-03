@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `user_form` (
     );
 
 CREATE TABLE IF NOT EXISTS `notification` (
-                                              `user_id` bigint,
-                                              `event_id` bigint,
-                                              CONSTRAINT `id_notification` PRIMARY KEY(`user_id`, `event_id`)
+                                              `user` bigint,
+                                              `event` bigint,
+                                              CONSTRAINT `id_notification` PRIMARY KEY(`user`, `event`)
     );
