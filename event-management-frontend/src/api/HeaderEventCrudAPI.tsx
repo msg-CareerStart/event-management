@@ -4,6 +4,10 @@ import { LocationType } from '../model/LocationType';
 import { serverURL, s3URL } from './Api';
 import { fetchWrapper } from './FetchWrapper';
 
+export const fetchEventStatistics = () => {
+  return fetchWrapper(`${serverURL}/events/ticketsStatistics`).then((response) => response.json());
+};
+
 export const fetchEventAPI = (id: string) => {
   return fetchWrapper(`${serverURL}/events/${id}`).then((response) => response.json());
 };
