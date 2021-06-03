@@ -27,6 +27,7 @@ import {
   watchFetchUserUpcomingEventsAsync,
   watchFetchHighlightedEventsAsync,
 } from './UserHomePageSaga';
+import { watchLoadDiscountsForEventAsync } from './DiscountsForEventSaga';
 import { watchFetchStatisticsEventAsync } from './EventStatisticsSaga';
 
 export default function* rootSaga() {
@@ -68,10 +69,13 @@ export default function* rootSaga() {
 
     watchFetchReserveEventAsync(),
 
+    watchLoadDiscountsForEventAsync(),
+
     watchFetchStatisticsEventAsync(),
 
     watchFetchAllExistingEventsAsync(),
 
     watchFetchLocationsStatisticsAsync(),
+
   ]);
 }

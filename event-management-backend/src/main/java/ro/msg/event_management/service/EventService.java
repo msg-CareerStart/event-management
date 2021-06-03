@@ -200,8 +200,15 @@ public class EventService {
                         List<TicketCategory> categoriesToSave = new ArrayList<>();
                         if (ticketCategory.getId() < 0) {
                             categoriesToSave.add(ticketCategory);
-                            this.ticketCategoryService.saveTicketCategories(categoriesToSave, eventFromDB);
-                            this.discountService.saveDiscounts(ticketCategory.getDiscounts(), ticketCategory);
+                            List<TicketCategory> updatedTicketCategories = this.ticketCategoryService.saveTicketCategories(categoriesToSave, eventFromDB);
+                            for(TicketCategory updatedTicketCategory: updatedTicketCategories){
+                                if(updatedTicketCategory.getTitle() == ticketCategory.getTitle() &&
+                                        updatedTicketCategory.getSubtitle() == ticketCategory.getSubtitle() &&
+                                        updatedTicketCategory.getPrice() == ticketCategory.getPrice() &&
+                                        updatedTicketCategory.getDescription() == ticketCategory.getDescription()) {
+                                    this.discountService.saveDiscounts(ticketCategory.getDiscounts(), updatedTicketCategory);
+                                }
+                            }
                         } else {
                             eventFromDB.getTicketCategories().forEach(ticketCategoryFromDB -> {
                                 if (ticketCategoryFromDB.getId().equals(ticketCategory.getId())) {

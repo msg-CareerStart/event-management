@@ -5,23 +5,34 @@ import CategoryCard from '../CategoryCard/CategoryCardSmart';
 import '../../../../styles/Responsivity.css';
 import { EventCrud } from '../../../../model/EventCrud';
 import { useTranslation } from 'react-i18next';
-import { CategoryCardErrors } from '../../../../model/EventFormErrors';
+import { EventFormErrors } from '../../../../model/EventFormErrors';
 import { useStyles } from '../../../../styles/CommonStyles';
 import { CategoryCardItem } from '../../../../model/TicketType';
+import { DiscountCardItem } from '../../../../model/DiscountType';
+import DiscountCardDumb from '../DiscountCard/DiscountCardDumb';
+import DiscoutCardSmart from '../DiscountCard/DiscountCardSmart';
 
 type Props = {
   newEvent: boolean;
   event: EventCrud;
   handleChange: any;
-  formErrors: {
-    ticketsPerUser: string;
-    ticketInfo: string;
-    ticketCategoryDtoList: CategoryCardErrors[];
-  };
+  formErrors: EventFormErrors;
   addCard: () => void;
+  removeDiscount: (id: number) => void;
+  updateEvent: (event: EventCrud) => void;
+  updateFormErrors: (errors: EventFormErrors) => void;
 };
 
-const CategoryPageDumb: React.FC<Props> = ({ newEvent, event, addCard, handleChange, formErrors }: Props) => {
+const CategoryPageDumb: React.FC<Props> = ({
+  newEvent,
+  event,
+  addCard,
+  handleChange,
+  formErrors,
+  removeDiscount,
+  updateEvent,
+  updateFormErrors,
+}: Props) => {
   const classes = useStylesCategoryPage();
   const classes2 = useStyles();
   const { t } = useTranslation();
@@ -84,16 +95,38 @@ const CategoryPageDumb: React.FC<Props> = ({ newEvent, event, addCard, handleCha
       <br />
       <Grid className={classes.gridStyle} container spacing={4}>
         {event.ticketCategoryDtoList.map((category: CategoryCardItem) => (
-          <Grid container item xl={6} lg={6} md={7} sm={12} xs={12} key={category.id}>
-            <CategoryCard
-              id={category.id}
-              title={category.title}
-              subtitle={category.subtitle}
-              price={category.price}
-              description={category.description}
-              ticketsPerCategory={category.ticketsPerCategory}
-              available={category.available}
-            />
+          <Grid container item xl={6} lg={6} md={7} sm={12} xs={12} key={category.id} direction="column" spacing={1}>
+            <Grid item>
+              <CategoryCard
+                id={category.id}
+                title={category.title}
+                subtitle={category.subtitle}
+                price={category.price}
+                description={category.description}
+                ticketsPerCategory={category.ticketsPerCategory}
+                available={category.available}
+              />
+            </Grid>
+            <Grid item container direction="column" spacing={1}>
+              {category.discountDtoList.map((discount: DiscountCardItem) => (
+                <Grid item key={discount.id}>
+                  <DiscoutCardSmart
+                    available={category.available}
+                    discountId={discount.id}
+                    categoryId={category.id}
+                    removeDiscount={removeDiscount}
+                    event={event}
+                    updateEvent={updateEvent}
+                    code={discount.code}
+                    percentage={discount.percentage}
+                    startDate={discount.startDate}
+                    endDate={discount.endDate}
+                    updateFormErrors={updateFormErrors}
+                    formErrors={formErrors}
+                  ></DiscoutCardSmart>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
         ))}
       </Grid>

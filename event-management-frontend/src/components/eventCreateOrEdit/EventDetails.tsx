@@ -149,8 +149,21 @@ function EventDetails({
         setOpen(true);
         return false;
       }
+      for (let discountError of ticketError.discountDtoList) {
+        if (
+          discountError.code.length > 0 ||
+          discountError.percentage.length > 0 ||
+          discountError.startDate.length > 0 ||
+          discountError.endDate.length > 0
+        ) {
+          setMsgUndo(t('welcome.popupErrMsgUnderstood'));
+          setDialogTitle(t('welcome.popupMsgErrTitle'));
+          setDialogDescription(t('welcome.popupErrMsgDescription'));
+          setOpen(true);
+          return false;
+        }
+      }
     }
-
     return true;
   };
 
@@ -183,6 +196,15 @@ function EventDetails({
         setDialogDescription(t('welcome.popupErrMsgNotFilled'));
         setOpen(true);
         return false;
+      }
+      for (let discount of category.discountDtoList) {
+        if (discount.code.trim() === '' || discount.startDate.length === 0 || discount.endDate.length === 0) {
+          setMsgUndo(t('welcome.popupErrMsgUnderstood'));
+          setDialogTitle(t('welcome.popupMsgErrTitle'));
+          setDialogDescription(t('welcome.popupErrMsgNotFilled'));
+          setOpen(true);
+          return false;
+        }
       }
     }
     return true;
