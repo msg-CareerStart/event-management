@@ -13,6 +13,8 @@ import ReservePageReducer from './ReservePageReducer';
 import TicketCategoriesReducer from './TicketReservationReducer';
 import RegistrationPageReducer from './RegistrationPageReducer';
 import { FormReducer } from './FormReducer';
+import { LocationStatisticsReducer } from './LocationStatisticsReducer';
+import { EventsStatisticsReducer } from './EventStatisticsPageReducer';
 
 export default combineReducers({
   events: EventsPageReducer,
@@ -29,4 +31,6 @@ export default combineReducers({
   reserveTicket: ReservePageReducer,
   ticketCategories: TicketCategoriesReducer,
   step: FormReducer,
+  eventStatistics: EventsStatisticsReducer,
+  locationsStatistics: LocationStatisticsReducer,
 });

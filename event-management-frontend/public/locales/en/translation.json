@@ -136,6 +136,9 @@
         "ticketsTab": "Tickets",
         "imagesTab": "Images",
 
+        "eventStatisticTab": "Events",
+        "locationStatisticTab": "Locations",
+
         "errMsgOverviewMinCharacters": "minimum 3 characters required",
         "errMsgOverviewFirstDayInPast": "the first day of the event can't be in the past",
         "errMsgOverviewFirstDayAfterLast": "the first day of the event can't be after the last",
@@ -166,7 +169,12 @@
         "backButton": "Back",
         "joinButton": "Join",
 
-        "loading": "Loading"
+        "loading": "Loading",
+
+        "eventStatistics": "Events Statistics",
+        "locationStatistics": "Locations Statistics",
+
+        "noItemsSelected": "No Items Selected"
     },
 
     "images": {

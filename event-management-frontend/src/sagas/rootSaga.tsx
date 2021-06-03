@@ -6,6 +6,7 @@ import {
   watchFetchHomeEventsAsync,
   watchFetchCustomHomeEventsAsync,
   watchValidateTicket,
+  watchFetchAllExistingEventsAsync,
 } from './EventsPageSaga';
 import {
   watchLoadEventAsync,
@@ -13,7 +14,7 @@ import {
   watchAddEventAsync,
   watchDeletEventAsync,
 } from './HeaderEventCrudSaga';
-import { watchFetchLocationAsync } from './LocationPageSaga';
+import { watchFetchLocationAsync, watchFetchLocationsStatisticsAsync } from './LocationPageSaga';
 import { watchLoadTicketCategoriesAsync, watchAddBookingsAsync } from './TicketReservationSaga';
 import { watchFetchReserveEventAsync } from './ReservePageSaga';
 import { watchFetchTicketsAsync } from './TicketsPageSaga';
@@ -26,6 +27,7 @@ import {
   watchFetchUserUpcomingEventsAsync,
   watchFetchHighlightedEventsAsync,
 } from './UserHomePageSaga';
+import { watchFetchStatisticsEventAsync } from './EventStatisticsSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -65,5 +67,11 @@ export default function* rootSaga() {
     watchValidateTicket(),
 
     watchFetchReserveEventAsync(),
+
+    watchFetchStatisticsEventAsync(),
+
+    watchFetchAllExistingEventsAsync(),
+
+    watchFetchLocationsStatisticsAsync(),
   ]);
 }

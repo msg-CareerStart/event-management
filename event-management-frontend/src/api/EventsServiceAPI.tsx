@@ -134,6 +134,14 @@ export const fetchEvents = () => {
     });
 };
 
+export const fetchAllExistingEvents = () => {
+  return fetchWrapper(`${serverURL}/events`)
+    .then((response) => response.json())
+    .then((json) => {
+      return json;
+    });
+};
+
 export const getLastNumber = (filters: EventFilters) => {
   const filtersToSend = computeFilterQueryString(filters);
   const limitToSend = computeLimit();

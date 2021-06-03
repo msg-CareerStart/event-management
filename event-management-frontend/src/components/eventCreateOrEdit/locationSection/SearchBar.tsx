@@ -28,19 +28,22 @@ interface Props {
 
 function getUserDataWithPromise(props: string) {
   const searchString = ORS_URL + process.env.REACT_APP_OPENROUTESERVICE_KEY + '&text=';
+  let find = searchString.concat(props);
+  if (props.length == 0) {
+    return new Promise(function (resolve, reject) {});
+  }
+
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'json';
   return new Promise(function (resolve, reject) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {
-        if (xhr.status >= 300) {
-          reject('Error, status code = ' + xhr.status);
-        } else {
+        if (xhr.status < 300) {
           resolve(xhr.response);
         }
       }
     };
-    xhr.open('GET', searchString.concat(props), true);
+    xhr.open('GET', find, true);
     xhr.send();
   });
 }

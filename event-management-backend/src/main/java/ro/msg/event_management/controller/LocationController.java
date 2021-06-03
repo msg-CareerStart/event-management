@@ -1,5 +1,6 @@
 package ro.msg.event_management.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import lombok.AllArgsConstructor;

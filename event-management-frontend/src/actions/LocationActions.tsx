@@ -1,3 +1,4 @@
+import { LocationStatistics } from '../model/LocationStatistics';
 import { LocationType } from '../model/LocationType';
 
 export enum LocationActionTypes {
