@@ -30,7 +30,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " ON e.id = b.event.id" +
             " WHERE b.user = :user" +
             " AND e.endDate < current_date()" +
-            " GROUP BY e.description" +
             " ORDER BY e.startDate DESC")
     Page<Event> findByUserInPast(@Param("user") String user, Pageable pageable);
 
@@ -38,7 +37,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " ON e.id = b.event.id" +
             " WHERE b.user = :user" +
             " AND e.endDate > current_date()" +
-            " GROUP BY e.id" +
             " ORDER BY e.startDate ASC")
     Page<Event> findByUserInFuture(@Param("user") String user, Pageable pageable);
 
