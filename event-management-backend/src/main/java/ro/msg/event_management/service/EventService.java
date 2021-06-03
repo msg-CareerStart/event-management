@@ -2,10 +2,7 @@ package ro.msg.event_management.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -391,7 +388,6 @@ public class EventService {
         return new PageImpl<>(result, pageable, count);
     }
 
-
     public Predicate getPredicate(ComparisonSign comparisonSign, String criteria, Float value, CriteriaBuilder criteriaBuilder, Root<EventView> c) {
         switch (comparisonSign) {
             case GREATER:
@@ -408,7 +404,6 @@ public class EventService {
                 return null;
         }
     }
-
 
     public Event getEvent(long id) {
         Optional<Event> eventOptional = this.eventRepository.findById(id);
@@ -427,4 +422,66 @@ public class EventService {
         return eventRepository.findByUserInFuture(user.getIdentificationString(), pageable);
     }
 
+    /**
+     * Gets the total number of available tickets for all the events.
+     * @return a Map where each entry has the eventId as key,
+     * and the number of available tickets as value.
+     */
+    public Map<Long, Integer> getAvailableTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = eventRepository.getAllEventIds();
+
+        // Get the ids of all events with tickets on sale
+        List<Integer> saleEventIds = eventRepository.getIdsOfEventsWithTicketsOnSale();
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(Long eId: allEventIds){
+            int nrOfTickets;
+            // If the event has tickets on sale, query the number of tickets
+            if(saleEventIds.contains(Math.toIntExact(eId))) {
+                nrOfTickets = eventRepository.getAvailableTicketsForEvent(eId);
+            }
+            // If the event has no tickets on sale, set the number of tickets to 0
+            else
+                nrOfTickets = 0;
+            mapNrTicketsToEvent.put((long) eId, nrOfTickets);
+        }
+        return mapNrTicketsToEvent;
+    }
+
+    /**
+     * Gets the total number of validated tickets for all the events.
+     * This method will return the total number of validated tickets.
+     * @return a Map where each entry has the eventId as key,
+     * and the number of validated tickets (for that event) as value.
+     */
+    public Map<Long, Integer> getValidatedTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = eventRepository.getAllEventIds();
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(long eId: allEventIds){
+            mapNrTicketsToEvent.put(eId, eventRepository.getNrOfValidatedTicketsForEvent(eId));
+        }
+
+        return mapNrTicketsToEvent;
+    }
+
+    /**
+     * Gets the total number of sold tickets for all the events.
+     * This method will return the total number of sold tickets.
+     * @return a Map where each entry has the eventId as key,
+     * and the number of sold tickets (for that event) as value.
+     */
+    public Map<Long, Integer> getSoldTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = eventRepository.getAllEventIds();
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(long eId: allEventIds){
+            mapNrTicketsToEvent.put(eId, eventRepository.getSoldTicketsForEvent(eId));
+        }
+
+        return mapNrTicketsToEvent;
+    }
 }
