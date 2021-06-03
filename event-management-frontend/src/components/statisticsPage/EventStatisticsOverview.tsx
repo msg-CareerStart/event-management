@@ -8,7 +8,7 @@ import { Grid } from '@material-ui/core';
 import { EventStatisticsPageState } from '../../reducers/EventStatisticsPageReducer';
 import { AppState } from '../../store/store';
 import { connect } from 'react-redux';
-import { availableColor, occupancyRateColor, validatedColor } from '../../styles/ChartColors';
+import { availableColor, occupancyRateColor } from '../../styles/ChartColors';
 import { useTranslation } from 'react-i18next';
 
 interface EventStatisticsProps {

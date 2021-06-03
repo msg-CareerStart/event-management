@@ -18,7 +18,7 @@
         "home": "Acasă",
         "buildings": "Clădiri",
         "events": "Evenimente",
-        "addevents": "Add Evenimente",
+        "addevents": "Adaugă Evenimente",
         "statistics": "Statistici",
         "tickets": "Bilete",
         "map": "Hartă",
@@ -79,7 +79,7 @@
         "username": "Nume de utilizator",
         "password": "Parola",
         "confirmPassword": "Confirmă parola",
-        "button": "Înregistare",
+        "button": "Înregistrare",
         "alreadyHaveAnAccount": "Ai deja un cont? ",
         "loginLink": "Autentifică-te!",
         "emptyError": "Introduceți o valoare",
@@ -174,7 +174,7 @@
         "eventStatistics": "Statistici pentru evenimente",
         "locationStatistics": "Statistici pentru locații",
 
-        "noItemsSelected": "Nici un câmp selectat"
+        "noItemsSelected": "Niciun câmp selectat"
     },
     "images": {
         "imageErrorMessage": "A apărut o eroare la încărcarea imaginilor",
@@ -217,7 +217,7 @@
         "priceError": "Trebuie să fie pozitiv",
         "ticketsPerCategoryExceedsError": "Depășește numărul maxim de persoane",
         "ticketsPerCategoryTooSmallError": "Minim 1 bilet/categorie",
-        "ticketsPerCategoryAlreadySoldError": "bilete sunt deja vândute",
+        "ticketsPerCategoryAlreadySoldError": "biletele sunt deja vândute",
         "ticketPerUserError": "Minim 1 bilet necesar",
         "removeTitle": "Șterge categoria",
         "removePurchased": "Această categorie nu poate fi ștearsă. Unele bilete sunt deja achiziționate.",
@@ -311,9 +311,9 @@
         "deleteEvent_404": "Evenimentul nu a fost găsit!"
     },
     "successMsg": {
-        "successfulBuy": "Achiziția a fost cu succes! Vă rugăm să vă verificați email-ul",
-        "successfulDelete": "Ștergerea a fost cu succes!",
-        "successfulAdd": "Adăugarea a fost cu succes!",
-        "successfulEdit": "Editarea a fost cu succes!"
+        "successfulBuy": "Achiziția a fost efectuată cu succes! Vă rugăm să vă verificați email-ul",
+        "successfulDelete": "Ștergerea a fost efectuată cu succes!",
+        "successfulAdd": "Adăugarea a fost efectuată cu succes!",
+        "successfulEdit": "Editarea a fost efectuată cu succes!"
     }
 }
