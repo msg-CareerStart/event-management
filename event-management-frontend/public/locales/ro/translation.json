@@ -20,6 +20,7 @@
         "events": "Evenimente",
         "addevents": "Add Evenimente",
         "statistics": "Statistici",
+        "administration": "Administrare",
         "tickets": "Bilete",
         "previous": "Anterior",
         "next": "Următor",
@@ -135,6 +136,9 @@
         "ticketsTab": "Bilete",
         "imagesTab": "Imagini",
 
+        "importTab": "Importare",
+        "exportTab": "Exportare",
+
         "errMsgOverviewMinCharacters": "minim 3 charactere necesare",
         "errMsgOverviewFirstDayInPast": "prima zi a evenimentului nu poate fi în trecut",
         "errMsgOverviewFirstDayAfterLast": "prima zi a evenimentului nu poate fi după ultima",
@@ -167,6 +171,7 @@
 
         "loading": "Se încarcă"
     },
+
     "images": {
         "imageErrorMessage": "A apărut o eroare la încărcarea imaginilor",
         "imageDragAndDrop": "Trageți și plasați fișiere aici sau faceți click pentru a selecta fișiere",
@@ -175,6 +180,22 @@
         "imageDialogAgree": "Da",
         "imageDialogDisagree": "Nu"
     },
+
+    "files": {
+        "fileErrorMessage": "A apărut o eroare la încărcarea fișierelor",
+        "fileDragAndDrop": "Trageți și plasați un fișier aici sau faceți click pentru a îl selecta",
+        "fileDialogTitle": "Doriți să ștergeți fișierul?",
+        "fileDialogContent": "Dacă ștergeți fișierul nu îl veți mai putea recupera mai târziu.",
+        "fileDialogAgree": "Da",
+        "fileDialogDisagree": "Nu",
+        "type": "Tip",
+        "tickets": "Bilete",
+        "events": "Evenimente",
+        "errorButton": "Am înțeles",
+        "errorTitle": "Eroare",
+        "errorExportDialog": "Va rugăm selectați tipul exportării"
+    },
+
     "location": {
         "selectButton": "Selectează",
         "cancelButton": "Anulează",

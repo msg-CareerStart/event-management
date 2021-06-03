@@ -92,4 +92,9 @@ public class TicketCategoryService {
 
         return this.ticketCategoryRepository.save(ticketCategory);
     }
+
+    public TicketCategory findOne(Long id){
+        var category = ticketCategoryRepository.findById(id);
+        return category.orElse(null);
+    }
 }

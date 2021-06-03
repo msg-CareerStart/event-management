@@ -1,13 +1,19 @@
 package ro.msg.event_management.controller;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,21 +33,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ro.msg.event_management.controller.converter.Converter;
 import ro.msg.event_management.controller.converter.EventReverseConverter;
-import ro.msg.event_management.controller.dto.*;
-import ro.msg.event_management.entity.Event;
-import ro.msg.event_management.entity.EventStatistics;
+import ro.msg.event_management.controller.dto.AvailableTicketsPerCategory;
+import ro.msg.event_management.controller.dto.CardsEventDto;
+import ro.msg.event_management.controller.dto.CardsUserEventDto;
+import ro.msg.event_management.controller.dto.EventDetailsForBookingDto;
+import ro.msg.event_management.controller.dto.EventDetailsForUserDto;
+import ro.msg.event_management.controller.dto.EventDto;
+import ro.msg.event_management.controller.dto.EventFilteringDto;
+import ro.msg.event_management.controller.dto.EventWithRemainingTicketsDto;
+import ro.msg.event_management.entity.*;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
-import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.exception.TicketCategoryException;
 import ro.msg.event_management.security.User;
-import ro.msg.event_management.service.EventService;
-import ro.msg.event_management.service.LocationService;
-import ro.msg.event_management.service.TicketService;
+import ro.msg.event_management.service.*;
 import ro.msg.event_management.utils.ComparisonSign;
 import ro.msg.event_management.utils.SortCriteria;
 
@@ -53,7 +63,9 @@ import ro.msg.event_management.utils.SortCriteria;
 public class EventController {
 
     private final EventService eventService;
-    private final LocationService locationService;
+    private final PictureService pictureService;
+    private final SublocationService sublocationService;
+    private final EventSublocationService eventSublocationService;
     private final Converter<Event, EventDto> convertToDto;
     private final Converter<EventDto, Event> convertToEntity;
     private final Converter<EventView, EventFilteringDto> converter;
@@ -80,10 +92,10 @@ public class EventController {
                 case ("userEventDetails"):
                     EventDto eventDtoForUserEventDetails = convertToDto.convert(event);
                     EventDetailsForUserDto eventDetailsForUserDto = EventDetailsForUserDto.builder()
-                                                                                          .eventDto(eventDtoForUserEventDetails)
-                                                                                          .locationAddress(event.getEventSublocations().get(0).getSublocation().getLocation().getAddress())
-                                                                                          .locationName(event.getEventSublocations().get(0).getSublocation().getLocation().getName())
-                                                                                          .build();
+                            .eventDto(eventDtoForUserEventDetails)
+                            .locationAddress(event.getEventSublocations().get(0).getSublocation().getLocation().getAddress())
+                            .locationName(event.getEventSublocations().get(0).getSublocation().getLocation().getName())
+                            .build();
                     return new ResponseEntity<>(eventDetailsForUserDto, HttpStatus.OK);
                 case ("bookingEventDetails"):
                     EventDetailsForBookingDto eventDetailsForBookingDto = this.eventDetailsForBookingDtoConverter.convert(event);
@@ -92,28 +104,14 @@ public class EventController {
                     EventDto eventDto = convertToDto.convert(event);
                     List<AvailableTicketsPerCategory> availableTicketsPerCategories = ticketService.getAvailableTickets(id);
                     EventWithRemainingTicketsDto eventWithRemainingTicketsDto = EventWithRemainingTicketsDto.builder()
-                                                                                                            .eventDto(eventDto)
-                                                                                                            .availableTicketsPerCategoryList(availableTicketsPerCategories)
-                                                                                                            .build();
+                            .eventDto(eventDto)
+                            .availableTicketsPerCategoryList(availableTicketsPerCategories)
+                            .build();
                     return new ResponseEntity<>(eventWithRemainingTicketsDto, HttpStatus.OK);
             }
         } catch (NoSuchElementException noSuchElementException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, noSuchElementException.getMessage(), noSuchElementException);
         }
-    }
-
-    @GetMapping("/{id}/locations")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public List<LocationDto> getLocationsByEventId(@PathVariable long id){
-        Event event = eventService.getEvent(id);
-        List<LocationDto> eventLocations = null;
-        if(event!=null){
-            eventLocations = locationService.getLocationsByEvent(event);
-        }else{
-            ///here we can write an exception handling
-            return null;
-        }
-        return eventLocations;
     }
 
     @PostMapping
@@ -140,8 +138,6 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
-        } catch (OverlappingDiscountsException overlappingDiscountsException) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
     }
 
@@ -180,8 +176,7 @@ public class EventController {
 
         try {
             List<Long> ticketCategoryToDelete = eventUpdateDto.getTicketCategoryToDelete();
-            List<Long> discountsToDelete = eventUpdateDto.getDiscountsToDelete();
-            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, discountsToDelete, eventUpdateDto.getLocation());
+            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, eventUpdateDto.getLocation());
             eventDto = convertToDto.convert(eventUpdated);
         } catch (NoSuchElementException noSuchElementException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, noSuchElementException.getMessage(), noSuchElementException);
@@ -191,8 +186,6 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
-        } catch (OverlappingDiscountsException overlappingDiscountsException) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
         return new ResponseEntity<>(eventDto, HttpStatus.OK);
     }
@@ -200,6 +193,7 @@ public class EventController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteEvent(@PathVariable long id) {
+
         try {
             this.eventService.deleteEvent(id);
             return new ResponseEntity<>("Event deleted", HttpStatus.OK);
@@ -326,29 +320,309 @@ public class EventController {
         return new ResponseEntity<>(returnList, HttpStatus.OK);
     }
 
-    @GetMapping("/ticketsStatistics")
+    @PostMapping(value = "/import")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<EventStatistics>> getAvailableTicketsForEvents(){
-        Map<Long, Integer> availableTickets = eventService.getAvailableTicketsForEvents();
-        Map<Long, Integer> validatedTickets = eventService.getValidatedTicketsForEvents();
-        Map<Long, Integer> soldTickets = eventService.getSoldTicketsForEvents();
-        List<EventStatistics> finalResponse = new ArrayList<>();
+    public ResponseEntity exportEventsCsv(@RequestParam MultipartFile csv) throws IOException, OverlappingEventsException, ExceededCapacityException {
+        InputStream inputStream = csv.getInputStream();
 
-        for(Long id: availableTickets.keySet()){
-            EventStatistics eventStatistics = EventStatistics.builder()
-                    .id(id)
-                    .availableTickets(availableTickets.get(id))
-                    .validatedTickets(validatedTickets.get(id))
-                    .totalTickets(soldTickets.get(id) + availableTickets.get(id))
-                    .unvalidatedTickets(soldTickets.get(id) - validatedTickets.get(id))
-                    .build();
+        var reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            finalResponse.add(eventStatistics);
+        reader.readLine(); // skip header
+        String errorString = "";
 
+        while(reader.ready()){
+            String line = reader.readLine();
+            var fields = line.split(",");
+
+            var title = fields[0];
+            var subtitle = fields[1];
+            var status = fields[2];
+            var startDate = fields[3];
+            var endDate = fields[4];
+            var endHour = fields[5];
+            var startHour = fields[6];
+            var maxPeople = fields[7];
+            var description = fields[8];
+            var highlighted = fields[9];
+            var observations = fields[10];
+            var ticketsPerUser = fields[11];
+            var creator = fields[12];
+            var ticketInfo = fields[13];
+
+            var picturesUrls = fields[14];
+
+            var locationId = fields[17];
+
+            var event = new Event();
+            if(title.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setTitle(title);
+
+            if(subtitle.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setSubtitle(subtitle);
+
+            if(status.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setStatus(Boolean.parseBoolean(status));
+
+            if(startDate.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setStartDate(LocalDate.parse(startDate));
+
+            if(endDate.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setEndDate(LocalDate.parse(endDate));
+
+            if(endHour.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setEndHour(LocalTime.parse(endHour));
+
+            if(startHour.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setStartHour(LocalTime.parse(startHour));
+
+            if(maxPeople.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setMaxPeople(Integer.parseInt(maxPeople));
+
+            if(description.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setDescription(description);
+
+            if(highlighted.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setHighlighted(Boolean.parseBoolean(highlighted));
+
+            if(observations.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setObservations(observations);
+
+            if(ticketsPerUser.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setTicketsPerUser(Integer.parseInt(ticketsPerUser));
+
+            if(creator.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setCreator(creator);
+
+            if(ticketInfo.equals("")) {
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+            event.setTicketInfo(ticketInfo);
+
+            if(locationId.equals("")){
+                errorString += "Skipped invalid row\n";
+                continue;
+            }
+
+            //add category
+            var categories = fields[16];
+            var ids4 = categories.split(";");
+            var list = new ArrayList<TicketCategory>();
+            for(String category: ids4){
+                var data = category.split("\\|");
+                var cat = new TicketCategory();
+                cat.setTitle(data[0]);
+                cat.setSubtitle(data[1]);
+                cat.setPrice(Float.parseFloat(data[2]));
+                cat.setDescription(data[3]);
+                cat.setTicketsPerCategory(Integer.parseInt(data[4]));
+                cat.setAvailable(Boolean.parseBoolean(data[5]));
+
+                list.add(cat);
+            }
+            event.setTicketCategories(list);
+
+            try {
+                Long.parseLong(locationId);
+            }catch (NumberFormatException e){
+                errorString += "Location id must be a number!\n";
+            }
+            event = eventService.saveEvent(event, Long.parseLong(locationId));
+
+            //add pictures to db
+            var urls = picturesUrls.split(";");
+            for(String url: urls){
+                var pic = new Picture();
+                pic.setEvent(event);
+                pic.setUrl(url);
+                pictureService.savePicture(pic);
+            }
+
+            //add eventsublocation to db
+            var sublocationIds = fields[15];
+            var ids2 = sublocationIds.split(";");
+            for(String id: ids2){
+                if(!id.equals("")) {
+                    try {
+                        var subLocation = sublocationService.findById(Long.parseLong(id));
+                        var eventSublocation = new EventSublocation();
+                        eventSublocation.setEvent(event);
+                        eventSublocation.setSublocation(subLocation);
+                        eventSublocationService.saveES(eventSublocation);
+                    }
+                    catch (Exception e){
+
+                    }
+                }
+            }
         }
 
-        return new ResponseEntity<>(finalResponse, HttpStatus.OK);
+        if(errorString.equals("")){
+            errorString = "Success";
+        }
+        return new ResponseEntity(errorString, HttpStatus.OK);
     }
 
-}
+    @GetMapping(value = "/export", produces = "text/csv")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<InputStreamResource> getEventsCsv() throws FileNotFoundException {
+        var events = eventService.findAll();
 
+        var headers = new ArrayList<String>();
+        headers.add("title");
+        headers.add("subtitle");
+        headers.add("status");
+        headers.add("startDate");
+        headers.add("endDate");
+        headers.add("endHour");
+        headers.add("startHour");
+        headers.add("maxPeople");
+        headers.add("description");
+        headers.add("highlighted");
+        headers.add("observations");
+        headers.add("ticketsPerUser");
+        headers.add("creator");
+        headers.add("ticketInfo");
+        headers.add("picturesUrls");
+        headers.add("sublocationIds");
+        headers.add("ticketCategoryTitle|ticketCategorySubtitle|ticketCategoryPrice|ticketCategoryDescription|ticketCategoryMax|ticketCategoryAvailable");
+
+        var date = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date());
+        var filename = "EventCSV" + date + ".csv";
+
+        try {
+            var writer = new FileWriter(filename);
+            for(String s:headers){
+                writer.write(s);
+                writer.write(',');
+            }
+
+            writer.write("\n");
+            for(Event event: events){
+                writer.write(event.getTitle());
+                writer.write(',');
+
+                writer.write(event.getSubtitle());
+                writer.write(',');
+
+                writer.write(String.valueOf(event.isStatus()));
+                writer.write(',');
+
+                writer.write(event.getStartDate().toString());
+                writer.write(',');
+
+                writer.write(event.getEndDate().toString());
+                writer.write(',');
+
+                writer.write(event.getEndHour().toString());
+                writer.write(',');
+
+                writer.write(event.getStartHour().toString());
+                writer.write(',');
+
+                writer.write(Integer.valueOf(event.getMaxPeople()).toString());
+                writer.write(',');
+
+                writer.write(event.getDescription());
+                writer.write(',');
+
+                writer.write(String.valueOf(event.isHighlighted()));
+                writer.write(',');
+
+                writer.write(event.getObservations());
+                writer.write(',');
+
+                writer.write(Integer.valueOf(event.getTicketsPerUser()).toString());
+                writer.write(',');
+
+                writer.write(event.getCreator());
+                writer.write(',');
+
+                writer.write(event.getTicketInfo());
+                writer.write(',');
+
+                var pictures = event.getPictures();
+                for(Picture picture: pictures){
+                    writer.write(String.valueOf(picture.getUrl()));
+                    writer.write(';');
+                }
+                writer.write(',');
+
+                var sublocations = event.getEventSublocations();
+                for(EventSublocation sublocation: sublocations){
+                    writer.write(String.valueOf(sublocation.getEventSublocationID().getSublocation()));
+                    writer.write(';');
+                }
+                writer.write(',');
+
+                var categories = event.getTicketCategories();
+                for(TicketCategory category: categories){
+                    writer.write(category.getTitle());
+                    writer.write('|');
+
+                    writer.write(category.getSubtitle());
+                    writer.write('|');
+
+                    writer.write(Float.valueOf(category.getPrice()).toString());
+                    writer.write('|');
+
+                    writer.write(category.getDescription());
+                    writer.write('|');
+
+                    writer.write(Integer.valueOf(category.getTicketsPerCategory()).toString());
+                    writer.write('|');
+
+                    writer.write(String.valueOf(category.isAvailable()));
+                    writer.write(';');
+                }
+                writer.write('\n');
+
+            }
+            writer.close();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(new InputStreamResource(new FileInputStream(filename)), HttpStatus.OK);
+    }
+}

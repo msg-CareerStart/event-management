@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import ro.msg.event_management.controller.dto.AvailableTicketsPerCategory;
 import ro.msg.event_management.entity.Event;
 import ro.msg.event_management.entity.Ticket;
+import ro.msg.event_management.entity.TicketCategory;
 import ro.msg.event_management.entity.TicketDocument;
 import ro.msg.event_management.entity.view.TicketView;
 import ro.msg.event_management.exception.TicketCorrespondingEventException;
@@ -136,5 +137,13 @@ public class TicketService {
         } else {
             throw new NoSuchElementException("There is no ticket with id = " + idTicket);
         }
+    }
+
+    public List<Ticket> findAll(){
+        return ticketRepository.findAll();
+    }
+
+    public Ticket save(Ticket ticket){
+        return ticketRepository.save(ticket);
     }
 }

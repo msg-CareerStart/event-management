@@ -6,6 +6,7 @@ import Header from './header/Header';
 import EventDetails from './eventCreateOrEdit/EventDetails';
 import { SecureRoute } from './SecureRoute';
 import ValidateTicket from './validateTicket/ValidateTicketSmart';
+import AdministrationStepper from './administrationPage/AdministrationStepper';
 
 const Main = () => {
   return (
@@ -32,6 +33,7 @@ const Main = () => {
             component={(props: any) => <EventDetails match={props.match} isAdmin={true} />}
           />
           <SecureRoute admin exact path="/admin" component={Home} />
+          <SecureRoute admin exact path="/admin/administration" component={(props: any) => <AdministrationStepper />} />
         </Switch>
       </main>
     </>

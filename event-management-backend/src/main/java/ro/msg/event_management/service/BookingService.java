@@ -63,10 +63,10 @@ public class BookingService {
     private final TicketRepository ticketRepository;
     private final EmailSenderService emailSenderService;
     private final AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                                                           .withCredentials(
-                                                               new InstanceProfileCredentialsProvider(false))
-                                                           .withRegion(Regions.EU_WEST_1)
-                                                           .build();
+            .withCredentials(
+                    new InstanceProfileCredentialsProvider(false))
+            .withRegion(Regions.EU_WEST_1)
+            .build();
 
     @PersistenceContext(type = PersistenceContextType.TRANSACTION)
     private final EntityManager entityManager;
@@ -81,29 +81,29 @@ public class BookingService {
                                                           Map.Entry<String, List<Ticket>> categoryWithTickets) {
         List<TicketCategory> ticketCategories = this.ticketCategoryRepository.findByEvent(event);
         TicketCategory ticketCategory = ticketCategories.stream()
-                                                        .filter(category -> category.getTitle().equals(
-                                                            categoryWithTickets.getKey()))
-                                                        .findFirst()
-                                                        .orElseThrow(() -> {
-                                                            throw new NoSuchElementException(
-                                                                "No ticket category with title=" + categoryWithTickets
-                                                                    .getKey());
-                                                        });
+                .filter(category -> category.getTitle().equals(
+                        categoryWithTickets.getKey()))
+                .findFirst()
+                .orElseThrow(() -> {
+                    throw new NoSuchElementException(
+                            "No ticket category with title=" + categoryWithTickets
+                                    .getKey());
+                });
 
         long numberOfExistingTicketsForCategory = ticketCategory.getTickets().size();
         if (numberOfExistingTicketsForCategory + categoryWithTickets.getValue().size() > ticketCategory
-            .getTicketsPerCategory()) {
+                .getTicketsPerCategory()) {
             throw new TicketBuyingException("Number of tickets per category exceeds the maximum value!");
         }
         return ticketCategory;
     }
 
     @Transactional(
-        rollbackFor = {FileNotFoundException.class, DocumentException.class, MessagingException.class,
-                       IOException.class})
+            rollbackFor = {FileNotFoundException.class, DocumentException.class, MessagingException.class,
+                    IOException.class})
     public Booking saveBookingAndTicketDocument(Booking booking, Map<String, List<Ticket>> categoryTitlesWithTickets,
                                                 long eventId)
-        throws IOException, DocumentException, MessagingException {
+            throws IOException, DocumentException, MessagingException {
         Booking savedBooking = this.saveBooking(booking, categoryTitlesWithTickets, eventId);
         this.createAndSaveTicketDocument(savedBooking);
         sendEmail(booking, categoryTitlesWithTickets);
@@ -111,7 +111,7 @@ public class BookingService {
     }
 
     public void sendEmail(Booking booking, Map<String, List<Ticket>> categoryTitlesWithTickets)
-        throws MessagingException, IOException {
+            throws MessagingException, IOException {
         Map<String, Object> model = new HashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
@@ -119,26 +119,26 @@ public class BookingService {
         model.put("lastName", user.getLastName());
         model.put("bookingId", booking.getId());
         model.put("bookingDate",
-                  booking.getBookingDate().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                booking.getBookingDate().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         model.put("eventName", booking.getEvent().getTitle());
         String eventDate = null;
         if (booking.getEvent().getStartDate().isEqual(booking.getEvent().getEndDate())) {
             eventDate = booking.getEvent().getStartDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         } else {
             eventDate = booking.getEvent().getStartDate()
-                               .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "-" + booking.getEvent()
-                                                                                                 .getEndDate().format(
-                    DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                    .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "-" + booking.getEvent()
+                    .getEndDate().format(
+                            DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         }
         model.put("eventDate", eventDate);
         model.put("startHour",
-                  booking.getEvent().getStartHour().getHour() + ":" + booking.getEvent().getStartHour().getMinute());
+                booking.getEvent().getStartHour().getHour() + ":" + booking.getEvent().getStartHour().getMinute());
         model.put("endHour",
-                  booking.getEvent().getEndHour().getHour() + ":" + booking.getEvent().getEndHour().getMinute());
+                booking.getEvent().getEndHour().getHour() + ":" + booking.getEvent().getEndHour().getMinute());
         model.put("locationName",
-                  booking.getEvent().getEventSublocations().get(0).getSublocation().getLocation().getName());
+                booking.getEvent().getEventSublocations().get(0).getSublocation().getLocation().getName());
         model.put("eventAddress",
-                  booking.getEvent().getEventSublocations().get(0).getSublocation().getLocation().getAddress());
+                booking.getEvent().getEventSublocations().get(0).getSublocation().getLocation().getAddress());
         int totalNoTickets = 0;
         for (List<Ticket> value : categoryTitlesWithTickets.values()) {
             totalNoTickets += value.size();
@@ -168,9 +168,9 @@ public class BookingService {
 
         //each user can buy only a certain amount of tickets at an event
         long totalNumberOfExistingTicketsForUserAtEvent = this.bookingRepository
-            .findByUserAndEvent(booking.getUser(), event).stream()
-            .mapToLong(booking1 -> booking1.getTickets().size())
-            .sum();
+                .findByUserAndEvent(booking.getUser(), event).stream()
+                .mapToLong(booking1 -> booking1.getTickets().size())
+                .sum();
         if (totalNumberOfExistingTicketsForUserAtEvent + numberOfTicketsToPurchase > event.getTicketsPerUser()) {
             throw new TicketBuyingException("Number of tickets exceeds maximum number of tickets per user!");
         }
@@ -181,11 +181,11 @@ public class BookingService {
             TicketCategory ticketCategory = this.validateAndReturnTicketCategory(event, entry);
             //set values for the tickets
             entry.getValue().forEach(ticket ->
-                                     {
-                                         ticket.setTicketCategory(ticketCategory);
-                                         ticket.setBooking(booking);
-                                         ticketsToSave.add(ticket);
-                                     });
+            {
+                ticket.setTicketCategory(ticketCategory);
+                ticket.setBooking(booking);
+                ticketsToSave.add(ticket);
+            });
         }
 
         event.getBookings().add(booking);
@@ -210,61 +210,61 @@ public class BookingService {
             BaseFont baseFont = BaseFont.createFont("FreeSerif-4aeK.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "eventNameLabel",
-                                           new Paragraph("Nume eveniment:"), baseFont);
+                    new Paragraph("Nume eveniment:"), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "locationLabel", new Paragraph("Locația:"),
-                                           baseFont);
+                    baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "addressLabel", new Paragraph("Adresa:"),
-                                           baseFont);
+                    baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "dateLabel", new Paragraph("Data:"), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "hourLabel", new Paragraph("Ora:"), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "participantNameLabel",
-                                           new Paragraph("Nume participant:"), baseFont);
+                    new Paragraph("Nume participant:"), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "ticketCategoryLabel",
-                                           new Paragraph("Categoria:"), baseFont);
+                    new Paragraph("Categoria:"), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "ticketCategoryDescriptionLabel",
-                                           new Paragraph("Descrierea categoriei:"), baseFont);
+                    new Paragraph("Descrierea categoriei:"), baseFont);
 
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "eventName", new Paragraph(event.getTitle()),
-                                           baseFont);
+                    baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "location", new Paragraph(location.getName()),
-                                           baseFont);
+                    baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "address", new Paragraph(location.getAddress()),
-                                           baseFont);
+                    baseFont);
 
             if (event.getStartDate().isEqual(event.getEndDate())) {
                 this.replaceFieldWithParagraph(acroFields, pdfContentByte, "date", new Paragraph(
-                    event.getStartDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))), baseFont);
+                        event.getStartDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))), baseFont);
             } else {
                 this.replaceFieldWithParagraph(acroFields, pdfContentByte, "date", new Paragraph(
-                                                   event.getStartDate().format(DateTimeFormatter.ofPattern("dd.MM" +
-                                                                                                           ".yyyy")) + " - " + event.getEndDate()
-                                                                                                                                         .format(
-                                                                                                                                             DateTimeFormatter
-                                                                                                                                                 .ofPattern(
-                                                                                                                                                     "dd.MM.yyyy"))),
-                                               baseFont);
+                                event.getStartDate().format(DateTimeFormatter.ofPattern("dd.MM" +
+                                        ".yyyy")) + " - " + event.getEndDate()
+                                        .format(
+                                                DateTimeFormatter
+                                                        .ofPattern(
+                                                                "dd.MM.yyyy"))),
+                        baseFont);
             }
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "hour",
-                                           new Paragraph(String.valueOf(event.getStartHour())), baseFont);
+                    new Paragraph(String.valueOf(event.getStartHour())), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "participantName",
-                                           new Paragraph(ticket.getName()), baseFont);
+                    new Paragraph(ticket.getName()), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "ticketCategory",
-                                           new Paragraph(ticketCategory.getTitle()), baseFont);
+                    new Paragraph(ticketCategory.getTitle()), baseFont);
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "ticketCategoryDescription",
-                                           new Paragraph(ticketCategory.getDescription()), baseFont);
+                    new Paragraph(ticketCategory.getDescription()), baseFont);
 
             Image image = Image.getInstance(event.getPictures().get(0).getUrl());
             this.replaceFieldWithImage(acroFields, pdfContentByte, "image", image);
 
             BarcodeQRCode qrCode = new BarcodeQRCode(savedBooking.getUser() + " " + ticket.getId().toString(), 1, 1,
-                                                     null);
+                    null);
             Image qrCodeImage = qrCode.getImage();
             qrCodeImage.scalePercent(300);
             this.replaceFieldWithImage(acroFields, pdfContentByte, "qrCode", qrCodeImage);
 
             Paragraph eventTicketInfoParagraph = new Paragraph(event.getTicketInfo());
             this.replaceFieldWithParagraph(acroFields, pdfContentByte, "eventTicketInfo", eventTicketInfoParagraph,
-                                           baseFont);
+                    baseFont);
 
             pdfStamper.close();
 
@@ -330,9 +330,9 @@ public class BookingService {
 
     public List<BookingCalendarDto> getMyBookings(String user) {
         TypedQuery<BookingCalendarDto> query
-            = entityManager.createQuery(
-            "SELECT NEW ro.msg.event.management.eventmanagementbackend.controller.dto.BookingCalendarDto(b.id, e.startDate, e.endDate, e.title)" +
-            " FROM Booking b JOIN b.event e WHERE b.user = :user ORDER BY e.startDate", BookingCalendarDto.class);
+                = entityManager.createQuery(
+                "SELECT NEW ro.msg.event.management.eventmanagementbackend.controller.dto.BookingCalendarDto(b.id, e.startDate, e.endDate, e.title)" +
+                        " FROM Booking b JOIN b.event e WHERE b.user = :user ORDER BY e.startDate", BookingCalendarDto.class);
         query.setParameter("user", user);
         return query.getResultList();
     }
@@ -345,5 +345,14 @@ public class BookingService {
             tmp = tmp.plusDays(1);
         }
         return localDates;
+    }
+
+    public Booking findOne(Long id){
+        var book = bookingRepository.findById(id);
+        return book.orElse(null);
+    }
+
+    public Booking save(Booking booking){
+        return bookingRepository.save(booking);
     }
 }

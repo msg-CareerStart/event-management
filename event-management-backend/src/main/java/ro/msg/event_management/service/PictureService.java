@@ -15,4 +15,8 @@ public class PictureService {
         pictureRepository.save(picture);
     }
 
+    public Picture findOne(Long id){
+        var pic = pictureRepository.findById(id);
+        return pic.orElse(null);
+    }
 }

@@ -21,6 +21,7 @@
         "addevents": "Add Events",
         "statistics": "Statistics",
         "tickets": "Tickets",
+        "administration": "Administration",
         "previous": "Prev",
         "next": "Next",
         "details": "Details",
@@ -135,6 +136,9 @@
         "ticketsTab": "Tickets",
         "imagesTab": "Images",
 
+        "importTab": "Import",
+        "exportTab": "Export",
+
         "errMsgOverviewMinCharacters": "minimum 3 characters required",
         "errMsgOverviewFirstDayInPast": "the first day of the event can't be in the past",
         "errMsgOverviewFirstDayAfterLast": "the first day of the event can't be after the last",
@@ -175,6 +179,21 @@
         "imageDialogContent": "If you delete the image, you will not be able to recover it later.",
         "imageDialogAgree": "Yes",
         "imageDialogDisagree": "No"
+    },
+
+    "files": {
+        "fileErrorMessage": "An error occurred while uploading files",
+        "fileDragAndDrop": "Drag and drop only one file here, or click to select it",
+        "fileDialogTitle": "Do you want to remove this file?",
+        "fileDialogContent": "If you delete the file, you will not be able to recover it later.",
+        "fileDialogAgree": "Yes",
+        "fileDialogDisagree": "No",
+        "type": "Type",
+        "tickets": "Tickets",
+        "events": "Events",
+        "errorButton": "I understand",
+        "errorTitle": "Error",
+        "errorExportDialog": "Please select the export type"
     },
 
     "validateTicket": {
