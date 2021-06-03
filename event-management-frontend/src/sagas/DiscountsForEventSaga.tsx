@@ -13,7 +13,6 @@ function* loadDiscountsForEventAsync(action: any) {
     const discounts = yield call(() => discountCodesForEventAPI(action.payload));
     yield put(loadDiscountsForEventSuccess(discounts));
   } catch (e) {
-    console.log('PLM');
     yield put(loadDiscountsForEventFailure(e));
   }
 }

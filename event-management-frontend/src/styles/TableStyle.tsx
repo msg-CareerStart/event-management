@@ -16,13 +16,11 @@ export const tableStyle = makeStyles((theme) => ({
     borderColor: '#d3d3d3',
     borderStyle: 'solid',
   },
-
   rightBorder: {
     borderRightWidth: '1px',
     borderRightColor: '#d3d3d3',
     borderRightStyle: 'solid',
   },
-
   table: {
     tableLayout: 'fixed',
   },
