@@ -9,6 +9,7 @@ import { EventStatisticsPageState } from '../../reducers/EventStatisticsPageRedu
 import { AppState } from '../../store/store';
 import { connect } from 'react-redux';
 import { availableColor, occupancyRateColor, validatedColor } from '../../styles/ChartColors';
+import { useTranslation } from 'react-i18next';
 
 interface EventStatisticsProps {
   events: [];
@@ -20,6 +21,7 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 function EventStatisticsOverview(props: EventStatisticsProps) {
   const options: { label: string; value: number }[] = [];
+  const { t } = useTranslation();
 
   props.events.map((e: any) => {
     const option = {
@@ -34,7 +36,7 @@ function EventStatisticsOverview(props: EventStatisticsProps) {
   const customRenderer = (selected: any, _options: any) => {
     return selected.length
       ? selected.map((sel: { value: number }) => options.find((elem) => elem.value == sel.value)?.label + '✔️  ')
-      : '❌ No Items Selected';
+      : '❌ ' + t('welcome.noItemsSelected');
   };
 
   return (

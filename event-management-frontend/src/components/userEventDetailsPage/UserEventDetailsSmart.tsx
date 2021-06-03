@@ -27,7 +27,6 @@ function UserEventDetailsSmart({
   locationAddress,
   locationName,
 }: UserEventDetailsProps) {
-
   useEffect(() => {
     fetchData(match.params.id);
   }, [match.params.id, fetchData]);

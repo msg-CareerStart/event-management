@@ -168,7 +168,12 @@
         "backButton": "Back",
         "joinButton": "Join",
 
-        "loading": "Loading"
+        "loading": "Loading",
+
+        "eventStatistics": "Events Statistics",
+        "locationStatistics": "Locations Statistics",
+
+        "noItemsSelected": "No Items Selected"
     },
 
     "images": {

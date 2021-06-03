@@ -168,7 +168,12 @@
         "backButton": "Înapoi",
         "joinButton": "Participă",
 
-        "loading": "Se încarcă"
+        "loading": "Se încarcă",
+        
+        "eventStatistics": "Statistici pentru evenimente",
+        "locationStatistics": "Statistici pentru locații",
+
+        "noItemsSelected": "Nici un câmp selectat"
     },
     "images": {
         "imageErrorMessage": "A apărut o eroare la încărcarea imaginilor",
