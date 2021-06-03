@@ -20,5 +20,6 @@ export interface EventCrud {
   ticketsPerUser: number;
   ticketCategoryDtoList: CategoryCardItem[];
   ticketCategoryToDelete: number[];
+  discountsToDelete: number[];
   ticketInfo: string;
 }
