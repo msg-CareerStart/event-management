@@ -43,60 +43,31 @@ function OverviewDumb(props: OverviewDumbProps) {
     <div className={overviewClasses.fundal}>
       <Typography className={overviewClasses.typography}></Typography>
 
-      <Grid container direction="column" justify="center" alignItems="center">
-        <Grid item container direction="row" justify="center" alignItems="center">
-          {createTextField(
-            overviewClasses.root,
-            props.handleEnterKey,
-            props.isAdmin,
-            'title',
-            t('welcome.overviewTitle'),
-            props.handleChange,
-            props.event.title,
-            props.formErrors.title,
-            'string',
-            null
-          )}
+      <Grid container direction='column' justify='center' alignItems='center'>
+        <Grid item container direction='row' justify='center' alignItems='center'>
+          {createTextField(overviewClasses.root, props.handleEnterKey, props.isAdmin, 'title',
+            t('welcome.overviewTitle'), props.handleChange, props.event.title, props.formErrors.title, 'string', null)}
 
-          {createTextField(
-            overviewClasses.root,
-            props.handleEnterKey,
-            props.isAdmin,
-            'subtitle',
-            t('welcome.overviewSubtitle'),
-            props.handleChange,
-            props.event.subtitle,
-            props.formErrors.subtitle,
-            'string',
-            null
-          )}
+          {createTextField(overviewClasses.root, props.handleEnterKey, props.isAdmin, 'subtitle',
+            t('welcome.overviewSubtitle'), props.handleChange, props.event.subtitle, props.formErrors.subtitle, 'string', null)}
 
-          {createTextField(
-            overviewClasses.root,
-            props.handleEnterKey,
-            props.isAdmin,
-            'maxPeople',
-            t('welcome.overviewMaxPpl'),
-            props.handleChange,
-            props.event.maxPeople,
-            props.formErrors.maxPeople,
-            'number',
-            { inputProps: { min: 0 } }
-          )}
+          {createTextField(overviewClasses.root, props.handleEnterKey, props.isAdmin, 'maxPeople',
+            t('welcome.overviewMaxPpl'), props.handleChange, props.event.maxPeople, props.formErrors.maxPeople, 'number', { inputProps: { min: 0 } })}
+
         </Grid>
 
-        <Grid item container className={overviewClasses.grid} direction="row" justify="center" alignItems="center">
+        <Grid item container className={overviewClasses.grid} direction='row' justify='center' alignItems='center'>
           <Grid item xl={7} lg={7} sm={8} xs={7}>
             <form className={overviewClasses.root}>
               <TextField
                 className={overviewClasses.margin}
                 onKeyDown={props.handleEnterKey}
-                name="description"
+                name='description'
                 disabled={!props.isAdmin}
                 label={t('welcome.overviewDescription')}
-                variant="outlined"
+                variant='outlined'
                 multiline
-                rows="5"
+                rows='5'
                 rowsMax={7}
                 onChange={props.handleChange}
                 defaultValue={props.event.description}
@@ -109,78 +80,28 @@ function OverviewDumb(props: OverviewDumbProps) {
           </Grid>
         </Grid>
 
-        <Grid
-          item
-          container
-          spacing={2}
-          className={overviewClasses.grid}
-          direction="row"
-          justify="center"
-          alignItems="center"
-        >
-          <Grid
-            item
-            container
-            spacing={2}
-            className={overviewClasses.grid}
-            direction="row"
-            justify="center"
-            alignItems="center"
-          >
-            {createDateTextField(
-              overviewClasses.root,
-              props.isAdmin,
-              'startDate',
-              t('welcome.overviewStartDate'),
-              props.handleChange,
-              props.event.startDate,
-              props.formErrors.startDate
-            )}
+        <Grid item container spacing={2} className={overviewClasses.grid} direction='row' justify='center' alignItems='center'>
+          <Grid item container spacing={2} className={overviewClasses.grid} direction='row' justify='center' alignItems='center'>
+            {createDateTextField(overviewClasses.root, props.isAdmin, 'startDate',
+              t('welcome.overviewStartDate'), props.handleChange, props.event.startDate, props.formErrors.startDate)}
 
-            {createTimeTextField(
-              overviewClasses.root,
-              props.isAdmin,
-              'startTime',
-              t('welcome.overviewStartTime'),
-              props.handleChange,
-              props.event.startHour,
-              props.formErrors.startTime
-            )}
+            {createTimeTextField(overviewClasses.root, props.isAdmin, 'startTime',
+              t('welcome.overviewStartTime'), props.handleChange, props.event.startHour, props.formErrors.startTime)}
+
           </Grid>
 
-          <Grid
-            item
-            container
-            spacing={2}
-            className={overviewClasses.grid}
-            direction="row"
-            justify="center"
-            alignItems="center"
-          >
-            {createDateTextField(
-              overviewClasses.root,
-              props.isAdmin,
-              'endDate',
-              t('welcome.overviewEndDate'),
-              props.handleChange,
-              props.event.endDate,
-              props.formErrors.endDate
-            )}
+          <Grid item container spacing={2} className={overviewClasses.grid} direction='row' justify='center' alignItems='center' >
+            {createDateTextField(overviewClasses.root, props.isAdmin, 'endDate',
+              t('welcome.overviewEndDate'), props.handleChange, props.event.endDate, props.formErrors.endDate)}
 
-            {createTimeTextField(
-              overviewClasses.root,
-              props.isAdmin,
-              'endTime',
-              t('welcome.overviewEndTime'),
-              props.handleChange,
-              props.event.endHour,
-              props.formErrors.endTime
-            )}
+            {createTimeTextField(overviewClasses.root, props.isAdmin, 'endTime',
+              t('welcome.overviewEndTime'), props.handleChange, props.event.endHour, props.formErrors.endTime)}
+
           </Grid>
         </Grid>
       </Grid>
 
-      <Grid item container className={overviewClasses.grid} direction="row" justify="center" alignItems="center">
+      <Grid item container className={overviewClasses.grid} direction='row' justify='center' alignItems='center'>
         <Grid item xl={1} lg={2} md={2} sm={4} xs={7}>
           <FormControlLabel
             disabled={!props.isAdmin}
@@ -188,7 +109,7 @@ function OverviewDumb(props: OverviewDumbProps) {
               <YellowCheckbox
                 checked={props.event.highlighted}
                 onChange={props.handleChangeCheckboxState}
-                name="highlighted"
+                name='highlighted'
               />
             }
             label={t('welcome.overviewHighlighted')}

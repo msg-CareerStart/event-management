@@ -8,13 +8,12 @@ import UserEventDetailsSmart from './userEventDetailsPage/UserEventDetailsSmart'
 import { SecureRoute } from './SecureRoute';
 import BuyTicketFirstPageSmart from './userBuyTicketsPage/firstPage/BuyTicketFirstPageSmart';
 import BuyTicketsSecondPageSmart from './userBuyTicketsPage/secondPage/BuyTicketsSecondPageSmart';
-import MyAccount from './myAccount/MyAccount';
 import UserMapEventsSmart from './userMapEvents/UserMapEventsSmart';
 
 const MainUser = () => {
   return (
     <>
-      <Header isAdmin={false} />
+      <Header />
       <main>
         <Switch>
           <SecureRoute
@@ -34,13 +33,6 @@ const MainUser = () => {
             exact
             path="/user/reserve-tickets/second-page/:id"
             component={(props: any) => <BuyTicketsSecondPageSmart match={props.match} />}
-          />
-          <SecureRoute
-            exact
-            path="/user/account"
-            component={(props: any) => (
-              <MyAccount match={props.match} isAdmin={false} isRequest={false} isError={false} />
-            )}
           />
           <SecureRoute exact path="/user/map" component={(props: any) => <UserMapEventsSmart />} />
         </Switch>

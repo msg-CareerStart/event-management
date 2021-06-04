@@ -21,9 +21,3 @@ ALTER TABLE `sublocation`
 
 ALTER TABLE `program`
     ADD FOREIGN KEY (`location`) REFERENCES `location`(`id`);
-
-ALTER TABLE `notification`
-    ADD FOREIGN KEY (`user`) REFERENCES `user_form`(`id`);
-
-ALTER TABLE `notification`
-    ADD FOREIGN KEY (`event`) REFERENCES `event`(`id`);
