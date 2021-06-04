@@ -1,10 +1,7 @@
 package ro.msg.event_management.controller;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -40,8 +37,6 @@ import ro.msg.event_management.service.*;
 public class TicketController {
 
     private final TicketService ticketService;
-    private final BookingService bookingService;
-    private final TicketCategoryService categoryService;
     private final Converter<TicketView, TicketListingDto> convertToTicketDto;
 
     private static final LocalDate MAX_DATE = LocalDate.parse("2999-12-31");
@@ -112,139 +107,14 @@ public class TicketController {
     @PostMapping(value = "/import")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity exportTicketsCsv(@RequestParam MultipartFile csv) throws IOException {
-        var inputStream = csv.getInputStream();
-
-        var reader = new BufferedReader(new InputStreamReader(inputStream));
-
-        reader.readLine(); // skip header
-        var errorString = "";
-
-        while(reader.ready()){
-            String line = reader.readLine();
-            var fields = line.split(",");
-
-            var name = fields[0];
-            var email = fields[1];
-            var categoryId = fields[2];
-            var bookingId = fields[3];
-
-            try{
-                Long.parseLong(bookingId);
-                Long.parseLong(categoryId);
-            }
-            catch (NumberFormatException e){
-                errorString += "Id must be number, skipping row\n";
-            }
-            var booking = bookingService.findOne(Long.parseLong(bookingId));
-            var category = categoryService.findOne(Long.parseLong(categoryId));
-
-            if(booking == null){
-                errorString += "Invalid booking, skipping row\n";
-
-            }
-            if(category == null){
-                errorString += "Invalid ticket category, skipping row\n";
-            }
-
-            var ticket = new Ticket();
-
-            if(name.equals("")) {
-                errorString += "Invalid name, skipping row\n";
-                continue;
-            }
-            ticket.setName(name);
-
-            if(email.equals("")) {
-                errorString += "Invalid email, skipping row\n";
-                continue;
-            }
-            ticket.setEmailAddress(email);
-
-            ticket.setTicketCategory(category);
-            ticket.setBooking(booking);
-
-            ticketService.save(ticket);
-        }
-        if(errorString.equals("")){
-            errorString = "Success";
-        }
-        return new ResponseEntity(errorString, HttpStatus.OK);
+        var result = ticketService.saveCsv(csv);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
     @GetMapping(value = "/export", produces = "text/csv")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<InputStreamResource> getTicketsCsv() throws FileNotFoundException {
-        var tickets = ticketService.findAll();
-
-        var headers = new ArrayList<String>();
-        headers.add("name");
-        headers.add("emailAddress");
-        headers.add("ticketCategoryTitle");
-        headers.add("ticketCategorySubtitle");
-        headers.add("ticketCategoryPrice");
-        headers.add("ticketCategoryDescription");
-        headers.add("ticketCategoryNrPerCategory");
-        headers.add("ticketCategoryAvailable");
-        headers.add("ticketCategoryEventId");
-        headers.add("bookingDate");
-        headers.add("bookingUser");
-        headers.add("bookingEventId");
-
-        var date = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date());
-        var filename = "TicketCSV" + date + ".csv";
-
-        try {
-            var writer = new FileWriter(filename);
-            for(String s:headers){
-                writer.write(s);
-                writer.write(',');
-            }
-
-            writer.write("\n");
-            for(Ticket ticket: tickets){
-                writer.write(ticket.getName());
-                writer.write(',');
-
-                writer.write(ticket.getEmailAddress());
-                writer.write(',');
-
-                var category = ticket.getTicketCategory();
-                writer.write(category.getTitle());
-                writer.write(',');
-
-                writer.write(category.getSubtitle());
-                writer.write(',');
-
-                writer.write(String.valueOf(category.getPrice()));
-                writer.write(',');
-
-                writer.write(category.getDescription());
-                writer.write(',');
-
-                writer.write(Integer.toString(category.getTicketsPerCategory()));
-                writer.write(',');
-
-                writer.write(String.valueOf(category.isAvailable()));
-                writer.write(',');
-
-                writer.write(String.valueOf(category.getEvent().getId()));
-                writer.write(',');
-
-                writer.write(String.valueOf(ticket.getBooking().getBookingDate()));
-                writer.write(',');
-
-                writer.write(ticket.getBooking().getUser());
-                writer.write(',');
-
-                writer.write(String.valueOf(ticket.getBooking().getEvent().getId()));
-                writer.write("\n");
-            }
-            writer.close();
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-        return new ResponseEntity<>(new InputStreamResource(new FileInputStream(filename)), HttpStatus.OK);
+        var result = ticketService.writeCsv();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
