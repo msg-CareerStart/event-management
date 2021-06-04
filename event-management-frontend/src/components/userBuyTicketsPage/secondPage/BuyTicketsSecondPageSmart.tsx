@@ -18,6 +18,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import { Dispatch } from 'redux';
 import { AppState } from '../../../store/store';
 import { useTranslation } from 'react-i18next';
+import UserForm from '../../../model/UserForm';
 
 interface BuyTicketsSecondPageSmartProps {
   match: any;
@@ -39,6 +40,8 @@ interface BuyTicketsSecondPageSmartProps {
 
   updateChecked: (checked: boolean) => void;
   checked: boolean;
+
+  user: UserForm;
 }
 
 const handleEnterKey = (e: KeyboardEvent<HTMLDivElement>): void => {
@@ -59,11 +62,12 @@ function BuyTicketsSecondPageSmart({
   ticketNames,
   updateChecked,
   checked,
+  user,
 }: BuyTicketsSecondPageSmartProps) {
   const [step, setStep] = useState(1);
   const history = useHistory();
-  const [ t ] = useTranslation();
-  
+  const [t] = useTranslation();
+
   useEffect(() => {
     fetchTicketCategories(match.params.id);
   }, [match.params.id, fetchTicketCategories]);
@@ -78,18 +82,18 @@ function BuyTicketsSecondPageSmart({
 
   if (isLoadingTicketCategories) {
     return (
-      <Grid container direction='row' justify='center' alignItems='center'>
-        <Container maxWidth='lg'>
+      <Grid container direction="row" justify="center" alignItems="center">
+        <Container maxWidth="lg">
           <CircularProgress />
         </Container>
-        <h6>{t("welcome.loading")}</h6>
+        <h6>{t('welcome.loading')}</h6>
       </Grid>
     );
   } else if (isErrorTicketCategories) {
     return (
-      <Grid container direction='row' justify='center' alignItems='center'>
+      <Grid container direction="row" justify="center" alignItems="center">
         <ErrorIcon color={'primary'} fontSize={'large'} />
-        <h2>{t("userEventList.errorMessage")}</h2>
+        <h2>{t('userEventList.errorMessage')}</h2>
       </Grid>
     );
   }
@@ -126,6 +130,7 @@ function BuyTicketsSecondPageSmart({
       nextStep={nextStep}
       prevStep={prevStep}
       handleEnterKey={handleEnterKey}
+      user={user}
     />
   );
 }
@@ -139,6 +144,8 @@ const mapStateToProps = (state: AppState) => {
 
     ticketNames: state.ticketCategories.ticketNames,
     checked: state.ticketCategories.checked,
+
+    user: state.userForm.user,
   };
 };
 

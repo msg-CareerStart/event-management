@@ -9,6 +9,7 @@ import { buyTicketsSecondPageDumbStyle } from '../../../styles/BuyTicketsSecondP
 import { TicketNames } from '../../../model/UserReserveTicket';
 import { TicketAvailabilityData } from '../../../model/BuyTicketsSecondPage';
 import '../../../styles/ReservePageStyle.css';
+import UserForm from '../../../model/UserForm';
 
 interface BuyTicketsSecondPageDumbProps {
   gotoFirstPage: () => void;
@@ -29,6 +30,7 @@ interface BuyTicketsSecondPageDumbProps {
   nextStep: () => void;
   prevStep: () => void;
   handleEnterKey: (e: KeyboardEvent<HTMLDivElement>) => void;
+  user: UserForm;
 }
 
 function BuyTicketsSecondPageDumb({
@@ -46,6 +48,7 @@ function BuyTicketsSecondPageDumb({
   nextStep,
   prevStep,
   handleEnterKey,
+  user,
 }: BuyTicketsSecondPageDumbProps) {
   const generalStyle = buyTicketsSecondPageDumbStyle();
 
@@ -79,7 +82,7 @@ function BuyTicketsSecondPageDumb({
             nextStep={nextStep}
             prevStep={prevStep}
             handleEnterKey={handleEnterKey}
-            email={booking.email}
+            email={user.email}
             updateBookings={updateBookings}
             booking={booking}
           />
@@ -119,7 +122,7 @@ function BuyTicketsSecondPageDumb({
 
   return (
     <div className={generalStyle.root}>
-      <Grid container direction='row' justify='center' alignItems='center'>
+      <Grid container direction="row" justify="center" alignItems="center">
         <Grid item xs={12}>
           <Paper className={`${generalStyle.paperStyle} buyPageResponsive`}>{currentPage}</Paper>
         </Grid>

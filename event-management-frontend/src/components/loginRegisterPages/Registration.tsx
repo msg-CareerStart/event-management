@@ -65,8 +65,6 @@ interface Props {
   registrationUsernameError: (usernameError: string) => void;
   registrationPasswordError: (passwordError: string) => void;
   registrationConfirmPasswordError: (confirmPasswordError: string) => void;
-  addUserAction: (userForm: UserForm) => void;
-  editUserAction: (userForm: UserForm) => void;
 }
 
 const Registration = ({
@@ -99,8 +97,6 @@ const Registration = ({
   registrationUsernameError,
   registrationPasswordError,
   registrationConfirmPasswordError,
-  addUserAction,
-  editUserAction,
 }: Props) => {
   const [values, setValues] = useState<{ showPassword: boolean }>({
     showPassword: false,

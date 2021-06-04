@@ -41,6 +41,8 @@ function HeaderAccDumb(props: Props) {
       let user = await Auth.currentAuthenticatedUser();
       let result = await Auth.updateUserAttributes(user, {
         email: props.userForm.email,
+        given_name: props.userForm.firstName,
+        family_name: props.userForm.lastName,
       });
       console.log(result);
     }

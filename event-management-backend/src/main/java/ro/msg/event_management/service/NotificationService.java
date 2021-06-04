@@ -53,12 +53,9 @@ public class NotificationService {
                     IOException.class})
     public void sendEmail(UserForm user, Event obj) throws MessagingException, IOException {
         Map<String, Object> model = new HashMap<>();
-        model.put("begin", "Draga utilizator: ");
         model.put("firstName", user.getFirstName());
         model.put("lastName", user.getLastName());
-        model.put("alert", "pentru evenimentul");
         model.put("eventName", obj.getTitle());
-        model.put("rateAlert", "s-a depasit capacitatea de");
         model.put("rate", user.getOccupancyRate());
         emailSenderService.sendNotificationEmail(emailSenderService.getNotificationMail(model, user.getEmail()));
     }
