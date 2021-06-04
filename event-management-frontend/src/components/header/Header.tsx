@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppBar, Avatar, Toolbar } from '@material-ui/core';
 import AppBarCollapse from './AppBarCollapse';
 import RO from '../../languageImages/RO.png';
@@ -8,9 +8,18 @@ import { useStylesHeader } from '../../styles/HeaderStyle';
 import AccountAppBarCollapse from './AccountAppBarCollapse';
 
 // The Header creates links that can be used to navigate between routes.
-const Header = () => {
+
+interface Props {
+  isAdmin: boolean;
+}
+
+const Header = ({ isAdmin }: Props) => {
   const [, i18n] = useTranslation();
   const classes = useStylesHeader();
+
+  useEffect(() => {
+    console.log(isAdmin);
+  });
 
   const handleChangeAppLanguage = (language: string) => {
     i18n.changeLanguage(language);
@@ -20,7 +29,7 @@ const Header = () => {
   return (
     <AppBar position="sticky" style={{ backgroundColor: '#133655' }}>
       <Toolbar>
-        <AccountAppBarCollapse />
+        <AccountAppBarCollapse isAdmin={isAdmin} />
 
         <div onClick={() => handleChangeAppLanguage('ro')} className={classes.flags}>
           <Avatar alt="RO" variant="square" className={classes.small} src={RO} />

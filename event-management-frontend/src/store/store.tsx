@@ -16,6 +16,7 @@ import { ReserveSecondPageState } from '../reducers/TicketReservationReducer';
 import { RegistrationPageState } from '../reducers/RegistrationPageReducer';
 import { UserEventDetailsState } from '../reducers/UserEventDetailsReducer';
 import { FormState } from '../reducers/FormReducer';
+import { UserFormState } from '../reducers/UserFormReducer';
 import { DiscountsForEventState } from '../reducers/DiscountsForEventReducer';
 import { EventStatisticsPageState } from '../reducers/EventStatisticsPageReducer';
 import { LocationPageStatistics } from '../reducers/LocationStatisticsReducer';
@@ -40,6 +41,7 @@ export interface AppState {
   ticketCategories: ReserveSecondPageState;
   eventWithLocation: UserEventDetailsState;
   step: FormState;
+  userForm: UserFormState;
   discounts: DiscountsForEventState;
   eventStatistics: EventStatisticsPageState;
   locationsStatistics: LocationPageStatistics;

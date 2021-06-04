@@ -33,15 +33,14 @@ Amplify.configure({
 
 // This component will be rendered by our <Router>
 const App = () => {
- 
   return (
-      <Suspense fallback={<Loader />}>
-        <AuthWrapper />
-        <Switch>
-          <Route path="/admin" component={Main} />
-          <Route path="/user" component={MainUser} />
-        </Switch>
-      </Suspense>
+    <Suspense fallback={<Loader />}>
+      <AuthWrapper />
+      <Switch>
+        <Route path="/admin" component={Main} />
+        <Route path="/user" component={MainUser} />
+      </Switch>
+    </Suspense>
   );
 };
 

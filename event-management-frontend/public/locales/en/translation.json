@@ -111,6 +111,11 @@
     "button": "Submit",
     "errorMessage": "Invalid verification code or email address!"
   },
+  "accountDetails":{
+    "firstName":"First Name",
+    "lastName":"Last Name",
+    "email":"Email"
+  },
   "welcome": {
     "title": "Welcome",
 
@@ -135,6 +140,10 @@
     "locationAddress": "Location Address",
     "ticketsTab": "Tickets",
     "imagesTab": "Images",
+    "appSettingsTab": "App Settings",
+    "userDetails": "User Details",
+    "headerCRUDClear":"Clear",
+    "headerCRUDNext":"Next",
 
     "eventStatisticTab": "Events",
     "locationStatisticTab": "Locations",
@@ -179,7 +188,26 @@
     "eventStatistics": "Events Statistics",
     "locationStatistics": "Locations Statistics",
 
-    "noItemsSelected": "No Items Selected"
+    "noItemsSelected": "No Items Selected",
+    
+    "accDetailsName":"LastName",
+    "accDetailsPrenume":"FirstName",
+    "accDetailsEmail":"Email",
+    "accDetailsUsername":"Username",
+    
+    "notificationSwitch":"Turn on Notifications",
+    "occupancyRate":"Occupancy rate %",
+    "occuppancyInfo":"Please eneter an occupancy rate condition from where you want to get a notification ",
+ 
+    "myPage":"My Page",
+    "usernameDetails": "Details Page for ",
+    "usernameAppSettings": "Application Settings for ",
+    "userEnglishS":"'s",
+    "userDialogErrorTitle":"Save Error",
+    "userDialogErrorText":"Incorect input data",
+    "userDialogSuccesTitle":"Update Succesful",
+    "userDialogSuccesText":"User update done successfully"
+  
   },
 
   "images": {

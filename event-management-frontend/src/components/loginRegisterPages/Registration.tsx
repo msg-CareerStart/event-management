@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { AppState } from '../../store/store';
 import { Dispatch } from 'redux';
@@ -30,6 +30,8 @@ import {
 } from '../../validation/RegistrationValidation';
 import { useTranslation } from 'react-i18next';
 import RegistrationDumb from './RegistrationDumb';
+import UserForm from '../../model/UserForm';
+import { addUser, editUser, loadUserByUsername } from '../../actions/UserFormActions';
 
 interface Props {
   isLoading: boolean;

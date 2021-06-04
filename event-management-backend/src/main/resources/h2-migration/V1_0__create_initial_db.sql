@@ -87,3 +87,19 @@ CREATE TABLE IF NOT EXISTS `booking` (
                                           `event` long
 
 );
+
+CREATE TABLE IF NOT EXISTS `user_form` (
+                                           `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                           `first_name` varchar(200),
+    `last_name` varchar(200),
+    `user_name` varchar(200),
+    `email` varchar(200),
+    `occupancy_rate` float,
+    `send_notification` boolean
+    );
+
+CREATE TABLE IF NOT EXISTS `notification` (
+                                              `user` bigint,
+                                              `event` bigint,
+                                              CONSTRAINT `id_notification` PRIMARY KEY(`user`, `event`)
+    );

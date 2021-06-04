@@ -18,6 +18,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import { Dispatch } from 'redux';
 import { AppState } from '../../../store/store';
 import { useTranslation } from 'react-i18next';
+import UserForm from '../../../model/UserForm';
 
 interface BuyTicketsSecondPageSmartProps {
   match: any;
@@ -39,6 +40,8 @@ interface BuyTicketsSecondPageSmartProps {
 
   updateChecked: (checked: boolean) => void;
   checked: boolean;
+
+  user: UserForm;
 }
 
 const handleEnterKey = (e: KeyboardEvent<HTMLDivElement>): void => {
@@ -59,6 +62,7 @@ function BuyTicketsSecondPageSmart({
   ticketNames,
   updateChecked,
   checked,
+  user,
 }: BuyTicketsSecondPageSmartProps) {
   const [step, setStep] = useState(1);
   const history = useHistory();
@@ -126,6 +130,7 @@ function BuyTicketsSecondPageSmart({
       nextStep={nextStep}
       prevStep={prevStep}
       handleEnterKey={handleEnterKey}
+      user={user}
     />
   );
 }
@@ -139,6 +144,8 @@ const mapStateToProps = (state: AppState) => {
 
     ticketNames: state.ticketCategories.ticketNames,
     checked: state.ticketCategories.checked,
+
+    user: state.userForm.user,
   };
 };
 

@@ -111,6 +111,12 @@
     "button": "Confirmă",
     "errorMessage": "Cod de verificare sau adresă de email invalid!"
   },
+  "accountDetails":{
+    "firstName":"Nume",
+    "lastName":"Prenume",
+    "email":"Email"
+  },
+  
   "welcome": {
     "title": "Bine ai venit!",
 
@@ -135,6 +141,8 @@
     "locationAddress": "Adresa Locației",
     "ticketsTab": "Bilete",
     "imagesTab": "Imagini",
+    "appSettingsTab": "Setari Aplicatie",
+    "userDetails": "Detalii Utilizator",
 
     "eventStatisticTab": "Evenimente",
     "locationStatisticTab": "Locații",
@@ -170,7 +178,9 @@
     "headerCRUDDelete": "Șterge",
     "headerCRUDCancel": "Renunță",
     "headerCRUDSave": "Salvează",
-
+    "headerCRUDClear":"Sterge",
+    "headerCRUDNext":"Urmatorul",
+    
     "backButton": "Înapoi",
     "joinButton": "Participă",
 
@@ -179,7 +189,23 @@
     "eventStatistics": "Statistici pentru evenimente",
     "locationStatistics": "Statistici pentru locații",
 
-    "noItemsSelected": "Niciun câmp selectat"
+    "noItemsSelected": "Niciun câmp selectat",
+    
+    "accDetailsName":"Nume",
+    "accDetailsPrenume":"Prenume",
+    "accDetailsEmail":"Email",
+    "accDetailsUsername":"Username",
+    "notificationSwitch":"Porneste notificarile",
+    "occupancyRate":"Rata de ocupare %",
+    "occuppancyInfo":"Va rog adaugati o rata de ocupare de la care doriti sa fiti notificati",
+    "myPage":"Pagina Mea",
+    "usernameDetails": "Detalii pentru ",
+    "usernameAppSettings": "Setari aplicatie pentru ",
+    "userEnglishS":"",
+    "userDialogErrorTitle":"Eroare Salvare",
+    "userDialogErrorText":"Date introduse incorecte",
+    "userDialogSuccesTitle":"Succes modificare",
+    "userDialogSuccesText":"Modificare realizata cu succes"
   },
 
   "images": {
