@@ -465,6 +465,7 @@ public class EventController {
                 Long.parseLong(locationId);
             }catch (NumberFormatException e){
                 errorString += "Location id must be a number!\n";
+                continue;
             }
             event = eventService.saveEvent(event, Long.parseLong(locationId));
 
