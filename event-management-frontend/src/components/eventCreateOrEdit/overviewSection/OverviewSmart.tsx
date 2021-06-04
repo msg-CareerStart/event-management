@@ -99,84 +99,34 @@ function OverviewSmart(props: OverviewSmartProps) {
         newFormErrors = resetErrors(newFormErrors);
 
         newFormErrors.startDate = setStartDateError(value, currDate, props.eventCrud.endDate, t);
-        newFormErrors.endDate =
-          compareDates(value, props.eventCrud.endDate) === 1 ? t('welcome.errMsgOverviewLastDayBeforeFirst') : '';
-        newFormErrors.startTime = setStartTimeError(
-          value,
-          props.eventCrud.endDate,
-          props.eventCrud.startHour,
-          props.eventCrud.endHour,
-          t
-        );
-        newFormErrors.endTime = setEndTimeError(
-          value,
-          props.eventCrud.endDate,
-          props.eventCrud.startHour,
-          props.eventCrud.endHour,
-          t
-        );
+        newFormErrors.endDate = compareDates(value, props.eventCrud.endDate) === 1 ? t('welcome.errMsgOverviewLastDayBeforeFirst') : '';
+        newFormErrors.startTime = setStartTimeError(value, props.eventCrud.endDate, props.eventCrud.startHour, props.eventCrud.endHour, t);
+        newFormErrors.endTime = setEndTimeError(value, props.eventCrud.endDate, props.eventCrud.startHour, props.eventCrud.endHour, t);
         break;
 
       case 'endDate':
         newFormErrors = resetErrors(newFormErrors);
 
         newFormErrors.startDate = setStartDateError(props.eventCrud.startDate, currDate, value, t);
-        newFormErrors.endDate =
-          compareDates(props.eventCrud.startDate, value) === 1 ? t('welcome.errMsgOverviewLastDayBeforeFirst') : '';
-        newFormErrors.startTime = setStartTimeError(
-          props.eventCrud.startDate,
-          value,
-          props.eventCrud.startHour,
-          props.eventCrud.endHour,
-          t
-        );
-        newFormErrors.endTime = setEndTimeError(
-          props.eventCrud.startDate,
-          value,
-          props.eventCrud.startHour,
-          props.eventCrud.endHour,
-          t
-        );
+        newFormErrors.endDate = compareDates(props.eventCrud.startDate, value) === 1 ? t('welcome.errMsgOverviewLastDayBeforeFirst') : '';
+        newFormErrors.startTime = setStartTimeError(props.eventCrud.startDate, value, props.eventCrud.startHour, props.eventCrud.endHour, t);
+        newFormErrors.endTime = setEndTimeError(props.eventCrud.startDate, value, props.eventCrud.startHour, props.eventCrud.endHour, t);
         break;
 
       case 'startTime':
         newFormErrors = resetErrors(newFormErrors);
 
-        newFormErrors.startTime = setStartTimeError(
-          props.eventCrud.startDate,
-          props.eventCrud.endDate,
-          value,
-          props.eventCrud.endHour,
-          t
-        );
+        newFormErrors.startTime = setStartTimeError(props.eventCrud.startDate, props.eventCrud.endDate, value, props.eventCrud.endHour, t);
         newFormErrors.startDate = setStartDateError(props.eventCrud.startDate, currDate, props.eventCrud.endDate, t);
-        newFormErrors.endTime = setEndTimeError(
-          props.eventCrud.startDate,
-          props.eventCrud.endDate,
-          value,
-          props.eventCrud.endHour,
-          t
-        );
+        newFormErrors.endTime = setEndTimeError(props.eventCrud.startDate, props.eventCrud.endDate, value, props.eventCrud.endHour, t);
         break;
 
       case 'endTime':
         newFormErrors = resetErrors(newFormErrors);
 
-        newFormErrors.endTime = setEndTimeError(
-          props.eventCrud.startDate,
-          props.eventCrud.endDate,
-          props.eventCrud.startHour,
-          value,
-          t
-        );
+        newFormErrors.endTime = setEndTimeError(props.eventCrud.startDate, props.eventCrud.endDate, props.eventCrud.startHour, value, t);
         newFormErrors.startDate = setStartDateError(props.eventCrud.startDate, currDate, props.eventCrud.endDate, t);
-        newFormErrors.startTime = setStartTimeError(
-          props.eventCrud.startDate,
-          props.eventCrud.endDate,
-          props.eventCrud.startHour,
-          value,
-          t
-        );
+        newFormErrors.startTime = setStartTimeError(props.eventCrud.startDate, props.eventCrud.endDate, props.eventCrud.startHour, value, t);
         break;
 
       case 'maxPeople':

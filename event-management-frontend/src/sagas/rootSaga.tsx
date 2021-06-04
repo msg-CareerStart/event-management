@@ -27,15 +27,8 @@ import {
   watchFetchUserUpcomingEventsAsync,
   watchFetchHighlightedEventsAsync,
 } from './UserHomePageSaga';
-import {
-  watchAddUserAsync,
-  watchEditUserAsync,
-  watchLoadUserByIDAsync,
-  watchLoadUserByUsernameAsync,
-} from './UserFormSaga';
 import { watchLoadDiscountsForEventAsync } from './DiscountsForEventSaga';
 import { watchFetchStatisticsEventAsync } from './EventStatisticsSaga';
-
 
 export default function* rootSaga() {
   yield all([
@@ -76,11 +69,6 @@ export default function* rootSaga() {
 
     watchFetchReserveEventAsync(),
 
-    watchLoadUserByIDAsync(),
-    watchLoadUserByUsernameAsync(),
-    watchAddUserAsync(),
-    watchEditUserAsync(),
-        
     watchLoadDiscountsForEventAsync(),
 
     watchFetchStatisticsEventAsync(),

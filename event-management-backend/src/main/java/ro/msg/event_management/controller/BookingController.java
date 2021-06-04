@@ -29,7 +29,6 @@ import ro.msg.event_management.entity.Booking;
 import ro.msg.event_management.exception.TicketBuyingException;
 import ro.msg.event_management.security.User;
 import ro.msg.event_management.service.BookingService;
-import ro.msg.event_management.service.NotificationService;
 
 @RestController
 @RequestMapping("/bookings")
@@ -40,7 +39,6 @@ public class BookingController {
     private final Converter<BookingSaveDto, Booking> bookingSaveReverseConverter;
     private final Converter<Booking, BookingDto> bookingConverter;
     private final Object lock = new Object();
-    private final NotificationService notificationService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
@@ -60,8 +58,6 @@ public class BookingController {
             synchronized (this.lock)
             {
                 savedBooking = this.bookingService.saveBookingAndTicketDocument(booking, categoryAndTicketsMapReverseConverter.convert(bookingSaveDto.getTickets()), bookingSaveDto.getEventId());
-                notificationService.addNotification(savedBooking.getId(),savedBooking.getEvent().getId());
-                notificationService.notifyUsers(savedBooking.getEvent().getId());
             }
 
             return new ResponseEntity<>(this.bookingConverter.convert(savedBooking), HttpStatus.OK);

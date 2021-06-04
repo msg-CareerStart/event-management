@@ -9,7 +9,6 @@ import { buyTicketsSecondPageDumbStyle } from '../../../styles/BuyTicketsSecondP
 import { TicketNames } from '../../../model/UserReserveTicket';
 import { TicketAvailabilityData } from '../../../model/BuyTicketsSecondPage';
 import '../../../styles/ReservePageStyle.css';
-import UserForm from '../../../model/UserForm';
 import SummaryStep from './steps/summaryStep/SummaryStepSmart';
 
 interface BuyTicketsSecondPageDumbProps {
@@ -31,7 +30,6 @@ interface BuyTicketsSecondPageDumbProps {
   nextStep: () => void;
   prevStep: () => void;
   handleEnterKey: (e: KeyboardEvent<HTMLDivElement>) => void;
-  user: UserForm;
 }
 
 function BuyTicketsSecondPageDumb({
@@ -49,7 +47,6 @@ function BuyTicketsSecondPageDumb({
   nextStep,
   prevStep,
   handleEnterKey,
-  user,
 }: BuyTicketsSecondPageDumbProps) {
   const generalStyle = buyTicketsSecondPageDumbStyle();
 
@@ -83,7 +80,7 @@ function BuyTicketsSecondPageDumb({
             nextStep={nextStep}
             prevStep={prevStep}
             handleEnterKey={handleEnterKey}
-            email={user.email}
+            email={booking.email}
             updateBookings={updateBookings}
             booking={booking}
           />

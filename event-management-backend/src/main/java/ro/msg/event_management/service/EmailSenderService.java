@@ -57,12 +57,6 @@ public class EmailSenderService {
         javaMailSender.send(message);
     }
 
-    @Async
-    public void sendNotificationEmail(Mail mail) throws MessagingException, IOException{
-        MimeMessage message = getMimeMessage(mail);
-        javaMailSender.send(message);
-    }
-
     private MimeMessage getMimeMessage(Mail mail) throws MessagingException, IOException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper =
@@ -96,15 +90,6 @@ public class EmailSenderService {
         mail.setFrom(fromMail);
         mail.setTo(email);
         mail.setSubject("Confirmare achizitionare bilete");
-        mail.setModel(model);
-        return mail;
-    }
-
-    public Mail getNotificationMail(Map<String, Object> model, String email){
-        Mail mail = new Mail();
-        mail.setFrom(fromMail);
-        mail.setTo(email);
-        mail.setSubject("Alerta rate de ocupare eveniment la care participati");
         mail.setModel(model);
         return mail;
     }

@@ -6,16 +6,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useTranslation } from 'react-i18next';
 import { useStylesHeader } from '../../styles/HeaderStyle';
 import { Auth } from 'aws-amplify';
-import { AppState } from '../../store/store';
-import { Dispatch } from 'redux';
-import { loadUserByUsername } from '../../actions/UserFormActions';
-import { connect } from 'react-redux';
 
-interface Props {
-  isAdmin: boolean;
-}
-
-const AccountAppBarCollapse = ({ isAdmin }: Props) => {
+const AccountAppBarCollapse = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | Element>(null);
   const open = Boolean(anchorEl);
   const classes = useStylesHeader();
@@ -43,8 +35,6 @@ const AccountAppBarCollapse = ({ isAdmin }: Props) => {
       .catch(() => {});
   };
 
-  const checkUser = () => {};
-
   return (
     <>
       <IconButton onClick={handleMenu} className={classes.yellow}>
@@ -65,7 +55,7 @@ const AccountAppBarCollapse = ({ isAdmin }: Props) => {
         open={open}
         onClose={handleClose}
       >
-        <Link onClick={checkUser} to={isAdmin ? '/admin/account' : '/user/account'} style={{ textDecoration: 'none' }}>
+        <Link to="/account" style={{ textDecoration: 'none' }}>
           <MenuItem>
             <Typography variant="h6" className={classes.light}>
               {t('eventList.account')}&nbsp;&nbsp;
