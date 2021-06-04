@@ -14,6 +14,9 @@ import TicketCategoriesReducer from './TicketReservationReducer';
 import RegistrationPageReducer from './RegistrationPageReducer';
 import { FormReducer } from './FormReducer';
 import UserFormReducer from './UserFormReducer';
+import { DiscountsForEventReducer } from './DiscountsForEventReducer';
+import { LocationStatisticsReducer } from './LocationStatisticsReducer';
+import { EventsStatisticsReducer } from './EventStatisticsPageReducer';
 
 export default combineReducers({
   events: EventsPageReducer,
@@ -31,4 +34,7 @@ export default combineReducers({
   ticketCategories: TicketCategoriesReducer,
   step: FormReducer,
   userForm: UserFormReducer,
+  discounts: DiscountsForEventReducer,
+  eventStatistics: EventsStatisticsReducer,
+  locationsStatistics: LocationStatisticsReducer,
 });

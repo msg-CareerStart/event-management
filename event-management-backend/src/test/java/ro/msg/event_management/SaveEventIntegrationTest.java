@@ -81,7 +81,7 @@ public class SaveEventIntegrationTest {
                 .highlighted(false)
                 .maxPeople(30)
                 .startDate(LocalDate.now())
-                .endDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(1))
                 .startHour(LocalTime.now())
                 .endHour(LocalTime.now().plusHours(3))
                 .creator("")

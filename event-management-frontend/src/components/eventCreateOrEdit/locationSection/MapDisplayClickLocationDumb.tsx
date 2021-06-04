@@ -8,6 +8,7 @@ import { useStyles } from '../../../styles/CommonStyles';
 import { LatLngExpression } from 'leaflet';
 import { LocationType } from '../../../model/LocationType';
 import { useDispatch } from 'react-redux';
+import { addLocationToEvent } from '../../../actions/HeaderEventCrudActions';
 
 interface Props {
   searchMarker: LatLngExpression[];
@@ -22,6 +23,8 @@ const MapDisplayClickLocationDumb = (props: Props) => {
 
   const [showPopUp, setShowPopUp] = useState(true);
   const [show, setShow] = useState(true);
+
+  const dispatch = useDispatch();
 
   const closePopup = () => {
     setShowPopUp(false);
@@ -52,6 +55,7 @@ const MapDisplayClickLocationDumb = (props: Props) => {
                       className={`${classes.mainButtonStyle} ${classes.pinkGradientButtonStyle} ${classesMap.buttonPopup}`}
                       onClick={(e: any) => {
                         closePopup();
+                        dispatch(addLocationToEvent(props.searchLocation));
                         return props.submitLocation(
                           props.searchLocation.id,
                           props.searchLocation.latitude,

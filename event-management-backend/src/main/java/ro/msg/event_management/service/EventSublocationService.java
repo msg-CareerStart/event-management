@@ -14,4 +14,9 @@ public class EventSublocationService {
     public void saveES(EventSublocation eventSublocation) {
         eventSublocationRepository.save(eventSublocation);
     }
+
+    public EventSublocation findOne(Long id){
+        var sub = eventSublocationRepository.findById(id);
+        return sub.orElse(null);
+    }
 }

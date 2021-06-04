@@ -7,6 +7,7 @@ import {
   editEvent,
   resetStore,
   resetErrors,
+  addLocationSuccess,
 } from '../../actions/HeaderEventCrudActions';
 import { connect } from 'react-redux';
 import Header from './headerEditAndDelete/HeaderCrudSmart';
@@ -25,6 +26,8 @@ import { eventDetailsStyles } from '../../styles/EventDetailsStyle';
 import { AppState } from '../../store/store';
 import { Dispatch } from 'redux';
 import { nextStepForm, setStepForm } from '../../actions/FormAction';
+import { LocationType } from '../../model/LocationType';
+import { addLocation } from '../../api/HeaderEventCrudAPI';
 
 interface Props {
   match: any;
@@ -35,6 +38,7 @@ interface Props {
   editEventAction: (event: EventCrud, images: EventImage[]) => void;
   resetStoreAction: () => void;
   resetErrorsAction: () => void;
+  addLocationSuccessAction: (location: LocationType) => void;
   fetchedEvent: {
     eventIsLoading: boolean;
     event: EventCrud;
@@ -43,6 +47,7 @@ interface Props {
     formErrors: EventFormErrors;
     isDeleted: boolean;
     isSaved: boolean;
+    location: LocationType;
     modifyEventError: boolean;
   };
   loadStep: () => void;
@@ -59,6 +64,7 @@ function EventDetails({
   editEventAction,
   resetStoreAction,
   resetErrorsAction,
+  addLocationSuccessAction,
   fetchedEvent,
   loadStep,
   step,
@@ -143,8 +149,21 @@ function EventDetails({
         setOpen(true);
         return false;
       }
+      for (let discountError of ticketError.discountDtoList) {
+        if (
+          discountError.code.length > 0 ||
+          discountError.percentage.length > 0 ||
+          discountError.startDate.length > 0 ||
+          discountError.endDate.length > 0
+        ) {
+          setMsgUndo(t('welcome.popupErrMsgUnderstood'));
+          setDialogTitle(t('welcome.popupMsgErrTitle'));
+          setDialogDescription(t('welcome.popupErrMsgDescription'));
+          setOpen(true);
+          return false;
+        }
+      }
     }
-
     return true;
   };
 
@@ -178,6 +197,15 @@ function EventDetails({
         setOpen(true);
         return false;
       }
+      for (let discount of category.discountDtoList) {
+        if (discount.code.trim() === '' || discount.startDate.length === 0 || discount.endDate.length === 0) {
+          setMsgUndo(t('welcome.popupErrMsgUnderstood'));
+          setDialogTitle(t('welcome.popupMsgErrTitle'));
+          setDialogDescription(t('welcome.popupErrMsgNotFilled'));
+          setOpen(true);
+          return false;
+        }
+      }
     }
     return true;
   };
@@ -189,15 +217,29 @@ function EventDetails({
   };
 
   let saveEvent = (): void => {
-    if (isFormValid(fetchedEvent.event, fetchedEvent.formErrors)) {
-      if (newEvent) {
-        setAddRequest(true);
-        setOpen(true);
-      } else {
-        setEditRequest(true);
-        setOpen(true);
+    (async () => {
+      if (fetchedEvent.event.location == 0) {
+        const aux = await addLocation(fetchedEvent.location, fetchedEvent.event.maxPeople)
+          .then((json) => {
+            addLocationSuccessAction(json);
+            fetchedEvent.event.location = json.id;
+            return json;
+          })
+          .catch((err) => {
+            console.log('Error: ' + err);
+          });
       }
-    }
+      if (isFormValid(fetchedEvent.event, fetchedEvent.formErrors)) {
+        console.log(fetchedEvent.event);
+        if (newEvent) {
+          setAddRequest(true);
+          setOpen(true);
+        } else {
+          setEditRequest(true);
+          setOpen(true);
+        }
+      }
+    })();
   };
 
   let deleteEvent = (): void => {
@@ -315,6 +357,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     resetErrorsAction: () => dispatch(resetErrors()),
     loadStep: () => dispatch(nextStepForm()),
     setStep: (value: number) => dispatch(setStepForm(value)),
+    addLocationSuccessAction: (location: LocationType) => dispatch(addLocationSuccess(location)),
   };
 };
 

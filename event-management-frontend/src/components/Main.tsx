@@ -7,6 +7,7 @@ import EventDetails from './eventCreateOrEdit/EventDetails';
 import { SecureRoute } from './SecureRoute';
 import ValidateTicket from './validateTicket/ValidateTicketSmart';
 import MyAccount from './myAccount/MyAccount';
+import StatisticsPageSmart from './statisticsPage/StatisticsPageSmart';
 
 const Main = () => {
   console.log('........');
@@ -44,6 +45,7 @@ const Main = () => {
               <MyAccount match={props.match} isAdmin={true} isRequest={false} isError={false} />
             )}
           />
+          <SecureRoute admin exact path="/admin/statistics" component={StatisticsPageSmart} />
         </Switch>
       </main>
     </>

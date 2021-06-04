@@ -1,7 +1,12 @@
 import { EventCrud } from '../model/EventCrud';
 import { EventImage } from '../model/EventImage';
+import { LocationType } from '../model/LocationType';
 import { serverURL, s3URL } from './Api';
 import { fetchWrapper } from './FetchWrapper';
+
+export const fetchEventStatistics = () => {
+  return fetchWrapper(`${serverURL}/events/ticketsStatistics`).then((response) => response.json());
+};
 
 export const fetchEventAPI = (id: string) => {
   return fetchWrapper(`${serverURL}/events/${id}`).then((response) => response.json());
@@ -87,3 +92,14 @@ export function fetchLocation() {
       return json;
     });
 }
+
+export const addLocation = (location: LocationType, maxPeople: number | string) => {
+  return fetchWrapper(`${serverURL}/locations/insert/` + maxPeople.toString(), {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(location),
+  }).then((response) => response.json());
+};

@@ -3,7 +3,12 @@ import { AppState } from '../../../../store/store';
 import { connect } from 'react-redux';
 import CategoryPageDumb from './CategoryPageDumb';
 import { EventCrud } from '../../../../model/EventCrud';
-import { addEmptyCategoryCard, updateEvent, updateFormErrors } from '../../../../actions/HeaderEventCrudActions';
+import {
+  addEmptyCategoryCard,
+  updateEvent,
+  updateFormErrors,
+  removeDiscountCard,
+} from '../../../../actions/HeaderEventCrudActions';
 import { EventFormErrors } from '../../../../model/EventFormErrors';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +19,7 @@ type Props = {
   addEmptyCategoryCard: () => void;
   updateEvent: (event: EventCrud) => void;
   updateFormErrors: (errors: EventFormErrors) => void;
+  removeDiscount: (id: number) => void;
 };
 
 const CategoryPageSmart: React.FC<Props> = ({
@@ -23,6 +29,7 @@ const CategoryPageSmart: React.FC<Props> = ({
   addEmptyCategoryCard,
   updateEvent,
   updateFormErrors,
+  removeDiscount,
 }: Props) => {
   const { t } = useTranslation();
 
@@ -78,6 +85,9 @@ const CategoryPageSmart: React.FC<Props> = ({
       formErrors={formErrors}
       addCard={addEmptyCategoryCard}
       handleChange={handleChange}
+      removeDiscount={removeDiscount}
+      updateEvent={updateEvent}
+      updateFormErrors={updateFormErrors}
     />
   );
 };
@@ -92,6 +102,7 @@ const mapDispatchToProps = (dispatch: any) => {
     addEmptyCategoryCard: () => dispatch(addEmptyCategoryCard()),
     updateEvent: (event: EventCrud) => dispatch(updateEvent(event)),
     updateFormErrors: (errors: EventFormErrors) => dispatch(updateFormErrors(errors)),
+    removeDiscount: (id: number) => dispatch(removeDiscountCard(id)),
   };
 };
 

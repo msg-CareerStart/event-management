@@ -1,18 +1,32 @@
 import React from 'react';
 import { EventCrud } from '../../model/EventCrud';
 import { EventImage } from '../../model/EventImage';
-import { Button, Grid, Typography, TableContainer, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Typography,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead,
+  Box,
+} from '@material-ui/core';
 import { useStyles } from '../../styles/CommonStyles';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CarouselSlide from './CarouselSlide';
 import { userEventDetailsStyles } from '../../styles/UserEventDetailsStyles';
+import { DiscountsForEvent } from '../../model/DiscountsForEvent';
+import { tableStyle } from '../../styles/TableStyle';
 
 interface UserEventDetailsDumbProps {
   event: EventCrud;
   images: EventImage[];
   locationAddress: string;
   locationName: string;
+  discounts: DiscountsForEvent[];
 }
 
 function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
@@ -22,9 +36,21 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
   const currTime = dateAndTime[1];
 
   const commonStyles = useStyles();
+  const tableProps = tableStyle();
   const userEventDetailsStyle = userEventDetailsStyles();
   const history = useHistory();
   const { t } = useTranslation();
+
+  const discountCodes = props.discounts.map((discount) => (
+    <TableRow key={discount.ticketCategoryId}>
+      <TableCell component="th" scope="row" className={`${tableProps.thStyle} ${tableProps.rightBorder}`}>
+        {discount.ticketCategory}
+      </TableCell>
+      <TableCell align="right" className={tableProps.thStyle}>
+        {discount.discountCode}
+      </TableCell>
+    </TableRow>
+  ));
 
   let handleBackButton = (): void => {
     history.push('/user/events');
@@ -33,7 +59,6 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
   let handleJoinButton = (): void => {
     history.push(`/user/reserve-tickets/first-page/${props.event.id}`);
   };
-
   return (
     <Grid container spacing={0} direction="column" justify="space-between" alignItems="center">
       <CarouselSlide images={props.images} />
@@ -111,18 +136,63 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
                   {props.event.status ? (
                     <TableCell align="right"> {t('welcome.overviewStatusActive')}</TableCell>
                   ) : (
-                      <TableCell align="right">{t('welcome.overviewStatusInactive')}</TableCell>
-                    )}
+                    <TableCell align="right">{t('welcome.overviewStatusInactive')}</TableCell>
+                  )}
                 </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
+
+          {props.discounts.length !== 0 && (
+            <div>
+              <TableContainer>
+                <Table aria-label="simple table" className={`${tableProps.table} ${tableProps.spaceTable}`}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell component="th" scope="row" className={`${tableProps.thStyle} ${tableProps.cellText}`}>
+                        {t('welcome.promos')}
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                </Table>
+              </TableContainer>
+              <TableContainer>
+                <Table aria-label="simple table" className={tableProps.table}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className={`${tableProps.thStyle} ${tableProps.rightBorder}`}
+                      >
+                        {t('welcome.ticketCategoryDiscount')}
+                      </TableCell>
+                      <TableCell align="right" className={tableProps.thStyle}>
+                        {t('welcome.discountCode')}
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{discountCodes}</TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          )}
         </Grid>
       </Grid>
 
-      <Grid item container justify="center" alignItems="flex-end" direction="row" className={userEventDetailsStyle.position}>
+      <Grid
+        item
+        container
+        justify="center"
+        alignItems="flex-end"
+        direction="row"
+        className={userEventDetailsStyle.position}
+      >
         <Grid item xs={3} sm={2} md={1} lg={1} xl={1}>
-          <Button className={`${commonStyles.mainButtonStyle} ${commonStyles.pinkGradientButtonStyle}`} onClick={handleBackButton}>
+          <Button
+            className={`${commonStyles.mainButtonStyle} ${commonStyles.pinkGradientButtonStyle}`}
+            onClick={handleBackButton}
+          >
             {t('welcome.backButton')}
           </Button>
         </Grid>
@@ -130,8 +200,11 @@ function UserEventDetailsDumb(props: UserEventDetailsDumbProps) {
         <Grid item xs={3} sm={2} md={1} lg={1} xl={1}>
           <Button
             className={`${commonStyles.mainButtonStyle} ${commonStyles.pinkGradientButtonStyle} ${userEventDetailsStyle.disabled}`}
-            disabled={props.event.endDate < currDate || (props.event.endDate === currDate && props.event.endHour < currTime)}
-            onClick={handleJoinButton}>
+            disabled={
+              props.event.endDate < currDate || (props.event.endDate === currDate && props.event.endHour < currTime)
+            }
+            onClick={handleJoinButton}
+          >
             {t('welcome.joinButton')}
           </Button>
         </Grid>

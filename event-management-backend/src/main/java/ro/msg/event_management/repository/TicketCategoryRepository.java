@@ -13,4 +13,10 @@ public interface TicketCategoryRepository extends JpaRepository<TicketCategory,L
 
     @Query("Select t from TicketCategory t where t.event.id = :id")
     List<TicketCategory> getAllForEvent(@Param("id") Long id);
+
+    @Query("SELECT COUNT(TC.id) FROM TicketCategory TC "+
+            "INNER JOIN Ticket T ON T.ticketCategory.id = TC.id " +
+            "WHERE TC.event.id= :id"
+    )
+    Integer getSoldTicketsForEvent(@Param("id")long eventId);
 }

@@ -1,14 +1,18 @@
 package ro.msg.event_management.controller;
 
+import java.io.*;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,25 +32,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ro.msg.event_management.controller.converter.Converter;
 import ro.msg.event_management.controller.converter.EventReverseConverter;
-import ro.msg.event_management.controller.dto.AvailableTicketsPerCategory;
-import ro.msg.event_management.controller.dto.CardsEventDto;
-import ro.msg.event_management.controller.dto.CardsUserEventDto;
-import ro.msg.event_management.controller.dto.EventDetailsForBookingDto;
-import ro.msg.event_management.controller.dto.EventDetailsForUserDto;
-import ro.msg.event_management.controller.dto.EventDto;
-import ro.msg.event_management.controller.dto.EventFilteringDto;
-import ro.msg.event_management.controller.dto.EventWithRemainingTicketsDto;
-import ro.msg.event_management.entity.Event;
+import ro.msg.event_management.entity.*;
+import ro.msg.event_management.controller.dto.*;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.exception.TicketCategoryException;
 import ro.msg.event_management.security.User;
-import ro.msg.event_management.service.EventService;
-import ro.msg.event_management.service.TicketService;
+import ro.msg.event_management.service.*;
 import ro.msg.event_management.utils.ComparisonSign;
 import ro.msg.event_management.utils.SortCriteria;
 
@@ -54,10 +52,11 @@ import ro.msg.event_management.utils.SortCriteria;
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PATCH, RequestMethod.OPTIONS}, allowedHeaders = {"Access- Control-Allow-Headers","Access-Control-Allow-Origin: *","Access-Control-Request-Method", "Access-Control-Request-Headers","Origin","Cache-Control", "Content-Type", "Authorization"}, exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
 public class EventController {
 
     private final EventService eventService;
+    private final LocationService locationService;
     private final Converter<Event, EventDto> convertToDto;
     private final Converter<EventDto, Event> convertToEntity;
     private final Converter<EventView, EventFilteringDto> converter;
@@ -106,6 +105,20 @@ public class EventController {
         }
     }
 
+    @GetMapping("/{id}/locations")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<LocationDto> getLocationsByEventId(@PathVariable long id){
+        Event event = eventService.getEvent(id);
+        List<LocationDto> eventLocations = null;
+        if(event!=null){
+            eventLocations = locationService.getLocationsByEvent(event);
+        }else{
+            ///here we can write an exception handling
+            return null;
+        }
+        return eventLocations;
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventDto> saveEvent(@RequestBody EventDto eventDTO) {
@@ -130,6 +143,8 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
+        } catch (OverlappingDiscountsException overlappingDiscountsException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
     }
 
@@ -168,7 +183,8 @@ public class EventController {
 
         try {
             List<Long> ticketCategoryToDelete = eventUpdateDto.getTicketCategoryToDelete();
-            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, eventUpdateDto.getLocation());
+            List<Long> discountsToDelete = eventUpdateDto.getDiscountsToDelete();
+            eventUpdated = eventService.updateEvent(event, ticketCategoryToDelete, discountsToDelete, eventUpdateDto.getLocation());
             eventDto = convertToDto.convert(eventUpdated);
         } catch (NoSuchElementException noSuchElementException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, noSuchElementException.getMessage(), noSuchElementException);
@@ -178,6 +194,8 @@ public class EventController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dateTimeException.getMessage(), dateTimeException);
         } catch (TicketCategoryException ticketCategoryException) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ticketCategoryException.getMessage(), ticketCategoryException);
+        } catch (OverlappingDiscountsException overlappingDiscountsException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, overlappingDiscountsException.getMessage(), overlappingDiscountsException);
         }
         return new ResponseEntity<>(eventDto, HttpStatus.OK);
     }
@@ -185,7 +203,6 @@ public class EventController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteEvent(@PathVariable long id) {
-
         try {
             this.eventService.deleteEvent(id);
             return new ResponseEntity<>("Event deleted", HttpStatus.OK);
@@ -310,6 +327,44 @@ public class EventController {
         List<CardsUserEventDto> returnList = converterToUserCardsEventDto.convertAll(eventViews.getContent());
 
         return new ResponseEntity<>(returnList, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/import")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity exportEventsCsv(@RequestParam MultipartFile csv) throws IOException, OverlappingEventsException, ExceededCapacityException {
+        var result = eventService.saveCsv(csv);
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<InputStreamResource> getEventsCsv() throws FileNotFoundException {
+        var result = eventService.writeCsv();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/ticketsStatistics")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<List<EventStatistics>> getAvailableTicketsForEvents(){
+        Map<Long, Integer> availableTickets = eventService.getAvailableTicketsForEvents();
+        Map<Long, Integer> validatedTickets = eventService.getValidatedTicketsForEvents();
+        Map<Long, Integer> soldTickets = eventService.getSoldTicketsForEvents();
+        List<EventStatistics> finalResponse = new ArrayList<>();
+
+        for(Long id: availableTickets.keySet()){
+            EventStatistics eventStatistics = EventStatistics.builder()
+                    .id(id)
+                    .availableTickets(availableTickets.get(id))
+                    .validatedTickets(validatedTickets.get(id))
+                    .totalTickets(soldTickets.get(id) + availableTickets.get(id))
+                    .unvalidatedTickets(soldTickets.get(id) - validatedTickets.get(id))
+                    .build();
+
+            finalResponse.add(eventStatistics);
+
+        }
+
+        return new ResponseEntity<>(finalResponse, HttpStatus.OK);
     }
 }
 
