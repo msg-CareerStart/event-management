@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class AvailableTicketsPerCategory implements Serializable {
+    private Long categoryID;
     private String title;
     private Long sold;
     private Long remaining;

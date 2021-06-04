@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from '../reducers/rootReducer';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas/rootSaga';
@@ -19,7 +19,6 @@ import { FormState } from '../reducers/FormReducer';
 import { DiscountsForEventState } from '../reducers/DiscountsForEventReducer';
 import { EventStatisticsPageState } from '../reducers/EventStatisticsPageReducer';
 import { LocationPageStatistics } from '../reducers/LocationStatisticsReducer';
-
 
 const sagaMiddleware = createSagaMiddleware();
 

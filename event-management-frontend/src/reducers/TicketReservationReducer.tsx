@@ -51,6 +51,7 @@ const initialBooking = {
 const initialState: ReserveSecondPageState = {
   ticketCategory: [
     {
+      categoryID: 0,
       title: '',
       remaining: 0,
       sold: 0,
@@ -82,7 +83,7 @@ const TicketCategoriesReducer = (
         ...state,
         isError: false,
         errorMsg: '',
-      }
+      };
     case FETCH_TICKET_CATEGORIES_REQUEST:
       return {
         ...state,

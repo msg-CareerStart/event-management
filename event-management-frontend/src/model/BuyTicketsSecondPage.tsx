@@ -7,6 +7,7 @@ export interface TicketAvailabilityData {
   title: string;
   remaining: number;
   sold: number;
+  categoryID: number;
 }
 
 export interface EmailStepFormErrors {

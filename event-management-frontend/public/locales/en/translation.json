@@ -236,6 +236,17 @@
     "notAValidPercent": "Invalid percent"
   },
 
+  "discountCodeBox": {
+    "label": "discount code",
+    "applyButton": "Apply",
+    "tooltip": "Apply discount code",
+    "discountAppliedTitle": "Discount code applied",
+    "discountAppliedDescription": "The discount code was applied successfully.",
+    "discountErrorTitle": "Discount code not valid",
+    "discountErrorDescription": "The discount code couldn't be applied.",
+    "discountDialogButton": "OK"
+  },
+
   "categoryCard": {
     "lengthError": "Min. 3 characters required",
     "priceError": "Must be positive",
@@ -339,5 +350,13 @@
     "successfulDelete": "Deleted successfully!",
     "successfulAdd": "Event added successfully!",
     "successfulEdit": "Event updated successfully!"
+  },
+
+  "summaryPage": {
+    "Title": "Order Summary",
+    "Quantity": "Quantity",
+    "Category": "Category",
+    "DiscountCode": "Discount Code",
+    "Discount": "Discount"
   }
 }

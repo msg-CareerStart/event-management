@@ -79,6 +79,9 @@ public class DiscountService {
     }
 
     public CheckDiscountDto checkDiscount(CheckDiscountDto checkDiscountDto) {
+        List<Long> discountIDs = new ArrayList<>();
+        List<String> discountCodes = new ArrayList<>();
+        List<Integer> percentages = new ArrayList<>();
         List<Long> ticketCategories = checkDiscountDto.getTicketCategories();
         CheckDiscountDto response = CheckDiscountDto.builder().code(checkDiscountDto.getCode()).build();
         List<Long> validCategories = new ArrayList<>();
@@ -89,11 +92,18 @@ public class DiscountService {
                 LocalDate startDate = discount.getStartDate();
                 LocalDate endDate = discount.getEndDate();
                 if(!currentDate.isAfter(endDate) && !currentDate.isBefore(startDate)) {
+                    discountCodes.add(discount.getCode());
+                    percentages.add(discount.getPercentage());
                     validCategories.add(ticketCategory);
+                    discountIDs.add(discount.getId());
+                    categoryTitles.add(ticketCategory.getTitle())
                 }
             }
         }
         response.setTicketCategories(validCategories);
+        response.setDiscountIDs(discountIDs);
+        response.setPercentages(percentages);
+        response.setDiscountCodes(discountCodes);
         return response;
     }
 

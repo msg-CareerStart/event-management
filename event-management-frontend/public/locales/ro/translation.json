@@ -162,9 +162,9 @@
 
     "ticketCategoryDiscount": "Categoria",
     "discountCode": "Cod Promoțional",
-        
+
     "promos": "Promoții",
-    
+
     "newEventTitle": "EVENIMENT NOU",
 
     "headerCRUDDelete": "Șterge",
@@ -189,6 +189,40 @@
     "imageDialogContent": "Dacă ștergeți imaginea nu o veți mai putea recupera mai târziu.",
     "imageDialogAgree": "Da",
     "imageDialogDisagree": "Nu"
+  },
+
+  "buyTicketsSecondPage": {
+    "gotoFirstPage": "Mergi la prima pagină",
+    "cancelPurchase": "Renunță la achiziție",
+    "wrongInput": "Text greșit",
+    "ticketsLeft_1": "Mai sunt doar",
+    "ticketsLeft_2": " bilete rămase în ",
+    "chooseDesiredTickets": "Vă rugăm să alegeți numărul de bilete dorit din categoriile existente",
+    "numberOfTickets": "Numărul de bilete",
+    "invalidEmailAddress": "Adresă greșită",
+    "myEmailAddress": "Adresa mea de email",
+    "buyTickets": "Cumpără",
+    "noTicketsSelected": "Nu au fost selectate bilete.",
+    "namesOnTickets": "Nume pentru bilete",
+    "noTicketsSelectedHelp": "Nu v-ați ales numărul de bilete dorit. Pentru a continua cu tranzacția, vă rugăm să reveniți la pasul Numărul de bilete și să alegeți numărul dorit de bilete din categoriile pe care le preferați",
+    "ticketsSelectedHelp": "Vă rugăm să introduceți numele persoanelor care vor utiliza biletele",
+    "termsAndConditionsErr": "Nu ați verificat acordul privind Termenii și condițiile, pentru a cumpăra biletele trebuie să citiți și să acceptați declarațiile privind termenii și condițiile",
+    "noErrorsInTicketsStep": "În secțiunea de bilete există încă erori, pentru a cumpăra biletele trebuie să le rezolvați",
+    "noErrorsInEmailStep": "Există încă erori în secțiunea de e-mail, pentru a cumpăra biletele trebuie să le rezolvați",
+    "noErrorsInNamesStep": "Există încă erori în secțiunea de nume, pentru a cumpăra biletele trebuie să le rezolvați",
+    "termsAndConditions": "Termeni și Condiții",
+    "agreement": "Sunt de acord"
+  },
+
+  "discountCodeBox": {
+    "label": "cod de reducere",
+    "applyButton": "Aplică",
+    "tooltip": "Aplică cod de reducere",
+    "discountAppliedTitle": "Cod de reducere aplicat",
+    "discountAppliedDescription": "Codul de reducere a fost aplicat cu succes.",
+    "discountErrorTitle": "Cod de reducere invalid",
+    "discountErrorDescription": "Codul de reducere nu a putut fi aplicat.",
+    "discountDialogButton": "OK"
   },
 
   "validateTicket": {
@@ -291,29 +325,6 @@
     "errorMessage": "Oops, error"
   },
 
-  "buyTicketsSecondPage": {
-    "gotoFirstPage": "Mergi la prima pagină",
-    "cancelPurchase": "Renunță la achiziție",
-    "wrongInput": "Text greșit",
-    "ticketsLeft_1": "Mai sunt doar",
-    "ticketsLeft_2": " bilete rămase în ",
-    "chooseDesiredTickets": "Vă rugăm să alegeți numărul de bilete dorit din categoriile existente",
-    "numberOfTickets": "Numărul de bilete",
-    "invalidEmailAddress": "Adresă greșită",
-    "myEmailAddress": "Adresa mea de email",
-    "buyTickets": "Cumpără",
-    "noTicketsSelected": "Nu au fost selectate bilete.",
-    "namesOnTickets": "Nume pentru bilete",
-    "noTicketsSelectedHelp": "Nu v-ați ales numărul de bilete dorit. Pentru a continua cu tranzacția, vă rugăm să reveniți la pasul Numărul de bilete și să alegeți numărul dorit de bilete din categoriile pe care le preferați",
-    "ticketsSelectedHelp": "Vă rugăm să introduceți numele persoanelor care vor utiliza biletele",
-    "termsAndConditionsErr": "Nu ați verificat acordul privind Termenii și condițiile, pentru a cumpăra biletele trebuie să citiți și să acceptați declarațiile privind termenii și condițiile",
-    "noErrorsInTicketsStep": "În secțiunea de bilete există încă erori, pentru a cumpăra biletele trebuie să le rezolvați",
-    "noErrorsInEmailStep": "Există încă erori în secțiunea de e-mail, pentru a cumpăra biletele trebuie să le rezolvați",
-    "noErrorsInNamesStep": "Există încă erori în secțiunea de nume, pentru a cumpăra biletele trebuie să le rezolvați",
-    "termsAndConditions": "Termeni și Condiții",
-    "agreement": "Sunt de acord"
-  },
-
   "serverErrors": {
     "tickets_404": "Categoriile evenimentului nu au fost găsite!",
     "tickets_409": "Ați depășit numărul maxim de bilete pentru un utilizator!",
@@ -339,5 +350,13 @@
     "successfulDelete": "Ștergerea a fost efectuată cu succes!",
     "successfulAdd": "Adăugarea a fost efectuată cu succes!",
     "successfulEdit": "Editarea a fost efectuată cu succes!"
+  },
+
+  "summaryPage": {
+    "Title": "Detalii Comandă",
+    "Quantity": "Cantitate",
+    "Category": "Categorie",
+    "DiscountCode": "Cod Reducere",
+    "Discount": "Reducere"
   }
 }
