@@ -13,7 +13,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-interface EventProps {
+export interface EventProps {
   events: EventCard[];
   page: number;
   limit: number;

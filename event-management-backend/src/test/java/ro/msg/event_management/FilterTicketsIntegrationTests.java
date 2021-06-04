@@ -71,10 +71,10 @@ public class FilterTicketsIntegrationTests {
         Location location2 = new Location("Centru", "Ferdinand 45", (float) 44.6, (float) 99.0, null, null);
         Sublocation sublocation1 = new Sublocation("same", 15, location1, null);
         Sublocation sublocation2 = new Sublocation("sameCentru", 20, location2, null);
-        TicketCategory ticketCategory1 = new TicketCategory("VIP", "subtitle", (float) 10.0, "descr", 10, true, event1, null);
-        TicketCategory ticketCategory2 = new TicketCategory("Normal", "subtitle", (float) 5.0, "descr", 10, true, event1, null);
-        TicketCategory ticketCategory4 = new TicketCategory("VIP", "subtitle", (float) 10.0, "descr", 10, true, event2, null);
-        TicketCategory ticketCategory5 = new TicketCategory("VIP", "subtitle", (float) 10.0, "descr", 10, true, event2, null);
+        TicketCategory ticketCategory1 = new TicketCategory("VIP", "subtitle", (float) 10.0, "descr", 10, true, event1, null, null);
+        TicketCategory ticketCategory2 = new TicketCategory("Normal", "subtitle", (float) 5.0, "descr", 10, true, event1, null, null);
+        TicketCategory ticketCategory4 = new TicketCategory("VIP", "subtitle", (float) 10.0, "descr", 10, true, event2, null, null);
+        TicketCategory ticketCategory5 = new TicketCategory("VIP", "subtitle", (float) 10.0, "descr", 10, true, event2, null, null);
         ticketCategoryRepository.save(ticketCategory1);
         ticketCategoryRepository.save(ticketCategory2);
         ticketCategoryRepository.save(ticketCategory4);

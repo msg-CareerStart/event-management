@@ -22,6 +22,8 @@ import {
   validateTicketSuccess,
   validateTicketFailure,
   VALIDATE_TICKET,
+  FETCH_EVENTS_ALL,
+  fetchAllExistingEventsRequest,
 } from '../actions/EventsPageActions';
 
 import { takeLatest, takeEvery, put, call } from 'redux-saga/effects';
@@ -33,6 +35,7 @@ import {
   fetchHomeEvents,
   fetchPaginatedHomeEvents,
   validateTicketAPI,
+  fetchAllExistingEvents,
 } from '../api/EventsServiceAPI';
 import { EventSort } from '../model/EventSort';
 import { responsiveFontSizes } from '@material-ui/core';
@@ -79,6 +82,20 @@ function* fetchEventsAsync() {
 
 export function* watchFetchEventsAsync() {
   yield takeEvery(FETCH_EVENTS, fetchEventsAsync);
+}
+
+function* fetchAllExistingEventsAsync() {
+  yield put(fetchAllExistingEventsRequest());
+  try {
+    const result = yield fetchAllExistingEvents();
+    yield put(fetchEventsSuccess(result));
+  } catch (err) {
+    yield put(fetchEventsError());
+  }
+}
+
+export function* watchFetchAllExistingEventsAsync() {
+  yield takeEvery(FETCH_EVENTS_ALL, fetchAllExistingEventsAsync);
 }
 
 function* fetchHomeEventsAsync() {

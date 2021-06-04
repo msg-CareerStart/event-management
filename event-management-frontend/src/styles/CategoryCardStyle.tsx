@@ -48,7 +48,7 @@ export const useStylesCategoryCard = makeStyles((theme: Theme) => ({
   },
 
   removeButton: {
-    width: '80px',
+    width: '160px',
     textAlign: 'center',
     color: theme.palette.secondary.main,
     textTransform: 'uppercase',

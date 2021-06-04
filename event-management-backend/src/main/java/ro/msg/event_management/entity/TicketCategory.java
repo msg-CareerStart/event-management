@@ -49,4 +49,11 @@ public class TicketCategory extends BaseEntity {
             orphanRemoval = true)
     private List<Ticket> tickets;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "ticketCategory",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Discount> discounts;
+
 }

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ro.msg.event_management.entity.Discount;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +20,5 @@ public class TicketCategoryDto {
     private String description;
     private int ticketsPerCategory;
     private boolean available;
+    private List<DiscountDto> discountDtoList;
 }

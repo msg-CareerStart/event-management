@@ -27,12 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ro.msg.event_management.entity.*;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
+import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
-import ro.msg.event_management.repository.EventRepository;
-import ro.msg.event_management.repository.EventSublocationRepository;
-import ro.msg.event_management.repository.LocationRepository;
-import ro.msg.event_management.repository.PictureRepository;
-import ro.msg.event_management.repository.SublocationRepository;
+import ro.msg.event_management.repository.*;
 import ro.msg.event_management.security.User;
 import ro.msg.event_management.utils.ComparisonSign;
 import ro.msg.event_management.utils.SortCriteria;
@@ -52,6 +49,9 @@ public class EventService {
     private final PictureService pictureService;
     private final EventSublocationService eventSublocationService;
     private final SublocationService sublocationService;
+    private final DiscountService discountService;
+    private final DiscountRepository discountRepository;
+
 
     @PersistenceContext(type = PersistenceContextType.TRANSACTION)
     private final EntityManager entityManager;
@@ -95,7 +95,11 @@ public class EventService {
                 eventSublocations.add(eventSublocation);
             });
             event.setEventSublocations(eventSublocations);
-            ticketCategoryService.saveTicketCategories(savedEvent.getTicketCategories(), savedEvent);
+            List<TicketCategory> ticketCategories = savedEvent.getTicketCategories();
+            ticketCategoryService.saveTicketCategories(ticketCategories, savedEvent);
+            for(TicketCategory ticketCategory : ticketCategories) {
+                discountService.saveDiscounts(ticketCategory.getDiscounts(), ticketCategory);
+            }
             return savedEvent;
         } else if (!validSublocations) {
             throw new OverlappingEventsException("Event overlaps another scheduled event");
@@ -110,7 +114,7 @@ public class EventService {
     }
 
     @Transactional(rollbackFor = {OverlappingEventsException.class, ExceededCapacityException.class})
-    public Event updateEvent(Event event, List<Long> ticketCategoryToDelete, Long updatedLocation) throws OverlappingEventsException, ExceededCapacityException {
+    public Event updateEvent(Event event, List<Long> ticketCategoryToDelete, List<Long> discountsToDelete, Long updatedLocation) throws OverlappingEventsException, ExceededCapacityException {
         Optional<Event> eventOptional;
         eventOptional = eventRepository.findById(event.getId());
 
@@ -190,23 +194,50 @@ public class EventService {
                     //update ticket category
                     for (Long ticketCategoryId : ticketCategoryToDelete) {
                         this.ticketCategoryService.deleteTicketCategory(ticketCategoryId);
+                        this.discountRepository.deleteByTicketCategoryId(ticketCategoryId);
                     }
 
-                    List<TicketCategory> categoriesToSave = new ArrayList<>();
+                    if(discountsToDelete != null) {
+                        for (Long discountId : discountsToDelete) {
+                            this.discountService.deleteDiscount(discountId);
+                        }
+                    }
+
                     event.getTicketCategories().forEach(ticketCategory ->
                     {
+                        List<TicketCategory> categoriesToSave = new ArrayList<>();
                         if (ticketCategory.getId() < 0) {
                             categoriesToSave.add(ticketCategory);
+                            List<TicketCategory> updatedTicketCategories = this.ticketCategoryService.saveTicketCategories(categoriesToSave, eventFromDB);
+                            for(TicketCategory updatedTicketCategory: updatedTicketCategories){
+                                if(updatedTicketCategory.getTitle() == ticketCategory.getTitle() &&
+                                        updatedTicketCategory.getSubtitle() == ticketCategory.getSubtitle() &&
+                                        updatedTicketCategory.getPrice() == ticketCategory.getPrice() &&
+                                        updatedTicketCategory.getDescription() == ticketCategory.getDescription()) {
+                                    this.discountService.saveDiscounts(ticketCategory.getDiscounts(), updatedTicketCategory);
+                                }
+                            }
                         } else {
                             eventFromDB.getTicketCategories().forEach(ticketCategoryFromDB -> {
                                 if (ticketCategoryFromDB.getId().equals(ticketCategory.getId())) {
                                     this.ticketCategoryService.updateTicketCategory(ticketCategory);
+                                    if(ticketCategory.getDiscounts() != null && !ticketCategory.getDiscounts().isEmpty()) {
+                                        for(Discount discount: ticketCategory.getDiscounts()) {
+                                            if(discount.getId() < 0) {
+                                                List<Discount> discountToAdd = new ArrayList<>();
+                                                discountToAdd.add(discount);
+                                                this.discountService.saveDiscounts(discountToAdd, ticketCategory);
+                                            } else {
+                                                this.discountService.updateDiscount(discount);
+                                            }
+                                        }
+                                    }
                                 }
                             });
                         }
                     });
 
-                    this.ticketCategoryService.saveTicketCategories(categoriesToSave, eventFromDB);
+
 
                     return eventFromDB;
 
@@ -372,7 +403,6 @@ public class EventService {
         return new PageImpl<>(result, pageable, count);
     }
 
-
     public Predicate getPredicate(ComparisonSign comparisonSign, String criteria, Float value, CriteriaBuilder criteriaBuilder, Root<EventView> c) {
         switch (comparisonSign) {
             case GREATER:
@@ -389,7 +419,6 @@ public class EventService {
                 return null;
         }
     }
-
 
     public Event getEvent(long id) {
         Optional<Event> eventOptional = this.eventRepository.findById(id);
@@ -416,6 +445,7 @@ public class EventService {
     public Page<Event> filterAndPaginateEventsUserWillAttend(User user, Pageable pageable) {
         return eventRepository.findByUserInFuture(user.getIdentificationString(), pageable);
     }
+
 
     public InputStreamResource writeCsv() throws FileNotFoundException {
         var events = this.findAll();
@@ -719,5 +749,69 @@ public class EventService {
         }
 
         return errorString.toString();
+    }
+}
+
+    /**
+     * Gets the total number of available tickets for all the events.
+     * @return a Map where each entry has the eventId as key,
+     * and the number of available tickets as value.
+     */
+    public Map<Long, Integer> getAvailableTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = eventRepository.getAllEventIds();
+
+        // Get the ids of all events with tickets on sale
+        List<Integer> saleEventIds = eventRepository.getIdsOfEventsWithTicketsOnSale();
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(Long eId: allEventIds){
+            int nrOfTickets;
+            // If the event has tickets on sale, query the number of tickets
+            if(saleEventIds.contains(Math.toIntExact(eId))) {
+                nrOfTickets = eventRepository.getAvailableTicketsForEvent(eId);
+            }
+            // If the event has no tickets on sale, set the number of tickets to 0
+            else
+                nrOfTickets = 0;
+            mapNrTicketsToEvent.put((long) eId, nrOfTickets);
+        }
+        return mapNrTicketsToEvent;
+    }
+
+    /**
+     * Gets the total number of validated tickets for all the events.
+     * This method will return the total number of validated tickets.
+     * @return a Map where each entry has the eventId as key,
+     * and the number of validated tickets (for that event) as value.
+     */
+    public Map<Long, Integer> getValidatedTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = eventRepository.getAllEventIds();
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(long eId: allEventIds){
+            mapNrTicketsToEvent.put(eId, eventRepository.getNrOfValidatedTicketsForEvent(eId));
+        }
+
+        return mapNrTicketsToEvent;
+    }
+
+    /**
+     * Gets the total number of sold tickets for all the events.
+     * This method will return the total number of sold tickets.
+     * @return a Map where each entry has the eventId as key,
+     * and the number of sold tickets (for that event) as value.
+     */
+    public Map<Long, Integer> getSoldTicketsForEvents(){
+        // Get the ids of all the events
+        List<Long> allEventIds = eventRepository.getAllEventIds();
+
+        Map<Long, Integer> mapNrTicketsToEvent = new HashMap<Long, Integer>();
+        for(long eId: allEventIds){
+            mapNrTicketsToEvent.put(eId, eventRepository.getSoldTicketsForEvent(eId));
+        }
+
+        return mapNrTicketsToEvent;
     }
 }

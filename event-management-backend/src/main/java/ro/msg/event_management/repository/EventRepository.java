@@ -2,6 +2,7 @@ package ro.msg.event_management.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.AbstractMap;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -29,7 +30,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " ON e.id = b.event.id" +
             " WHERE b.user = :user" +
             " AND e.endDate < current_date()" +
-            " GROUP BY e.id" +
             " ORDER BY e.startDate DESC")
     Page<Event> findByUserInPast(@Param("user") String user, Pageable pageable);
 
@@ -37,7 +37,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " ON e.id = b.event.id" +
             " WHERE b.user = :user" +
             " AND e.endDate > current_date()" +
-            " GROUP BY e.id" +
             " ORDER BY e.startDate ASC")
     Page<Event> findByUserInFuture(@Param("user") String user, Pageable pageable);
 
@@ -47,4 +46,26 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " WHERE t.id= :id")
     Event findEventByTicket(@Param("id") long idTicket);
 
+    @Query("SELECT SUM(TC.ticketsPerCategory) FROM TicketCategory TC" +
+            " WHERE TC.event.id = :id")
+    Integer getAvailableTicketsForEvent(@Param("id") long id);
+
+    @Query("SELECT COUNT(td.validate)" +
+            " FROM Ticket t" +
+            " INNER JOIN Booking b ON t.booking.id = b.id and b.event.id = :id" +
+            " INNER JOIN TicketDocument td ON t.id = td.id  and td.validate = TRUE")
+    Integer getNrOfValidatedTicketsForEvent(long id);
+
+    @Query("SELECT COUNT(t.id) FROM TicketCategory tc "+
+            "INNER JOIN Ticket t ON t.ticketCategory.id = tc.id "+
+            "WHERE tc.event.id= :id" )
+    Integer getSoldTicketsForEvent(@Param("id")long eventId);
+
+    @Query("SELECT TC.event.id" +
+            " FROM TicketCategory TC" +
+            " GROUP BY TC.event.id")
+    List<Integer> getIdsOfEventsWithTicketsOnSale();
+
+    @Query("SELECT e.id FROM Event e")
+    List<Long> getAllEventIds();
 }
