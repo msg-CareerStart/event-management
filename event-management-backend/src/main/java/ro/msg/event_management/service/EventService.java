@@ -750,7 +750,6 @@ public class EventService {
 
         return errorString.toString();
     }
-}
 
     /**
      * Gets the total number of available tickets for all the events.
