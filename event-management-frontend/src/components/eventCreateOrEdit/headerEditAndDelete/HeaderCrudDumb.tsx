@@ -4,6 +4,7 @@ import { useStyles } from '../../../styles/CommonStyles';
 import { useTranslation } from 'react-i18next';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { headerCrudDumbStyles } from '../../../styles/HeaderCrudStyles';
 
 interface Props {
@@ -59,9 +60,9 @@ function HeaderDumb({ step, loadStep, setStep, isAdmin, title, handleEventDelete
 
   const saveIconButton =
     isAdmin === true ? (
-      <Tooltip title="Save">
-        <IconButton onClick={handleEventSave}>
-          <SaveIcon color="secondary" />
+      <Tooltip title={step != 3 ? 'Next' : 'Save'}>
+        <IconButton onClick={step != 3 ? loadStep : handleEventSave}>
+          {step != 3 ? <SkipNextIcon color="secondary" /> : <SaveIcon color="secondary" />}
         </IconButton>
       </Tooltip>
     ) : null;
