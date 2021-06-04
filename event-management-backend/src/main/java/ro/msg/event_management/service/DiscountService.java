@@ -96,7 +96,7 @@ public class DiscountService {
                     percentages.add(discount.getPercentage());
                     validCategories.add(ticketCategory);
                     discountIDs.add(discount.getId());
-                    categoryTitles.add(ticketCategory.getTitle())
+                    categoryTitles.add(ticketCategory.getTitle());
                 }
             }
         }
