@@ -239,7 +239,12 @@
     "discountCodeBox":{
         "label" : "discount code",
         "applyButton" : "Apply",
-        "tooltip" : "Apply discount code"
+        "tooltip" : "Apply discount code",
+        "discountAppliedTitle" : "Discount code applied",
+        "discountAppliedDescription" : "The discount code was applied successfully.",
+        "discountErrorTitle" : "Discount code not valid",
+        "discountErrorDescription" : "The discount code couldn't be applied.",
+        "discountDialogButton" : "OK"
     },
 
   "categoryCard": {

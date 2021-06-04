@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { loadAppliedDiscounts } from '../../../../../actions/DiscountForEventActions';
 import { pair } from '../../../../../reducers/DiscountsForEventReducer';
 import { Dispatch } from 'redux';
+import DiscountDialog from './DiscountDialog';
 
 interface DiscountCodeBoxProps {
   categoryID: number;
@@ -23,14 +24,29 @@ function DiscountCodeBox(props: DiscountCodeBoxProps) {
   const discountBoxStyle = useDiscountBoxStyles();
   const { t } = useTranslation();
   const [code, setCode] = useState('');
+  const [open, setOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [dialogDescription, setDialogDescription] = useState('');
+  const [error, setError] = useState(false);
+
+  const closeDialog = () => {
+    setOpen(false);
+  };
 
   function checkDiscountValidity(discountCode: string, categoryId: number): void {
     checkDiscountCodeValidityAPI(discountCode, categoryId).then((response) => {
       let discount: pair = { key: categoryId, value: response.discountIDs[0] };
-      if (response.discountIDs.length === 0) console.log('discount code not valid');
-      else {
-        console.log('checkDiscountValidity');
+      if (response.discountIDs.length === 0) {
+        setDialogTitle(t('discountCodeBox.discountErrorTitle'));
+        setDialogDescription(t('discountCodeBox.discountErrorDescription'));
+        setOpen(true);
+        setError(true);
+      } else {
         props.loadAppliedDiscounts(discount);
+        setDialogTitle(t('discountCodeBox.discountAppliedTitle'));
+        setDialogDescription(t('discountCodeBox.discountAppliedDescription'));
+        setOpen(true);
+        setError(false);
       }
     });
   }
@@ -58,6 +74,13 @@ function DiscountCodeBox(props: DiscountCodeBoxProps) {
         >
           {t('discountCodeBox.applyButton')}
         </Button>
+        <DiscountDialog
+          open={open}
+          dialogTitle={dialogTitle}
+          dialogDescription={dialogDescription}
+          closeDialog={closeDialog}
+          error={error}
+        ></DiscountDialog>
       </Grid>
     );
   } else return <Grid></Grid>;

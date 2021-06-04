@@ -218,7 +218,12 @@
     "discountCodeBox":{
         "label" : "cod de reducere",
         "applyButton" : "Aplică",
-        "tooltip" : "Aplică cod de reducere"
+        "tooltip" : "Aplică cod de reducere",
+        "discountAppliedTitle" : "Cod de reducere aplicat",
+        "discountAppliedDescription" : "Codul de reducere a fost aplicat cu succes.",
+        "discountErrorTitle" : "Cod de reducere invalid",
+        "discountErrorDescription" : "Codul de reducere nu a putut fi aplicat.",
+        "discountDialogButton" : "OK"
     },
 
 
