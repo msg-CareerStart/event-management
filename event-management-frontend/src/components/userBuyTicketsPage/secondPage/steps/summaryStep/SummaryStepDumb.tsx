@@ -21,7 +21,7 @@ export function SummaryStepDumb({ nextStep, previousStep, summary }: SummaryStep
   return (
     <Grid>
       <Typography className={summaryStepStyles.typography} align="center">
-        Order Summary
+        {t('summaryPage.Title')}
       </Typography>
       {summary}
       <Grid

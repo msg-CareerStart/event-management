@@ -20,19 +20,9 @@ import { DiscountsForEventState } from '../reducers/DiscountsForEventReducer';
 import { EventStatisticsPageState } from '../reducers/EventStatisticsPageReducer';
 import { LocationPageStatistics } from '../reducers/LocationStatisticsReducer';
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  }
-}
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
 const sagaMiddleware = createSagaMiddleware();
 
-const enhancer = composeEnhancers(applyMiddleware(sagaMiddleware));
-
-export const store = createStore(rootReducer, enhancer);
+export const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 sagaMiddleware.run(rootSaga);
 
 export interface AppState {

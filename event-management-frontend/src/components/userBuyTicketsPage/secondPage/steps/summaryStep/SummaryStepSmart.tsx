@@ -6,6 +6,7 @@ import { EventCrud } from '../../../../../model/EventCrud';
 import { connect } from 'react-redux';
 import { TicketsPerCateory } from '../../../../../model/UserReserveTicket';
 import { Grid, Typography, List } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 
 interface SummaryStepSmartProps {
   nextStep: () => void;
@@ -16,6 +17,8 @@ interface SummaryStepSmartProps {
 }
 
 function SummaryStepSmart({ nextStep, previousStep, discount, event, ticketAmmount }: SummaryStepSmartProps) {
+  const { t } = useTranslation();
+
   let summary = ticketAmmount.map((ticketAmmountElement) => {
     let index = discount.appliedDiscounts.findIndex(
       (appliedDiscount) => appliedDiscount.CategoryTitle === ticketAmmountElement.category
@@ -24,14 +27,17 @@ function SummaryStepSmart({ nextStep, previousStep, discount, event, ticketAmmou
     if (index !== -1) {
       discountCodeDescription = (
         <Typography>
-          Quantity: {ticketAmmountElement.quantity}, Category: {ticketAmmountElement.category}, Discount Code:{' '}
-          {discount.appliedDiscounts[index].DiscountCode}, Discount: {discount.appliedDiscounts[index].percentage}%
+          {t('summaryPage.Quantity')}: {ticketAmmountElement.quantity}, {t('summaryPage.Category')}:{' '}
+          {ticketAmmountElement.category}, {t('summaryPage.DiscountCode')}:{' '}
+          {discount.appliedDiscounts[index].DiscountCode}, {t('summaryPage.Discount')}:{' '}
+          {discount.appliedDiscounts[index].percentage}%
         </Typography>
       );
     } else {
       discountCodeDescription = (
         <Typography>
-          Quantity: {ticketAmmountElement.quantity}, Category: {ticketAmmountElement.category}
+          {t('summaryPage.Quantity')}: {ticketAmmountElement.quantity}, {t('summaryPage.Category')}:{' '}
+          {ticketAmmountElement.category}
         </Typography>
       );
     }

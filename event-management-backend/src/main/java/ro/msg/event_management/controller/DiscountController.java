@@ -21,7 +21,7 @@ public class DiscountController {
     private final DiscountService discountService;
 
     @PostMapping("/check")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CheckDiscountDto> checkDiscount(@RequestBody CheckDiscountDto checkDiscountDto) {
         return new ResponseEntity<>(discountService.checkDiscount(checkDiscountDto), HttpStatus.OK);
     }
