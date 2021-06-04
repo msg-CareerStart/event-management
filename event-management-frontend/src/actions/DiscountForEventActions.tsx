@@ -1,4 +1,4 @@
-import { pair } from '../reducers/DiscountsForEventReducer';
+import { ReturnedDiscount } from '../reducers/DiscountsForEventReducer';
 
 export const LOAD_DISCOUNTS_FOR_EVENT = 'LOAD_DISCOUNTS_FOR_EVENT';
 export const LOAD_DISCOUNTS_FOR_EVENT_REQUEST = 'LOAD_DISCOUNTS_FOR_EVENT_REQUEST';
@@ -33,7 +33,7 @@ export const loadDiscountsForEventFailure = (err: string) => {
   };
 };
 
-export const loadAppliedDiscounts = (discount: pair) => {
+export const loadAppliedDiscounts = (discount: ReturnedDiscount) => {
   return {
     type: LOAD_APPLIED_DISCOUNTS,
     discount: discount,

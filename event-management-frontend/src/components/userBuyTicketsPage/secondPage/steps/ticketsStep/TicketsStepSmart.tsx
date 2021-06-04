@@ -166,6 +166,7 @@ function TicketsStepSmart({
           ticketNumber={getTicketNumber(i)}
           available={getTicketNumber(i) < ticketCategories[i].remaining}
           categoryID={ticketCategories[i].categoryID}
+          categoryTitle={ticketCategories[i].title}
         />
       </Grid>
     );

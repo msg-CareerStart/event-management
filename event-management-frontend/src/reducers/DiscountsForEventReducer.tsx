@@ -7,9 +7,12 @@ import {
 } from '../actions/DiscountForEventActions';
 import { DiscountsForEvent } from '../model/DiscountsForEvent';
 
-export interface pair {
-  key: number;
-  value: number;
+export interface ReturnedDiscount {
+  CategoryId: number;
+  DiscountId: number;
+  DiscountCode: string;
+  percentage: number;
+  CategoryTitle: string;
 }
 
 export interface DiscountsForEventState {
@@ -17,7 +20,7 @@ export interface DiscountsForEventState {
   isLoading: boolean;
   isError: boolean;
   err: string;
-  appliedDiscounts: pair[];
+  appliedDiscounts: ReturnedDiscount[];
 }
 
 const initialState: DiscountsForEventState = {
@@ -30,7 +33,7 @@ const initialState: DiscountsForEventState = {
 
 export const DiscountsForEventReducer = (
   state: DiscountsForEventState = initialState,
-  action: { type: string; payload: DiscountsForEvent[]; err: string; discount: pair }
+  action: { type: string; payload: DiscountsForEvent[]; err: string; discount: ReturnedDiscount }
 ) => {
   switch (action.type) {
     case LOAD_DISCOUNTS_FOR_EVENT_REQUEST:
@@ -52,21 +55,32 @@ export const DiscountsForEventReducer = (
         err: action.payload,
       };
     case LOAD_APPLIED_DISCOUNTS:
-      console.log('reducer');
       let localState = { ...state };
       localState.discounts = [...state.discounts];
       localState.appliedDiscounts = [...state.appliedDiscounts];
 
       localState.appliedDiscounts.forEach((element) => {
-        if (element.key === action.discount.key) {
-          element.value = action.discount.value;
+        if (element.CategoryId === action.discount.CategoryId) {
+          element.DiscountId = action.discount.DiscountId;
         } else {
-          let newDiscount: pair = { key: action.discount.key, value: action.discount.value };
+          let newDiscount: ReturnedDiscount = {
+            CategoryId: action.discount.CategoryId,
+            DiscountId: action.discount.DiscountId,
+            percentage: action.discount.percentage,
+            DiscountCode: action.discount.DiscountCode,
+            CategoryTitle: action.discount.CategoryTitle,
+          };
           localState.appliedDiscounts.push(newDiscount);
         }
       });
       if (localState.appliedDiscounts.length === 0) {
-        let newDiscount: pair = { key: action.discount.key, value: action.discount.value };
+        let newDiscount: ReturnedDiscount = {
+          CategoryId: action.discount.CategoryId,
+          DiscountId: action.discount.DiscountId,
+          percentage: action.discount.percentage,
+          DiscountCode: action.discount.DiscountCode,
+          CategoryTitle: action.discount.CategoryTitle,
+        };
         localState.appliedDiscounts.push(newDiscount);
       }
       return localState;

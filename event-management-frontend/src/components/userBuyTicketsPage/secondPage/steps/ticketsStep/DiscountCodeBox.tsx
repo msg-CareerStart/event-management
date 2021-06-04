@@ -7,16 +7,17 @@ import { useTranslation } from 'react-i18next';
 import { checkDiscountCodeValidityAPI } from '../../../../../api/EventsServiceAPI';
 import { connect } from 'react-redux';
 import { loadAppliedDiscounts } from '../../../../../actions/DiscountForEventActions';
-import { pair } from '../../../../../reducers/DiscountsForEventReducer';
+import { ReturnedDiscount } from '../../../../../reducers/DiscountsForEventReducer';
 import { Dispatch } from 'redux';
 import DiscountDialog from './DiscountDialog';
 
 interface DiscountCodeBoxProps {
   categoryID: number;
+  categoryTitle: string;
   ticketCategory: string;
   ticketNumber: number;
   available: boolean;
-  loadAppliedDiscounts: (discount: pair) => void;
+  loadAppliedDiscounts: (discount: ReturnedDiscount) => void;
 }
 
 function DiscountCodeBox(props: DiscountCodeBoxProps) {
@@ -35,7 +36,13 @@ function DiscountCodeBox(props: DiscountCodeBoxProps) {
 
   function checkDiscountValidity(discountCode: string, categoryId: number): void {
     checkDiscountCodeValidityAPI(discountCode, categoryId).then((response) => {
-      let discount: pair = { key: categoryId, value: response.discountIDs[0] };
+      let discount: ReturnedDiscount = {
+        CategoryId: categoryId,
+        DiscountId: response.discountIDs[0],
+        DiscountCode: response.discountCodes[0],
+        percentage: response.percentages[0],
+        CategoryTitle: props.categoryTitle,
+      };
       if (response.discountIDs.length === 0) {
         setDialogTitle(t('discountCodeBox.discountErrorTitle'));
         setDialogDescription(t('discountCodeBox.discountErrorDescription'));
@@ -88,7 +95,7 @@ function DiscountCodeBox(props: DiscountCodeBoxProps) {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    loadAppliedDiscounts: (discount: pair) => dispatch(loadAppliedDiscounts(discount)),
+    loadAppliedDiscounts: (discount: ReturnedDiscount) => dispatch(loadAppliedDiscounts(discount)),
   };
 };
 

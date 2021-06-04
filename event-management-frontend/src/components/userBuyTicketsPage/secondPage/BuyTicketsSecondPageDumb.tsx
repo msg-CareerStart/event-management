@@ -9,7 +9,7 @@ import { buyTicketsSecondPageDumbStyle } from '../../../styles/BuyTicketsSecondP
 import { TicketNames } from '../../../model/UserReserveTicket';
 import { TicketAvailabilityData } from '../../../model/BuyTicketsSecondPage';
 import '../../../styles/ReservePageStyle.css';
-import { SummaryStepSmart } from './steps/summaryStep/SummaryStepSmart';
+import SummaryStep from './steps/summaryStep/SummaryStepSmart';
 
 interface BuyTicketsSecondPageDumbProps {
   gotoFirstPage: () => void;
@@ -100,7 +100,7 @@ function BuyTicketsSecondPageDumb({
       );
       break;
     case 4:
-      currentPage = <SummaryStepSmart previousStep={prevStep} nextStep={nextStep} />;
+      currentPage = <SummaryStep previousStep={prevStep} nextStep={nextStep} />;
       break;
     case 5:
       currentPage = (

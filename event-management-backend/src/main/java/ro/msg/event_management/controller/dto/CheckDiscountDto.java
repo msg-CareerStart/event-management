@@ -15,4 +15,6 @@ public class CheckDiscountDto {
     private List<Long> discountIDs;
     private String code;
     private List<Long> ticketCategories;
+    private List<String> discountCodes;
+    private List<Integer> percentages;
 }
