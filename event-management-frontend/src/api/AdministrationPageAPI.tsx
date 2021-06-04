@@ -18,14 +18,9 @@ export const dowloadCSV = async (url: string, name: string) => {
 export const importTickets = (csv: FormData) => {
   return fetchWrapper(`${serverURL}/tickets/import`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      //'Content-Length': '123',
-      //ETag: '12345',
-    },
     body: csv,
   })
-    .then((response) => response.json())
+    .then((response) => response)
     .catch((error) => {
       console.log('error:', error);
     });
@@ -34,14 +29,9 @@ export const importTickets = (csv: FormData) => {
 export const importEvents = (csv: FormData) => {
   return fetchWrapper(`${serverURL}/events/import`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      //'Content-Length': '123',
-      //ETag: '12345',
-    },
     body: csv,
   })
-    .then((response) => response.json())
+    .then((response) => response)
     .catch((error) => {
       console.log('error:', error);
     });

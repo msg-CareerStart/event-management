@@ -4,8 +4,10 @@ import FilesSectionDumb from './FilesSectionDumb';
 import FilesDialog from './FilesDialogDelete';
 import { FileAdministration } from '../../../model/FileAdministration';
 import { importEvents, importTickets } from '../../../api/AdministrationPageAPI';
+import ImportDialogSuccess from './ImportDialogSuccess';
 
 interface FilesSectionProps {
+  setDoImport: (value: boolean) => void;
   doImport: boolean;
   state: string;
   setStateComboBox: (value: string) => void;
@@ -14,34 +16,47 @@ interface FilesSectionProps {
 
 const FilesSectionSmart = (props: FilesSectionProps) => {
   const [files, setFiles] = useState<FileAdministration[]>([]);
-  const [open, setOpen] = useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [openDialogImportSuccess, setOpenDialogImportSuccess] = useState(false);
+  const [openDialogImportError, setOpenDialogImportError] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<FileAdministration>();
 
-  const importCSV = () => {
-    if (props.state === '10') {
+  const importCSV = async () => {
+    if (props.state === '10' && files.length !== 0) {
       let formData = new FormData();
       formData.append('csv', files[0].file);
-      importEvents(formData);
+      const result = await importEvents(formData);
+      console.log(result);
       props.setStateComboBox('0');
-    } else if (props.state === '20') {
+      props.setDoImport(false);
+      setFiles([]);
+      setOpenDialogImportSuccess(true);
+    } else if (props.state === '20' && files.length !== 0) {
       let formData = new FormData();
       formData.append('csv', files[0].file);
-      importTickets(formData);
+      const result = await importTickets(formData);
+      console.log(result);
       props.setStateComboBox('0');
+      props.setDoImport(false);
+      setFiles([]);
+      setOpenDialogImportSuccess(true);
     } else {
       props.setShowDialogExport(true);
+      props.setDoImport(false);
     }
   };
 
   const handleCloseConfirm = () => {
     setImageAsDeleted(itemToDelete as FileAdministration);
     setItemToDelete(undefined);
-    setOpen(false);
+    setOpenDialogDelete(false);
+    setOpenDialogImportSuccess(false);
   };
 
   const handleCloseDecline = () => {
     setItemToDelete(undefined);
-    setOpen(false);
+    setOpenDialogDelete(false);
+    setOpenDialogImportSuccess(false);
   };
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -64,13 +79,12 @@ const FilesSectionSmart = (props: FilesSectionProps) => {
 
   const handleClickOpen = (item: FileAdministration) => {
     setItemToDelete(item);
-    setOpen(true);
+    setOpenDialogDelete(true);
   };
 
   const { getRootProps, getInputProps } = useDropzone({ accept: '.csv', onDrop, multiple: false });
 
   useEffect(() => {
-    console.log('Da');
     if (props.doImport === true) {
       importCSV();
     }
@@ -86,7 +100,17 @@ const FilesSectionSmart = (props: FilesSectionProps) => {
         handleClickOpen={handleClickOpen}
       />
 
-      <FilesDialog open={open} handleCloseDecline={handleCloseDecline} handleCloseConfirm={handleCloseConfirm} />
+      <FilesDialog
+        open={openDialogDelete}
+        handleCloseDecline={handleCloseDecline}
+        handleCloseConfirm={handleCloseConfirm}
+      />
+
+      <ImportDialogSuccess
+        open={openDialogImportSuccess}
+        handleCloseDecline={handleCloseDecline}
+        handleCloseConfirm={handleCloseConfirm}
+      />
     </>
   );
 };

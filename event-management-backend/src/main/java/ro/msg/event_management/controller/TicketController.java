@@ -36,7 +36,7 @@ import ro.msg.event_management.service.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/tickets")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PATCH, RequestMethod.OPTIONS}, allowedHeaders = {"Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"}, exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PATCH, RequestMethod.OPTIONS}, allowedHeaders = {"Access- Control-Allow-Headers","Access-Control-Allow-Origin: *","Access-Control-Request-Method", "Access-Control-Request-Headers","Origin","Cache-Control", "Content-Type", "Authorization"}, exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
 public class TicketController {
 
     private final TicketService ticketService;
@@ -110,8 +110,7 @@ public class TicketController {
     }
 
     @PostMapping(value = "/import")
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity exportTicketsCsv(@RequestParam MultipartFile csv) throws IOException {
         var inputStream = csv.getInputStream();
 

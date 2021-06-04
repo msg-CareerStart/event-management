@@ -148,6 +148,7 @@ const AdministrationStepper = (props: EventProps) => {
       <div className={classes.component}>
         <TabPanel value={value} index={0}>
           <FilesSectionSmart
+            setDoImport={setDoImport}
             doImport={doImport}
             state={stateComboBox}
             setStateComboBox={setStateComboBox}

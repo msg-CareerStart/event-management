@@ -1,0 +1,7 @@
+name,emailAddress,ticketCategoryTitle,ticketCategorySubtitle,ticketCategoryPrice,ticketCategoryDescription,ticketCategoryNrPerCategory,ticketCategoryAvailable,ticketCategoryEventId,bookingDate,bookingUser,bookingEventId,
+Andrew,a@yahoo.com,VIP,best,50.0,really good,5,true,1,2020-09-17T18:47:52.690,6011847a-94c0-4091-b301-ef839c7a10fa,1
+AndrewC,aC@yahoo.com,VIP,best,50.0,really good,5,true,1,2020-09-17T18:47:52.690,6011847a-94c0-4091-b301-ef839c7a10fa,1
+AndrewM,aM@yahoo.com,VIP,best,50.0,really good,17,true,2,2020-09-17T18:47:52.690,6011847a-94c0-4091-b301-ef839c7a10fa,2
+AndrewS,aS@yahoo.com,VIP,best,50.0,really good,17,true,2,2020-09-17T18:47:52.690,6011847a-94c0-4091-b301-ef839c7a10fa,2
+AndrewM,aM@yahoo.com,VIP,best,50.0,really good,5,true,1,2020-09-17T18:47:52.690,78323b75-15df-4aad-9451-8b987307077a,1
+AndrewS,aS@yahoo.com,VIP,best,50.0,really good,17,true,2,2020-09-17T18:47:52.690,78323b75-15df-4aad-9451-8b987307077a,2

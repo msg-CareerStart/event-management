@@ -193,6 +193,8 @@
         "events": "Evenimente",
         "errorButton": "Am înțeles",
         "errorTitle": "Eroare",
+        "success": "Succes",
+        "successImport": "Importarea a fost realizată cu succes!",
         "errorExportDialog": "Va rugăm selectați tipul exportării"
     },
 

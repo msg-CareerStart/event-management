@@ -193,6 +193,8 @@
         "events": "Events",
         "errorButton": "I understand",
         "errorTitle": "Error",
+        "success": "Success",
+        "successImport": "The import was executed successfuly!",
         "errorExportDialog": "Please select the export type"
     },
 
