@@ -9,6 +9,7 @@ import { buyTicketsSecondPageDumbStyle } from '../../../styles/BuyTicketsSecondP
 import { TicketNames } from '../../../model/UserReserveTicket';
 import { TicketAvailabilityData } from '../../../model/BuyTicketsSecondPage';
 import '../../../styles/ReservePageStyle.css';
+import { SummaryStepSmart } from './steps/summaryStep/SummaryStepSmart';
 
 interface BuyTicketsSecondPageDumbProps {
   gotoFirstPage: () => void;
@@ -99,6 +100,9 @@ function BuyTicketsSecondPageDumb({
       );
       break;
     case 4:
+      currentPage = <SummaryStepSmart previousStep={prevStep} nextStep={nextStep} />;
+      break;
+    case 5:
       currentPage = (
         <TermsAndConditionsStep
           open={open}
@@ -119,7 +123,7 @@ function BuyTicketsSecondPageDumb({
 
   return (
     <div className={generalStyle.root}>
-      <Grid container direction='row' justify='center' alignItems='center'>
+      <Grid container direction="row" justify="center" alignItems="center">
         <Grid item xs={12}>
           <Paper className={`${generalStyle.paperStyle} buyPageResponsive`}>{currentPage}</Paper>
         </Grid>
