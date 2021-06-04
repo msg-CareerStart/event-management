@@ -1,6 +1,6 @@
 package ro.msg.event_management.controller;
 
-import java.io.InputStream;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,13 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ro.msg.event_management.controller.converter.Converter;
 import ro.msg.event_management.controller.dto.AvailableTicketsPerCategory;
@@ -33,7 +28,7 @@ import ro.msg.event_management.entity.view.TicketView;
 import ro.msg.event_management.exception.TicketCorrespondingEventException;
 import ro.msg.event_management.exception.TicketValidateException;
 import ro.msg.event_management.security.User;
-import ro.msg.event_management.service.TicketService;
+import ro.msg.event_management.service.*;
 
 @RestController
 @AllArgsConstructor
@@ -107,5 +102,19 @@ public class TicketController {
         responseBody.put("name", participantName);
         responseBody.put("email", participantEmail);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/import")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity exportTicketsCsv(@RequestParam MultipartFile csv) throws IOException {
+        var result = ticketService.saveCsv(csv);
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<InputStreamResource> getTicketsCsv() throws FileNotFoundException {
+        var result = ticketService.writeCsv();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -346,4 +346,13 @@ public class BookingService {
         }
         return localDates;
     }
+
+    public Booking findOne(Long id){
+        var book = bookingRepository.findById(id);
+        return book.orElse(null);
+    }
+
+    public Booking save(Booking booking){
+        return bookingRepository.save(booking);
+    }
 }

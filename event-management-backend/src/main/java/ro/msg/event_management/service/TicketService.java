@@ -1,11 +1,9 @@
 package ro.msg.event_management.service;
 
-import java.io.InputStream;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,21 +22,18 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ro.msg.event_management.controller.dto.AvailableTicketsPerCategory;
-import ro.msg.event_management.entity.Event;
-import ro.msg.event_management.entity.Ticket;
-import ro.msg.event_management.entity.TicketDocument;
+import ro.msg.event_management.entity.*;
 import ro.msg.event_management.entity.view.TicketView;
 import ro.msg.event_management.exception.TicketCorrespondingEventException;
 import ro.msg.event_management.exception.TicketValidateException;
-import ro.msg.event_management.repository.BookingRepository;
-import ro.msg.event_management.repository.EventRepository;
-import ro.msg.event_management.repository.TicketDocumentRepository;
-import ro.msg.event_management.repository.TicketRepository;
+import ro.msg.event_management.repository.*;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +43,10 @@ public class TicketService {
     private final EventRepository eventRepository;
 
     private final TicketRepository ticketRepository;
+
+    private final BookingRepository bookingRepository;
+
+    private final TicketCategoryRepository categoryRepository;
 
     @Value("${event-management.s3.tickets.bucketName}")
     private String bucketName;
@@ -60,8 +59,6 @@ public class TicketService {
     private final TicketDocumentService ticketDocumentService;
 
     private final TicketDocumentRepository ticketDocumentRepository;
-
-    private final BookingRepository bookingRepository;
 
     @PersistenceContext(type = PersistenceContextType.TRANSACTION)
     private final EntityManager entityManager;
@@ -136,5 +133,151 @@ public class TicketService {
         } else {
             throw new NoSuchElementException("There is no ticket with id = " + idTicket);
         }
+    }
+
+    public List<Ticket> findAll(){
+        return ticketRepository.findAll();
+    }
+
+    public Ticket save(Ticket ticket){
+        return ticketRepository.save(ticket);
+    }
+
+    public String saveCsv(MultipartFile csv) throws IOException {
+        var inputStream = csv.getInputStream();
+
+        var reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        reader.readLine(); // skip header
+        StringBuffer errorString = new StringBuffer();
+
+        while(reader.ready()){
+            String line = reader.readLine();
+            var fields = line.split(",");
+
+            var name = fields[0];
+            var email = fields[1];
+            var categoryId = fields[2];
+            var bookingId = fields[3];
+
+            try{
+                Long.parseLong(bookingId);
+                Long.parseLong(categoryId);
+            }
+            catch (NumberFormatException e){
+                errorString.append("Id must be number, skipping row\n");
+                continue;
+            }
+            var booking = bookingRepository.findById(Long.parseLong(bookingId));
+            var category = categoryRepository.findById(Long.parseLong(categoryId));
+
+            if(booking.isEmpty()){
+                errorString.append("Invalid booking, skipping row\n");
+                continue;
+            }
+            if(category.isEmpty()){
+                errorString.append("Invalid ticket category, skipping row\n");
+                continue;
+            }
+
+            var ticket = new Ticket();
+
+            if(name.equals("")) {
+                errorString.append("Invalid name, skipping row\n");
+                continue;
+            }
+            ticket.setName(name);
+
+            if(email.equals("")) {
+                errorString.append("Invalid email, skipping row\n");
+                continue;
+            }
+            ticket.setEmailAddress(email);
+
+            ticket.setTicketCategory(category.get());
+            ticket.setBooking(booking.get());
+
+            this.save(ticket);
+        }
+        if(errorString.toString().equals("")){
+            errorString.append("Success");
+        }
+
+        return errorString.toString();
+    }
+
+    public InputStreamResource writeCsv() throws FileNotFoundException {
+        var tickets = this.findAll();
+
+        var headers = new ArrayList<String>();
+        headers.add("name");
+        headers.add("emailAddress");
+        headers.add("ticketCategoryTitle");
+        headers.add("ticketCategorySubtitle");
+        headers.add("ticketCategoryPrice");
+        headers.add("ticketCategoryDescription");
+        headers.add("ticketCategoryNrPerCategory");
+        headers.add("ticketCategoryAvailable");
+        headers.add("ticketCategoryEventId");
+        headers.add("bookingDate");
+        headers.add("bookingUser");
+        headers.add("bookingEventId");
+
+        var date = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date());
+        var filename = "TicketCSV" + date + ".csv";
+
+        try {
+            var writer = new FileWriter(filename);
+            for(String s:headers){
+                writer.write(s);
+                writer.write(',');
+            }
+
+            writer.write("\n");
+            for(Ticket ticket: tickets){
+                writer.write(ticket.getName());
+                writer.write(',');
+
+                writer.write(ticket.getEmailAddress());
+                writer.write(',');
+
+                var category = ticket.getTicketCategory();
+                writer.write(category.getTitle());
+                writer.write(',');
+
+                writer.write(category.getSubtitle());
+                writer.write(',');
+
+                writer.write(String.valueOf(category.getPrice()));
+                writer.write(',');
+
+                writer.write(category.getDescription());
+                writer.write(',');
+
+                writer.write(Integer.toString(category.getTicketsPerCategory()));
+                writer.write(',');
+
+                writer.write(String.valueOf(category.isAvailable()));
+                writer.write(',');
+
+                writer.write(String.valueOf(category.getEvent().getId()));
+                writer.write(',');
+
+                writer.write(String.valueOf(ticket.getBooking().getBookingDate()));
+                writer.write(',');
+
+                writer.write(ticket.getBooking().getUser());
+                writer.write(',');
+
+                writer.write(String.valueOf(ticket.getBooking().getEvent().getId()));
+                writer.write("\n");
+            }
+            writer.close();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return new InputStreamResource(new FileInputStream(filename));
     }
 }

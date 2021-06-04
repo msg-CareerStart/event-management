@@ -1,5 +1,7 @@
 package ro.msg.event_management.service;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -15,11 +17,13 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ro.msg.event_management.entity.*;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
@@ -42,8 +46,12 @@ public class EventService {
     private final TicketCategoryService ticketCategoryService;
     private final EventSublocationRepository eventSublocationRepository;
     private final LocationRepository locationRepository;
+    private final PictureService pictureService;
+    private final EventSublocationService eventSublocationService;
+    private final SublocationService sublocationService;
     private final DiscountService discountService;
     private final DiscountRepository discountRepository;
+
 
     @PersistenceContext(type = PersistenceContextType.TRANSACTION)
     private final EntityManager entityManager;
@@ -421,6 +429,15 @@ public class EventService {
         }
     }
 
+    public List<Event> findAll(){
+        return eventRepository.findAll();
+    }
+
+    public Event findOne(Long id){
+        var ev = eventRepository.findById(id);
+        return ev.orElse(null);
+    }
+
     public Page<Event> filterAndPaginateEventsAttendedByUser(User user, Pageable pageable) {
         return eventRepository.findByUserInPast(user.getIdentificationString(), pageable);
     }
@@ -428,6 +445,312 @@ public class EventService {
     public Page<Event> filterAndPaginateEventsUserWillAttend(User user, Pageable pageable) {
         return eventRepository.findByUserInFuture(user.getIdentificationString(), pageable);
     }
+
+
+    public InputStreamResource writeCsv() throws FileNotFoundException {
+        var events = this.findAll();
+
+        var headers = new ArrayList<String>();
+        headers.add("title");
+        headers.add("subtitle");
+        headers.add("status");
+        headers.add("startDate");
+        headers.add("endDate");
+        headers.add("endHour");
+        headers.add("startHour");
+        headers.add("maxPeople");
+        headers.add("description");
+        headers.add("highlighted");
+        headers.add("observations");
+        headers.add("ticketsPerUser");
+        headers.add("creator");
+        headers.add("ticketInfo");
+        headers.add("picturesUrls");
+        headers.add("sublocationIds");
+        headers.add("ticketCategoryTitle|ticketCategorySubtitle|ticketCategoryPrice|ticketCategoryDescription|ticketCategoryMax|ticketCategoryAvailable");
+
+        var date = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date());
+        var filename = "EventCSV" + date + ".csv";
+
+        try {
+            var writer = new FileWriter(filename);
+            for(String s:headers){
+                writer.write(s);
+                writer.write(',');
+            }
+
+            writer.write("\n");
+            for(Event event: events){
+                writer.write(event.getTitle());
+                writer.write(',');
+
+                writer.write(event.getSubtitle());
+                writer.write(',');
+
+                writer.write(String.valueOf(event.isStatus()));
+                writer.write(',');
+
+                writer.write(event.getStartDate().toString());
+                writer.write(',');
+
+                writer.write(event.getEndDate().toString());
+                writer.write(',');
+
+                writer.write(event.getEndHour().toString());
+                writer.write(',');
+
+                writer.write(event.getStartHour().toString());
+                writer.write(',');
+
+                writer.write(Integer.valueOf(event.getMaxPeople()).toString());
+                writer.write(',');
+
+                writer.write(event.getDescription());
+                writer.write(',');
+
+                writer.write(String.valueOf(event.isHighlighted()));
+                writer.write(',');
+
+                writer.write(event.getObservations());
+                writer.write(',');
+
+                writer.write(Integer.valueOf(event.getTicketsPerUser()).toString());
+                writer.write(',');
+
+                writer.write(event.getCreator());
+                writer.write(',');
+
+                writer.write(event.getTicketInfo());
+                writer.write(',');
+
+                var pictures = event.getPictures();
+                for(Picture picture: pictures){
+                    writer.write(String.valueOf(picture.getUrl()));
+                    writer.write(';');
+                }
+                writer.write(',');
+
+                var sublocations = event.getEventSublocations();
+                for(EventSublocation sublocation: sublocations){
+                    writer.write(String.valueOf(sublocation.getEventSublocationID().getSublocation()));
+                    writer.write(';');
+                }
+                writer.write(',');
+
+                var categories = event.getTicketCategories();
+                for(TicketCategory category: categories){
+                    writer.write(category.getTitle());
+                    writer.write('|');
+
+                    writer.write(category.getSubtitle());
+                    writer.write('|');
+
+                    writer.write(Float.valueOf(category.getPrice()).toString());
+                    writer.write('|');
+
+                    writer.write(category.getDescription());
+                    writer.write('|');
+
+                    writer.write(Integer.valueOf(category.getTicketsPerCategory()).toString());
+                    writer.write('|');
+
+                    writer.write(String.valueOf(category.isAvailable()));
+                    writer.write(';');
+                }
+                writer.write('\n');
+
+            }
+            writer.close();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return new InputStreamResource(new FileInputStream(filename));
+    }
+
+    public String saveCsv(MultipartFile csv) throws IOException, OverlappingEventsException, ExceededCapacityException {
+        InputStream inputStream = csv.getInputStream();
+
+        var reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        reader.readLine(); // skip header
+        StringBuffer errorString = new StringBuffer();
+
+        while(reader.ready()){
+            String line = reader.readLine();
+            var fields = line.split(",");
+
+            var title = fields[0];
+            var subtitle = fields[1];
+            var status = fields[2];
+            var startDate = fields[3];
+            var endDate = fields[4];
+            var endHour = fields[5];
+            var startHour = fields[6];
+            var maxPeople = fields[7];
+            var description = fields[8];
+            var highlighted = fields[9];
+            var observations = fields[10];
+            var ticketsPerUser = fields[11];
+            var creator = fields[12];
+            var ticketInfo = fields[13];
+
+            var picturesUrls = fields[14];
+
+            var locationId = fields[17];
+
+            var event = new Event();
+            if(title.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setTitle(title);
+
+            if(subtitle.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setSubtitle(subtitle);
+
+            if(status.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setStatus(Boolean.parseBoolean(status));
+
+            if(startDate.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setStartDate(LocalDate.parse(startDate));
+
+            if(endDate.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setEndDate(LocalDate.parse(endDate));
+
+            if(endHour.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setEndHour(LocalTime.parse(endHour));
+
+            if(startHour.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setStartHour(LocalTime.parse(startHour));
+
+            if(maxPeople.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setMaxPeople(Integer.parseInt(maxPeople));
+
+            if(description.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setDescription(description);
+
+            if(highlighted.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setHighlighted(Boolean.parseBoolean(highlighted));
+
+            if(observations.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setObservations(observations);
+
+            if(ticketsPerUser.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setTicketsPerUser(Integer.parseInt(ticketsPerUser));
+
+            if(creator.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setCreator(creator);
+
+            if(ticketInfo.equals("")) {
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+            event.setTicketInfo(ticketInfo);
+
+            if(locationId.equals("")){
+                errorString.append("Skipped invalid row\n");
+                continue;
+            }
+
+            //add category
+            var categories = fields[16];
+            var ids4 = categories.split(";");
+            var list = new ArrayList<TicketCategory>();
+            for(String category: ids4){
+                var data = category.split("\\|");
+                var cat = new TicketCategory();
+                cat.setTitle(data[0]);
+                cat.setSubtitle(data[1]);
+                cat.setPrice(Float.parseFloat(data[2]));
+                cat.setDescription(data[3]);
+                cat.setTicketsPerCategory(Integer.parseInt(data[4]));
+                cat.setAvailable(Boolean.parseBoolean(data[5]));
+
+                list.add(cat);
+            }
+            event.setTicketCategories(list);
+
+            try {
+                Long.parseLong(locationId);
+            }catch (NumberFormatException e){
+                errorString.append("Location id must be a number!\n");
+                continue;
+            }
+            event = this.saveEvent(event, Long.parseLong(locationId));
+
+            //add pictures to db
+            var urls = picturesUrls.split(";");
+            for(String url: urls){
+                var pic = new Picture();
+                pic.setEvent(event);
+                pic.setUrl(url);
+                pictureService.savePicture(pic);
+            }
+
+            //add eventsublocation to db
+            var sublocationIds = fields[15];
+            var ids2 = sublocationIds.split(";");
+            for(String id: ids2){
+                if(!id.equals("")) {
+                    try {
+                        var subLocation = sublocationService.findById(Long.parseLong(id));
+                        var eventSublocation = new EventSublocation();
+                        eventSublocation.setEvent(event);
+                        eventSublocation.setSublocation(subLocation);
+                        eventSublocationService.saveES(eventSublocation);
+                    }
+                    catch (Exception e){
+
+                    }
+                }
+            }
+        }
+
+        if(errorString.toString().equals("")){
+            errorString.append("Success\n");
+        }
+
+        return errorString.toString();
+    }
+}
 
     /**
      * Gets the total number of available tickets for all the events.

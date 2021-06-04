@@ -1,5 +1,6 @@
 package ro.msg.event_management.controller;
 
+import java.io.*;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -30,21 +32,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ro.msg.event_management.controller.converter.Converter;
 import ro.msg.event_management.controller.converter.EventReverseConverter;
+import ro.msg.event_management.entity.*;
 import ro.msg.event_management.controller.dto.*;
-import ro.msg.event_management.entity.Event;
-import ro.msg.event_management.entity.EventStatistics;
 import ro.msg.event_management.entity.view.EventView;
 import ro.msg.event_management.exception.ExceededCapacityException;
 import ro.msg.event_management.exception.OverlappingDiscountsException;
 import ro.msg.event_management.exception.OverlappingEventsException;
 import ro.msg.event_management.exception.TicketCategoryException;
 import ro.msg.event_management.security.User;
-import ro.msg.event_management.service.EventService;
-import ro.msg.event_management.service.LocationService;
-import ro.msg.event_management.service.TicketService;
+import ro.msg.event_management.service.*;
 import ro.msg.event_management.utils.ComparisonSign;
 import ro.msg.event_management.utils.SortCriteria;
 
@@ -329,6 +329,20 @@ public class EventController {
         return new ResponseEntity<>(returnList, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/import")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity exportEventsCsv(@RequestParam MultipartFile csv) throws IOException, OverlappingEventsException, ExceededCapacityException {
+        var result = eventService.saveCsv(csv);
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<InputStreamResource> getEventsCsv() throws FileNotFoundException {
+        var result = eventService.writeCsv();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping("/ticketsStatistics")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<EventStatistics>> getAvailableTicketsForEvents(){
@@ -352,6 +366,5 @@ public class EventController {
 
         return new ResponseEntity<>(finalResponse, HttpStatus.OK);
     }
-
 }
 
