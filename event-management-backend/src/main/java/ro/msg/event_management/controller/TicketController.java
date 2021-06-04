@@ -33,7 +33,7 @@ import ro.msg.event_management.service.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/tickets")
-@CrossOrigin
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PATCH, RequestMethod.OPTIONS}, allowedHeaders = {"Access- Control-Allow-Headers","Access-Control-Allow-Origin: *","Access-Control-Request-Method", "Access-Control-Request-Headers","Origin","Cache-Control", "Content-Type", "Authorization"}, exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
 public class TicketController {
 
     private final TicketService ticketService;
