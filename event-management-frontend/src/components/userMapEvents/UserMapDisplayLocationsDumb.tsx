@@ -28,23 +28,19 @@ const UserMapDisplayLocationsDumb = (props: Props) => {
         >
           <Popup>
             <div className={classesMap.wrapperPopup}>
-              <p className={classesMap.locationAddress}>
+              <div className={classesMap.locationAddress}>
                 {e.location.name}
                 {', '}
                 {e.location.address}
-              </p>
+              </div>
               {e.eventCards.map((x) => (
                 <div key={x.id}>
-                  <h1 className={classesMap.locationTitle} onClick={() => goToEventDetails(x.id)}>
+                  <div className={classesMap.locationTitle} onClick={() => goToEventDetails(x.id)}>
                     {x.title}
-                  </h1>
-                  <p className={classesMap.eventDetails}>
-                    {' '}
-                    {', '}
-                    {x.startDate}
-                    {', '}
-                    {x.startHour}
-                  </p>
+                  </div>
+                  <div>
+                    {x.startDate} , {x.startHour.substring(0, x.startHour.length - 3)}
+                  </div>
                 </div>
               ))}
             </div>
