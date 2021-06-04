@@ -6,17 +6,18 @@ export const useUserMapEvents = makeStyles((theme) => ({
   },
   locationAddress: {
     margin: '0 !important',
-    fontSize: '13px',
+    fontSize: '14px',
   },
   locationTitle: {
     cursor: 'pointer',
-    display: 'inline',
-    verticalAlign: 'top',
+    color: '#0000FF',
+    marginBottom: '0px',
+    fontWeight: 'bold',
     fontSize: '14px',
+    textDecoration: 'underline',
   },
   eventDetails: {
-    display: 'inline',
-    verticalAlign: 'top',
     fontSize: '14px',
+    marginTop: '0px',
   },
 }));
